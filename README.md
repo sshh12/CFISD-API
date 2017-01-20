@@ -1,2 +1,3 @@
-# CyRanch-App-Server
-The back end of the CyRanch App
+# CyRanch App Server
+
+The python backend for the CyRanch App.
