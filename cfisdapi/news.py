@@ -2,6 +2,7 @@ import re
 import ujson
 import time
 import requests
+from flask import request
 
 from cfisdapi import app
 from cfisdapi.database import add_news, execute, fetchone, fetchall
