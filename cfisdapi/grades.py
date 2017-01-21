@@ -1,5 +1,9 @@
 from requests import Session
+from flask import request
+from urllib import unquote
 import re
+import time
+import ujson
 
 from cfisdapi import app
 from cfisdapi.database import set_grade, execute, fetchone, fetchall
@@ -85,13 +89,12 @@ class HomeAccessCenter:
 
                         if self.re_get_assign_name.search(assigntext):
 
-                            assign_name = self.re_get_assign_name.search(assigntext).group(
-                                1).replace("&nbsp;", "").replace("&amp;", "&")
+                            assign_name = self.re_get_assign_name.search(assigntext).group(1)
+                            assign_name = assign_name.replace("&nbsp;", "").replace("&amp;", "&")
 
                             try:
                                 date, datedue = self.re_get_assign_dates.findall(assigntext)[0]
                             except Exception as e:
-                                print "Date Error"
                                 date, datedue = "1/1/2016", "1/1/2016"
 
                             datedue = datedue.replace("\\", "")
@@ -100,12 +103,14 @@ class HomeAccessCenter:
                             grade_type, grade = self.re_get_assign_value.findall(assigntext)[0]
                             grade = grade.replace("&nbsp;", "")
 
-                            classwork[class_id]['assignments'].update({assign_name: {
-                                'date': date,
-                                'datedue': datedue,
-                                'gradetype': grade_type,
-                                'grade': grade,
-                                'letter': self._get_letter_grade(grade)}})
+                            classwork[class_id]['assignments'].update({
+                                assign_name: {
+                                    'date': date,
+                                    'datedue': datedue,
+                                    'gradetype': grade_type,
+                                    'grade': grade,
+                                    'letter': self._get_letter_grade(grade)}})
+
                             set_grade(self.sid, classname, assign_name,
                                       self._percent_to_float(grade), 25)
                     except Exception as e:
@@ -155,7 +160,7 @@ def get_classwork(user=""):
         return ujson.dumps(grades)
     except Exception as e:
         print str(e)
-        return "ERROR"
+        return "Error"
 
 
 @app.route("/homeaccess/reportcard/<user>", methods=['POST'])
@@ -173,7 +178,7 @@ def get_reportcard(user=""):
         return ujson.dumps(reportcard)
     except Exception as e:
         print str(e)
-        return "ERROR"
+        return "Error"
 
 
 @app.route("/homeaccess/stats/<subject>/<name>/<grade>")
@@ -200,4 +205,4 @@ def homeaccess_stats(subject="", name="", grade="0.0"):
         return ujson.dumps({'Average': avg, 'PercentBelow': percent})
     except Exception as e:
         print(e)
-    return "error"
+    return "Error"

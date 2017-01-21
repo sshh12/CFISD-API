@@ -1,5 +1,9 @@
+import urlparse
+import os
 
 from cfisdapi import app
+
+LOCAL = False
 
 try:
     # If the VAR exists this probably is attach to a database
@@ -17,12 +21,13 @@ try:
     )
     cur = conn.cursor()
 
-except:
-    print "Running without a database..."
+except Exception as e:
+    print e
+    LOCAL = True
 
 
 def set_grade(user, subject, name, grade, grade_level):
-    try:
+    if not LOCAL:
         cur.execute("SELECT 1 FROM grades WHERE user_id=%s AND name=%s AND subject=%s;",
                     [user, name, subject])
         if cur.fetchone() == None:
@@ -31,12 +36,12 @@ def set_grade(user, subject, name, grade, grade_level):
         else:
             cur.execute("UPDATE grades SET grade=%s WHERE user_id=%s AND name=%s AND subject=%s;", [
                 grade, user, name, subject])
-    except:
-        print "set_grade error"
+        return True
+    return False
 
 
 def add_news(icon, picture, organization, eventdate, text, link, check=False):
-    try:
+    if not LOCAL:
         if check:
             cur.execute("select 1 from news where description=%s and organization=%s",
                         [text, organization])
@@ -47,29 +52,26 @@ def add_news(icon, picture, organization, eventdate, text, link, check=False):
                     icon, picture, organization, eventdate, text, link])
         conn.commit()
         return True
-    except:
-        print "add_news error"
+    return False
 
 
 def execute(*args):
-    try:
-        return cur.execute(*args)
-    except:
-        print "execute error"
+    if not LOCAL:
+        cur.execute(*args)
+        return True
+    else:
         return None
 
 
 def fetchone():
-    try:
+    if not LOCAL:
         return cur.fetchone()
-    except:
-        print "fetch error"
+    else:
         return []
 
 
 def fetchall():
-    try:
+    if not LOCAL:
         return cur.fetchall()
-    except:
-        print "fetch error"
+    else:
         return []

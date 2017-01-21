@@ -2,6 +2,7 @@ import re
 import ujson
 import time
 import requests
+import hashlib
 from flask import request
 
 from cfisdapi import app
@@ -21,10 +22,16 @@ def update_cyranch_news():
     for category in cyranch_pages.keys():
         print "Updating " + category
         for url in cyranch_pages[category]:
+
             text = requests.get("http://cyranchnews.com/category" + url).text
+
             for a in re_get_cyranch_article.finditer(text):
-                add_news("/icons/CyRanchMustangs.png", a.group(2), category, a.group(4),
-                         a.group(3).replace("&#8217;", "'"), a.group(1), check=True)
+                add_news("/icons/CyRanchMustangs.png",
+                         a.group(2),
+                         category,
+                         a.group(4),
+                         a.group(3).replace("&#8217;", "'"),
+                         a.group(1), check=True)
 
 
 @app.route("/news/<org>")
@@ -36,16 +43,16 @@ def get_org_news(org=""):
         update_cyranch_news()
 
     news = []
-    execute("select * from news where organization=%s", [org])
-    for n in fetchall():
-        news.append({
-                    'date': n[4].strftime("%B %d, %Y"),
-                    'image': n[2],
-                    'icon': n[1],
-                    'organization': n[3],
-                    'text': n[5],
-                    'link': n[6]
-                    })
+    if execute("select * from news where organization=%s", [org]):
+        for n in fetchall():
+            news.append({
+                        'date': n[4].strftime("%B %d, %Y"),
+                        'image': n[2],
+                        'icon': n[1],
+                        'organization': n[3],
+                        'text': n[5],
+                        'link': n[6]
+                        })
     return ujson.dumps(news)
 
 form_html = """
@@ -82,9 +89,9 @@ def create_org_news():
         execute("select distinct icon from news where organization=%s", ['The Cy-Ranch App'])
         icon = fetchone()[0]
 
-        if sudo_hash(org) == password:
+        if hashlib.sha256(org + "!").hexdigest()[:8] == password:  # Still Not Secure
             add_news(icon, pic, org, date, text, link)
-            return "DONE"
+            return "Success"
         return "Error"
     else:
         orgs = []
