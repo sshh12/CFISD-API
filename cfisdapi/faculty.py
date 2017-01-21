@@ -4,12 +4,11 @@ FACULTY_FILE = 'faculty.json'
 
 
 @app.route("/faculty")
-def faculty():
-    with open(FACULTY_FILE, 'r') as f:
-        faculty = f.read()
-    return faculty
+def get_faculty():
+    with open(FACULTY_FILE, 'r') as ff:
+        return ff.read()
 
-# Old Code Used For Parsing Original Site
+# Old Code Used For Parsing Original Site -> faculty.json
 #
 # def update_faculty():
 #     teachers = {}

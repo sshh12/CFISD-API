@@ -3,7 +3,7 @@ import os
 
 from cfisdapi import app
 
-LOCAL = False
+LOCAL = False # Running Locally = W/O Database
 
 try:
     # If the VAR exists this probably is attach to a database
@@ -22,7 +22,6 @@ try:
     cur = conn.cursor()
 
 except Exception as e:
-    print e
     LOCAL = True
 
 
@@ -42,7 +41,7 @@ def set_grade(user, subject, name, grade, grade_level):
 
 def add_news(icon, picture, organization, eventdate, text, link, check=False):
     if not LOCAL:
-        if check:
+        if check: # Check if event already exists
             cur.execute("select 1 from news where description=%s and organization=%s",
                         [text, organization])
             if cur.fetchone() != None:
@@ -54,6 +53,7 @@ def add_news(icon, picture, organization, eventdate, text, link, check=False):
         return True
     return False
 
+# Proxies for interacting with `cur` database object
 
 def execute(*args):
     if not LOCAL:

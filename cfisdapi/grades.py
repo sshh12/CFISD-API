@@ -42,13 +42,13 @@ class HomeAccessCenter:
 
         self.session.post("https://home-access.cfisd.net/HomeAccess/Account/LogOn", data=data)
 
-    def logout(self):
+    def logout(self): # Ignored to Keep Resp. Times Lower
         self.session.get("https://home-access.cfisd.net/HomeAccess/Account/LogOff")
 
     def _percent_to_float(self, s):
         try:
             return float(s.replace("%", ""))
-        except:
+        except ValueError:
             return 0.0
 
     def _get_letter_grade(self, percent):
@@ -63,9 +63,10 @@ class HomeAccessCenter:
             return "D"
         return "F"
 
-    def get_classwork(self):
-        page = self.session.get(
-            "https://home-access.cfisd.net/HomeAccess/Content/Student/Assignments.aspx").text
+    def get_classwork(self, page=None):
+        if not page:
+            page = self.session.get(
+                "https://home-access.cfisd.net/HomeAccess/Content/Student/Assignments.aspx").text
 
         classwork = {}
 
@@ -74,14 +75,20 @@ class HomeAccessCenter:
                 classtext = c.group(0)
 
                 class_id, classname = self.re_get_classname.findall(classtext)[0]
-                class_average = self.re_get_classavg.search(
-                    classtext).group(1).replace("Marking Period Avg ", "")
+                
+                class_average = self.re_get_classavg.search(classtext).group(1)
+                class_average = class_average.replace("Marking Period Avg ", "")
 
-                classwork.update({class_id: {'name': classname, 'overallavg': class_average,
-                                             'assignments': {}, 'letter': self._get_letter_grade(class_average)}})
+                classwork.update({class_id: {'name': classname,
+                                             'overallavg': class_average,
+                                             'assignments': {},
+                                             'letter': self._get_letter_grade(class_average)}})
 
-                set_grade(self.sid, classname, classname + " AVG",
-                          self._percent_to_float(class_average), 25)
+                set_grade(self.sid,
+                          classname,
+                          classname + " AVG",
+                          self._percent_to_float(class_average),
+                          25)
 
                 for a in self.re_get_assignments.finditer(classtext):
                     try:
@@ -92,7 +99,7 @@ class HomeAccessCenter:
                             assign_name = self.re_get_assign_name.search(assigntext).group(1)
                             assign_name = assign_name.replace("&nbsp;", "").replace("&amp;", "&")
 
-                            try:
+                            try: # Fix
                                 date, datedue = self.re_get_assign_dates.findall(assigntext)[0]
                             except Exception as e:
                                 date, datedue = "1/1/2016", "1/1/2016"
@@ -111,8 +118,11 @@ class HomeAccessCenter:
                                     'grade': grade,
                                     'letter': self._get_letter_grade(grade)}})
 
-                            set_grade(self.sid, classname, assign_name,
-                                      self._percent_to_float(grade), 25)
+                            set_grade(self.sid,
+                                      classname,
+                                      assign_name,
+                                      self._percent_to_float(grade),
+                                      25)
                     except Exception as e:
                         print "Error 1,", str(e)
             except Exception as e:
@@ -120,9 +130,10 @@ class HomeAccessCenter:
 
         return classwork
 
-    def get_reportcard(self):
-        page = self.session.get(
-            "https://home-access.cfisd.net/HomeAccess/Content/Student/ReportCards.aspx").text
+    def get_reportcard(self, page=None):
+        if not page:
+            page = self.session.get(
+                "https://home-access.cfisd.net/HomeAccess/Content/Student/ReportCards.aspx").text
 
         reportcard = {}
 
@@ -200,9 +211,9 @@ def homeaccess_stats(subject="", name="", grade="0.0"):
             name, subject, grade])
         below_grades = fetchone()[0]
 
-        percent = min(below_grades / float(total_grades - 1) * 100.0, 99.99)
+        percentile = min(below_grades / float(total_grades - 1) * 100.0, 99.99)
 
-        return ujson.dumps({'Average': avg, 'PercentBelow': percent})
+        return ujson.dumps({'Average': avg, 'PercentBelow': percentile})
     except Exception as e:
         print(e)
     return "Error"
