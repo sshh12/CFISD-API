@@ -52,16 +52,20 @@ class HomeAccessCenter:
             return 0.0
 
     def _get_letter_grade(self, percent):
+        
+        if not percent:
+            return ''
+        
         num = self._percent_to_float(percent)
         if num >= 89.5:
-            return "A"
+            return 'A'
         if num >= 79.5:
-            return "B"
+            return 'B'
         if num >= 69.5:
-            return "C"
+            return 'C'
         if num >= 15:
-            return "D"
-        return "F"
+            return 'D'
+        return 'F'
 
     def get_classwork(self, page=None):
         if not page:
@@ -149,7 +153,7 @@ class HomeAccessCenter:
                                      'letter': self._get_letter_grade(avg)}})
 
             reportcard.update({classid: {'name': classname,
-                                         'teacher': teacher,
+                                         'teacher': teacher.title(),
                                          'room': room,
                                          'averages': averages}})
 
