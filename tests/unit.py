@@ -20,6 +20,19 @@ class GradesTest(unittest.TestCase):
         self.assertEqual(c._get_letter_grade('0.0%'),  'F')
         self.assertEqual(c._get_letter_grade(''),      '')
 
+    def test_honors(self):
+        c = HomeAccessCenter('s123456')
+        
+        self.assertEqual(c._is_honors("U S History AP"), True)
+        self.assertEqual(c._is_honors("AP Physics I"), True)
+        self.assertEqual(c._is_honors("CHEMISTRY AP"), True)
+        self.assertEqual(c._is_honors("ADV COM SCI K"), True)
+        self.assertEqual(c._is_honors("Pre-Calculus K"), True)
+        self.assertEqual(c._is_honors("Eng III AP"), True)
+
+        self.assertEqual(c._is_honors("NotAnAP Class"), False)
+        self.assertEqual(c._is_honors("Kinimatics On Level"), False)
+
     def test_reportcard(self):
         c = HomeAccessCenter('s123456')
 

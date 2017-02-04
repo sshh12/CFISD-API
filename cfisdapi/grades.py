@@ -28,6 +28,9 @@ class HomeAccessCenter:
     re_get_reportcard = re.compile(
         r'<tr class="sg-asp-table-data-row">\s+<td>(\d+ - \d+)\s+<\/td><td>\s+<a [\s\w="#(\');]+>([\w\s/\-&]+)<\/a>[\s\w<\/>=":.@]+">([\w\s,]+)<\/a><\/td><td>([\d\w]+)\s*<\/td><td>\s+[\d\.\s<\/td>]+a\s+href="#" onclick="\w+\(\'\d+\', \'\d+\', \'\d\', \'MP1\s+\', \'\w+\', \d+\); return false;">\s+(\d+|\s+)<\/a>[\d\.\s<\/td>]+a\s+href="#" onclick="\w+\(\'\d+\', \'\d+\', \'\d\', \'MP2\s+\', \'\w+\', \d+\); return false;">\s+(\d+|\s+)<\/a>[\d\.\s<\/td>]+a\s+href="#" onclick="\w+\(\'\d+\', \'\d+\', \'\d\', \'MP3\s+\', \'\w+\', \d+\); return false;">\s+(\d+|\s)<\/a>[\s<\/td>a\w;"]+="#"\s+onclick="\w+\(\'\d+\', \'\d+\', \'\d\', \'MP4\s+\', \'\w+\', \d+\); return false;">(\d+|\s+)<\/a>[\s<\/td>a\w;"]+="#"\s+onclick="\w+\(\'\d+\', \'\d+\', \'\d\', \'MP5\s+\', \'\w+\', \d+\); return false;">(\d+|\s+)<\/a>[\s<\/td>a\w;"]+="#"\s+onclick="\w+\(\'\d+\', \'\d+\', \'\d\', \'MP6\s+\', \'\w+\', \d+\); return false;">(\d+|\s+)<\/a>')
 
+    re_honors = re.compile(
+        r'\b(?:AP|K)\b')
+    
     def __init__(self, sid):
         self.sid = sid
         self.session = Session()
@@ -67,6 +70,10 @@ class HomeAccessCenter:
             return 'D'
         return 'F'
 
+    def _is_honors(self, name):
+        return name != '' and self.re_honors.search(name) != None
+        
+
     def get_classwork(self, page=None):
         if not page:
             page = self.session.get(
@@ -83,7 +90,10 @@ class HomeAccessCenter:
                 class_average = self.re_get_classavg.search(classtext).group(1)
                 class_average = class_average.replace("Marking Period Avg ", "")
 
+                honors = self._is_honors(classname)
+
                 classwork.update({class_id: {'name': classname,
+                                             'honors': honors,
                                              'overallavg': class_average,
                                              'assignments': {},
                                              'letter': self._get_letter_grade(class_average)}})

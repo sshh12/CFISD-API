@@ -11,7 +11,8 @@ The python backend for the Cy-Ranch App.
 
 ### Tests
 
-```python
+```shell
+python -m tests.unit -v
 
 python -m tests.manual
 ```
