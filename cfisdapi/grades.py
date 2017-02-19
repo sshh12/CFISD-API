@@ -43,7 +43,12 @@ class HomeAccessCenter:
                 'LogOnDetails.UserName': self.sid,
                 'LogOnDetails.Password': self.passwd}
 
-        self.session.post("https://home-access.cfisd.net/HomeAccess/Account/LogOn", data=data)
+        resp = self.session.post(
+            "https://home-access.cfisd.net/HomeAccess/Account/LogOn", data=data)
+
+        if "ViewAssignments" not in resp.text:  # Test If Login Worked
+            return False
+        return True
 
     def logout(self):  # Ignored to Keep Resp. Times Lower
         self.session.get("https://home-access.cfisd.net/HomeAccess/Account/LogOff")
@@ -75,8 +80,11 @@ class HomeAccessCenter:
 
     def get_classwork(self, page=None):
         if not page:
-            page = self.session.get(
-                "https://home-access.cfisd.net/HomeAccess/Content/Student/Assignments.aspx").text
+            try:
+                page = self.session.get(
+                    "https://home-access.cfisd.net/HomeAccess/Content/Student/Assignments.aspx").text
+            except:
+                return {'status': 'connection_failed'}
 
         classwork = {}
 
@@ -143,12 +151,17 @@ class HomeAccessCenter:
             except Exception as e:
                 print "Error 0, ", str(e)
 
+        classwork.update({'status': 'success'})
+
         return classwork
 
     def get_reportcard(self, page=None):
         if not page:
-            page = self.session.get(
-                "https://home-access.cfisd.net/HomeAccess/Content/Student/ReportCards.aspx").text
+            try:
+                page = self.session.get(
+                    "https://home-access.cfisd.net/HomeAccess/Content/Student/ReportCards.aspx").text
+            except:
+                return {'status': 'connection_failed'}
 
         reportcard = {}
 
@@ -168,6 +181,8 @@ class HomeAccessCenter:
                                          'room': room,
                                          'averages': averages}})
 
+        reportcard.update({'status': 'success'})
+
         return reportcard
 
 
@@ -178,8 +193,11 @@ def get_classwork(user=""):
 
         t = time.time()
         u = HomeAccessCenter(user)
-        u.login(passw)
-        grades = u.get_classwork()
+
+        if u.login(passw):
+            grades = u.get_classwork()
+        else:
+            grades = {'status': 'login_failed'}
 
         print "GOT Grades For {} in {}".format(user, time.time() - t)
 
@@ -196,8 +214,11 @@ def get_reportcard(user=""):
 
         t = time.time()
         u = HomeAccessCenter(user)
-        u.login(passw)
-        reportcard = u.get_reportcard()
+
+        if u.login(passw):
+            reportcard = u.get_reportcard()
+        else:
+            reportcard = {'status': 'login_failed'}
 
         print "GOT ReportCard For {} in {}".format(user, time.time() - t)
 
