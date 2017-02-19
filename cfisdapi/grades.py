@@ -30,7 +30,7 @@ class HomeAccessCenter:
 
     re_honors = re.compile(
         r'\b(?:AP|K)\b')
-    
+
     def __init__(self, sid):
         self.sid = sid
         self.session = Session()
@@ -45,7 +45,7 @@ class HomeAccessCenter:
 
         self.session.post("https://home-access.cfisd.net/HomeAccess/Account/LogOn", data=data)
 
-    def logout(self): # Ignored to Keep Resp. Times Lower
+    def logout(self):  # Ignored to Keep Resp. Times Lower
         self.session.get("https://home-access.cfisd.net/HomeAccess/Account/LogOff")
 
     def _percent_to_float(self, s):
@@ -55,10 +55,10 @@ class HomeAccessCenter:
             return 0.0
 
     def _get_letter_grade(self, percent):
-        
+
         if not percent:
             return ''
-        
+
         num = self._percent_to_float(percent)
         if num >= 89.5:
             return 'A'
@@ -72,7 +72,6 @@ class HomeAccessCenter:
 
     def _is_honors(self, name):
         return name != '' and self.re_honors.search(name) != None
-        
 
     def get_classwork(self, page=None):
         if not page:
@@ -86,7 +85,7 @@ class HomeAccessCenter:
                 classtext = c.group(0)
 
                 class_id, classname = self.re_get_classname.findall(classtext)[0]
-                
+
                 class_average = self.re_get_classavg.search(classtext).group(1)
                 class_average = class_average.replace("Marking Period Avg ", "")
 
@@ -97,12 +96,13 @@ class HomeAccessCenter:
                                              'overallavg': class_average,
                                              'assignments': {},
                                              'letter': self._get_letter_grade(class_average)}})
-
-                set_grade(self.sid,
-                          classname,
-                          classname + " AVG",
-                          self._percent_to_float(class_average),
-                          25)
+                class_avg = self._percent_to_float(class_average)
+                if class_avg > 10:
+                    set_grade(self.sid,
+                              classname,
+                              classname + " AVG",
+                              class_avg,
+                              25)
 
                 for a in self.re_get_assignments.finditer(classtext):
                     try:
@@ -113,7 +113,7 @@ class HomeAccessCenter:
                             assign_name = self.re_get_assign_name.search(assigntext).group(1)
                             assign_name = assign_name.replace("&nbsp;", "").replace("&amp;", "&")
 
-                            try: # Fix
+                            try:  # Fix
                                 date, datedue = self.re_get_assign_dates.findall(assigntext)[0]
                             except Exception as e:
                                 date, datedue = "1/1/2016", "1/1/2016"
@@ -131,12 +131,13 @@ class HomeAccessCenter:
                                     'gradetype': grade_type,
                                     'grade': grade,
                                     'letter': self._get_letter_grade(grade)}})
-
-                            set_grade(self.sid,
-                                      classname,
-                                      assign_name,
-                                      self._percent_to_float(grade),
-                                      25)
+                            assign_avg = self._percent_to_float(grade)
+                            if assign_avg > 10:
+                                set_grade(self.sid,
+                                          classname,
+                                          assign_name,
+                                          assign_avg,
+                                          25)
                     except Exception as e:
                         print "Error 1,", str(e)
             except Exception as e:
