@@ -4,12 +4,11 @@ import time
 import requests
 import hashlib
 from flask import request
-from enum import Enum
 
 from cfisdapi import app
 from cfisdapi.database import add_news, execute, fetchone, fetchall
 
-class NewsType(Enum):
+class NewsType:
     BASIC = 0
     ARTICLE = 1
 
