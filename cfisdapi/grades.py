@@ -137,7 +137,7 @@ class HomeAccessCenter:
                                     'letter': self._get_letter_grade(grade)}})
                             
                             assign_avg = self._percent_to_float(grade)
-                            if assign_avg > 10:
+                            if assign_avg > 10 and False:
                                 set_grade(self.sid,
                                           classname,
                                           assign_name,
@@ -147,7 +147,7 @@ class HomeAccessCenter:
                     except Exception as e:
                         print "Error 1,", str(e) # Fix
 
-                    if class_avg > 10:
+                    if class_avg > 10 and False:
                         set_grade(self.sid,
                                   classname,
                                   classname + " AVG",

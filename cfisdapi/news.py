@@ -34,7 +34,7 @@ def update_cyranch_news():
                          a.group(2),
                          category,
                          a.group(4),
-                         a.group(3).replace("&#8217;", "'"),
+                         a.group(3).replace("&#8217;", "'").replace("&#8220;", "\"").replace("&#8221;", "\"").replace("&semi;", ""),
                          a.group(1), NewsType.ARTICLE, check=True)
 
 
