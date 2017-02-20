@@ -104,13 +104,9 @@ class HomeAccessCenter:
                                              'overallavg': class_average,
                                              'assignments': {},
                                              'letter': self._get_letter_grade(class_average)}})
+                
                 class_avg = self._percent_to_float(class_average)
-                if class_avg > 10:
-                    set_grade(self.sid,
-                              classname,
-                              classname + " AVG",
-                              class_avg,
-                              25)
+                
 
                 for a in self.re_get_assignments.finditer(classtext):
                     try:
@@ -139,6 +135,7 @@ class HomeAccessCenter:
                                     'gradetype': grade_type,
                                     'grade': grade,
                                     'letter': self._get_letter_grade(grade)}})
+                            
                             assign_avg = self._percent_to_float(grade)
                             if assign_avg > 10:
                                 set_grade(self.sid,
@@ -146,10 +143,19 @@ class HomeAccessCenter:
                                           assign_name,
                                           assign_avg,
                                           25)
+                                
                     except Exception as e:
-                        print "Error 1,", str(e)
+                        print "Error 1,", str(e) # Fix
+
+                    if class_avg > 10:
+                        set_grade(self.sid,
+                                  classname,
+                                  classname + " AVG",
+                                  class_avg,
+                                  25)
+                    
             except Exception as e:
-                print "Error 0, ", str(e)
+                print "Error 0, ", str(e) # Fix
 
         classwork.update({'status': 'success'})
 
