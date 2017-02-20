@@ -39,7 +39,7 @@ def set_grade(user, subject, name, grade, grade_level):
     return False
 
 
-def add_news(icon, picture, organization, eventdate, text, link, check=False):
+def add_news(icon, picture, organization, eventdate, text, link, type_, check=False):
     if not LOCAL:
         if check: # Check if event already exists
             cur.execute("select 1 from news where description=%s and organization=%s",
@@ -47,8 +47,8 @@ def add_news(icon, picture, organization, eventdate, text, link, check=False):
             if cur.fetchone() != None:
                 return False
 
-        cur.execute("insert into news (icon, picture, organization, eventdate, description, link) values (%s,%s,%s,%s,%s,%s);", [
-                    icon, picture, organization, eventdate, text, link])
+        cur.execute("insert into news (icon, picture, organization, eventdate, description, link, contenttype) values (%s,%s,%s,%s,%s,%s,%s);", [
+                    icon, picture, organization, eventdate, text, link, type_])
         conn.commit()
         return True
     return False

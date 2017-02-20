@@ -4,9 +4,14 @@ import time
 import requests
 import hashlib
 from flask import request
+from enum import Enum
 
 from cfisdapi import app
 from cfisdapi.database import add_news, execute, fetchone, fetchall
+
+class NewsType(Enum):
+    BASIC = 0
+    ARTICLE = 1
 
 re_get_cyranch_article = re.compile(
     r'<div class="sno-animate categorypreviewbox[\w\s]+"><a href="([\w\d:/.\-_]+)"><img src="([\w\d:/.\-_]+)" class="previewstaffpic" alt="[\w\s\S]+?" \/><\/a><h1 class="catprofile \w+"><a href="[\w\d:/.\-_]+" rel="bookmark">([\w\s\d&;#]+)<\/a><\/h1><p class="categorydate">(\w{3,10} \d{1,2}, \d{4})<\/p>')
@@ -31,7 +36,7 @@ def update_cyranch_news():
                          category,
                          a.group(4),
                          a.group(3).replace("&#8217;", "'"),
-                         a.group(1), check=True)
+                         a.group(1), NewsType.ARTICLE, check=True)
 
 
 @app.route("/news/<org>")
@@ -51,7 +56,8 @@ def get_org_news(org=""):
                         'icon': n[1],
                         'organization': n[3],
                         'text': n[5],
-                        'link': n[6]
+                        'link': n[6],
+                        'type': n[7]
                         })
     return ujson.dumps(news)
 
@@ -86,11 +92,11 @@ def create_org_news():
         date = request.form['date']
         password = request.form['password']
 
-        execute("select distinct icon from news where organization=%s", ['The Cy-Ranch App'])
+        execute("select distinct icon from news where organization=%s", [org])
         icon = fetchone()[0]
 
         if hashlib.sha256(org + "!").hexdigest()[:8] == password:  # Still Not Secure
-            add_news(icon, pic, org, date, text, link)
+            add_news(icon, pic, org, date, text, link, NewsType.ARTICLE)
             return "Success"
         return "Error"
     else:
