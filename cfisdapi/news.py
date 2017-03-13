@@ -11,6 +11,7 @@ from cfisdapi.database import add_news, execute, fetchone, fetchall
 class NewsType:
     BASIC = 0
     ARTICLE = 1
+    TEXT = 2
 
 re_get_cyranch_article = re.compile(
     r'<div class="sno-animate categorypreviewbox[\w\s]+"><a href="([\w\d:/.\-_]+)"><img src="([\w\d:/.\-_]+)" class="previewstaffpic" alt="[\w\s\S]+?" \/><\/a><h1 class="catprofile \w+"><a href="[\w\d:/.\-_]+" rel="bookmark">([\w\s\d&;#]+)<\/a><\/h1><p class="categorydate">(\w{3,10} \d{1,2}, \d{4})<\/p>')
@@ -34,7 +35,7 @@ def update_cyranch_news():
                          a.group(2),
                          category,
                          a.group(4),
-                         a.group(3).replace("&#8217;", "'").replace("&#8220;", "\"").replace("&#8221;", "\"").replace("&semi;", ""),
+                         a.group(3).replace("&#8217;", "'").replace("&#8220;", "\"").replace("&#8221;", "\"").replace("&semi;", "").replace("&quot;", "'"),
                          a.group(1), NewsType.ARTICLE, check=True)
 
 
@@ -73,6 +74,7 @@ Picture: <input type="text" name="pic"><br>
 Text: <input type="text" name="text"><br>
 Link: <input type="text" name="link"><br>
 Date: <input type="date" name="date"><br>
+Type (1=Article,2=Text): <input type="number" name="type"><br>
 Password: <input type="password" name="password"><br>
 <input type="submit" name="submit">
 </form>
