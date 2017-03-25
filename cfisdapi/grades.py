@@ -90,8 +90,6 @@ class HomeAccessCenter:
                                          'overallavg': class_average,
                                          'assignments': {},
                                          'letter': self._get_letter_grade(class_average)}})
-            
-            print class_id, classname
 
             for row in class_.find_class('sg-asp-table-data-row'):
                 
@@ -118,14 +116,14 @@ class HomeAccessCenter:
                                                             'letter': self._get_letter_grade(grade)}})
                             
                             
-                    if assign_avgf > 10:
+                    if assign_avgf > 10 and False:
                         set_grade(self.sid,
                         classname,
                         assign_name,
                         assign_avgf,
                         25)
 
-            if class_avgf > 10:
+            if class_avgf > 10 and False:
                         set_grade(self.sid,
                                   classname,
                                   classname + " AVG",
