@@ -1,6 +1,7 @@
 from requests import Session
 from flask import request
 from urllib import unquote
+from lxml import html
 import re
 import time
 import ujson
@@ -11,25 +12,8 @@ from cfisdapi.database import set_grade, execute, fetchone, fetchall
 
 class HomeAccessCenter:
 
-    re_get_classes = re.compile(
-        "<div class=\"AssignmentClass\">[\S\s]+?<\/span>\s+<\/div>\s+<\/span>")
-    re_get_classname = re.compile(
-        "(\d+ - \d+)\s{3,4}([\w\s/-]+)\r\n")
-    re_get_classavg = re.compile(
-        "\"Average of all marking period scores\">(.+)<\/span>")
-    re_get_assignments = re.compile(
-        "<tr class=\"sg-asp-table-data-row\">[\s\S]+?<\/tr>")
-    re_get_assign_name = re.compile(
-        "; return false;\">\s+([\S\s]+\S)\s+<\/a>")
-    re_get_assign_dates = re.compile(
-        "<td>(\d{2}\/\d{2}\/\d{4})<\/td>\s*<td>(\d{2}\/\d{2}\/\d{4})<\/td>")
-    re_get_assign_value = re.compile(
-        "<td>([\w\s]{11,12})<\/td>[\s\S]+?<td class=\"sg-view-quick\">([\S]+?)<\/td>\s+<\/tr>")
-    re_get_reportcard = re.compile(
-        r'<tr class="sg-asp-table-data-row">\s+<td>(\d+ - \d+)\s+<\/td><td>\s+<a [\s\w="#(\');]+>([\w\s/\-&]+)<\/a>[\s\w<\/>=":.@]+">([\w\s,]+)<\/a><\/td><td>([\d\w]+)\s*<\/td><td>\s+[\d\.\s<\/td>]+a\s+href="#" onclick="\w+\(\'\d+\', \'\d+\', \'\d\', \'MP1\s+\', \'\w+\', \d+\); return false;">\s+(\d+|\s+)<\/a>[\d\.\s<\/td>]+a\s+href="#" onclick="\w+\(\'\d+\', \'\d+\', \'\d\', \'MP2\s+\', \'\w+\', \d+\); return false;">\s+(\d+|\s+)<\/a>[\d\.\s<\/td>]+a\s+href="#" onclick="\w+\(\'\d+\', \'\d+\', \'\d\', \'MP3\s+\', \'\w+\', \d+\); return false;">\s+(\d+|\s)<\/a>[\s<\/td>a\w;"]+="#"\s+onclick="\w+\(\'\d+\', \'\d+\', \'\d\', \'MP4\s+\', \'\w+\', \d+\); return false;">(\d+|\s+)<\/a>[\s<\/td>a\w;"]+="#"\s+onclick="\w+\(\'\d+\', \'\d+\', \'\d\', \'MP5\s+\', \'\w+\', \d+\); return false;">(\d+|\s+)<\/a>[\s<\/td>a\w;"]+="#"\s+onclick="\w+\(\'\d+\', \'\d+\', \'\d\', \'MP6\s+\', \'\w+\', \d+\); return false;">(\d+|\s+)<\/a>')
-
-    re_honors = re.compile(
-        r'\b(?:AP|K)\b')
+    re_get_classname = re.compile("(\d+ - \d+)\s{3,4}([\w\s/-]+)\r\n")
+    re_honors = re.compile(r'\b(?:AP|K)\b')
 
     def __init__(self, sid):
         self.sid = sid
@@ -64,6 +48,9 @@ class HomeAccessCenter:
         if not percent:
             return ''
 
+        elif 'X' in percent:
+            return 'U'
+
         num = self._percent_to_float(percent)
         if num >= 89.5:
             return 'A'
@@ -82,80 +69,69 @@ class HomeAccessCenter:
         if not page:
             try:
                 page = self.session.get(
-                    "https://home-access.cfisd.net/HomeAccess/Content/Student/Assignments.aspx").text
+                    "https://home-access.cfisd.net/HomeAccess/Content/Student/Assignments.aspx").content
             except:
                 return {'status': 'connection_failed'}
 
+        tree = html.fromstring(page)
+
         classwork = {}
 
-        for c in self.re_get_classes.finditer(page):
-            try:
-                classtext = c.group(0)
+        for class_ in tree.find_class('AssignmentClass'):
 
-                class_id, classname = self.re_get_classname.findall(classtext)[0]
+            class_id, classname = self.re_get_classname.findall(class_.find_class('sg-header-heading')[0].text_content())[0]
 
-                class_average = self.re_get_classavg.search(classtext).group(1)
-                class_average = class_average.replace("Marking Period Avg ", "")
+            class_average = class_.find_class('sg-header-heading sg-right')[0].text_content().split(' ')[-1]
 
-                honors = self._is_honors(classname)
+            class_avgf = self._percent_to_float(class_average)
 
-                classwork.update({class_id: {'name': classname,
-                                             'honors': honors,
-                                             'overallavg': class_average,
-                                             'assignments': {},
-                                             'letter': self._get_letter_grade(class_average)}})
+            classwork.update({class_id: {'name': classname,
+                                         'honors': self._is_honors(classname),
+                                         'overallavg': class_average,
+                                         'assignments': {},
+                                         'letter': self._get_letter_grade(class_average)}})
+            
+            print class_id, classname
+
+            for row in class_.find_class('sg-asp-table-data-row'):
                 
-                class_avg = self._percent_to_float(class_average)
+                cols = map(lambda el: el.text_content(), row.xpath("td"))
                 
+                if len(cols) == 10:
+                    
+                    assign_name = cols[2].replace("\t*", "").strip().replace("&nbsp;", "").replace("&amp;", "&")
+                    
+                    datedue = cols[0].replace(u'\xa0', "")
+                    date = cols[1].replace(u'\xa0', "")
 
-                for a in self.re_get_assignments.finditer(classtext):
-                    try:
-                        assigntext = a.group(0)
+                    grade_type = cols[3]
+                    grade = cols[-1].replace("&nbsp;", "").replace(u'\xa0', "")
 
-                        if self.re_get_assign_name.search(assigntext):
+                    assign_avgf = self._percent_to_float(grade)
 
-                            assign_name = self.re_get_assign_name.search(assigntext).group(1)
-                            assign_name = assign_name.replace("&nbsp;", "").replace("&amp;", "&")
-
-                            try:  # Fix
-                                date, datedue = self.re_get_assign_dates.findall(assigntext)[0]
-                            except Exception as e:
-                                date, datedue = "1/1/2016", "1/1/2016"
-
-                            datedue = datedue.replace("\\", "")
-                            date = date.replace("\\", "")
-
-                            grade_type, grade = self.re_get_assign_value.findall(assigntext)[0]
-                            grade = grade.replace("&nbsp;", "")
-
-                            classwork[class_id]['assignments'].update({
-                                assign_name: {
-                                    'date': date,
-                                    'datedue': datedue,
-                                    'gradetype': grade_type,
-                                    'grade': grade,
-                                    'letter': self._get_letter_grade(grade)}})
+                    classwork[class_id]['assignments'].update({
+                                                         assign_name: {
+                                                            'date': date,
+                                                            'datedue': datedue,
+                                                            'gradetype': grade_type,
+                                                            'grade': grade,
+                                                            'letter': self._get_letter_grade(grade)}})
                             
-                            assign_avg = self._percent_to_float(grade)
-                            if assign_avg > 10 and False:
-                                set_grade(self.sid,
-                                          classname,
-                                          assign_name,
-                                          assign_avg,
-                                          25)
-                                
-                    except Exception as e:
-                        print "Error 1,", str(e) # Fix
+                            
+                    if assign_avgf > 10:
+                        set_grade(self.sid,
+                        classname,
+                        assign_name,
+                        assign_avgf,
+                        25)
 
-                    if class_avg > 10 and False:
+            if class_avgf > 10:
                         set_grade(self.sid,
                                   classname,
                                   classname + " AVG",
-                                  class_avg,
+                                  class_avgf,
                                   25)
-                    
-            except Exception as e:
-                print "Error 0, ", str(e) # Fix
+        
 
         classwork.update({'status': 'success'})
 
@@ -165,27 +141,40 @@ class HomeAccessCenter:
         if not page:
             try:
                 page = self.session.get(
-                    "https://home-access.cfisd.net/HomeAccess/Content/Student/ReportCards.aspx").text
+                    "https://home-access.cfisd.net/HomeAccess/Content/Student/ReportCards.aspx").content
             except:
                 return {'status': 'connection_failed'}
 
+        tree = html.fromstring(page)
+
         reportcard = {}
 
-        for r in self.re_get_reportcard.finditer(page):
-            classid = r.group(1)
-            classname = r.group(2)
-            teacher = r.group(3)
-            room = r.group(4)
-            averages = {}
-            for i in range(6):
-                avg = r.group(i + 5).strip()
-                averages.update({i: {'average': avg,
-                                     'letter': self._get_letter_grade(avg)}})
+        for row in tree.find_class('sg-asp-table-data-row'):
 
-            reportcard.update({classid: {'name': classname,
-                                         'teacher': teacher.title(),
-                                         'room': room,
-                                         'averages': averages}})
+           cols = map(lambda el: el.text_content().strip(), row.xpath("td"))
+
+           classid = cols[0]
+           classname = cols[1]
+           teacher = cols[3].title()
+           room = cols[4]
+
+           averages = []
+           for i in [7,8,9,12,13,14]:
+               averages.append({'average':self._percent_to_float(cols[i]), 'letter':self._get_letter_grade(cols[i])})
+
+           exams = []
+           sems = []
+           for i in [10, 15]:
+               exams.append({'average':self._percent_to_float(cols[i]), 'letter':self._get_letter_grade(cols[i])})
+               sems.append({'average':self._percent_to_float(cols[i+1]), 'letter':self._get_letter_grade(cols[i+1])})
+
+           reportcard.update({classid: {'name': classname,
+                                        'teacher': teacher,
+                                        'room': room,
+                                        'averages': averages,
+                                        'exams':exams,
+                                        'semesters':sems}})
+               
 
         reportcard.update({'status': 'success'})
 

@@ -19,6 +19,7 @@ class GradesTest(unittest.TestCase):
         self.assertEqual(c._get_letter_grade('70%'),   'C')
         self.assertEqual(c._get_letter_grade('0.0%'),  'F')
         self.assertEqual(c._get_letter_grade(''),      '')
+        self.assertEqual(c._get_letter_grade('X'),     'U')
 
     def test_honors(self):
         c = HomeAccessCenter('s123456')
@@ -31,35 +32,35 @@ class GradesTest(unittest.TestCase):
         self.assertEqual(c._is_honors("Eng III AP"), True)
 
         self.assertEqual(c._is_honors("NotAnAP Class"), False)
-        self.assertEqual(c._is_honors("Kinimatics On Level"), False)
+        self.assertEqual(c._is_honors("Kinematics On Level"), False)
 
     def test_reportcard(self):
+        
         c = HomeAccessCenter('s123456')
 
         rc = c.get_reportcard(page=self._load("reportcard_2-3-2017"))
 
-        for classid in rc:
+        self.assertEqual(rc['status'], 'success')
 
-            self.assertEqual(len(rc[classid]), 4)
+        self.assertEqual(len(rc), 8)
+
+        for key in rc:
             
-            averages = rc[classid]['averages']
-            self.assertEqual(len(averages), 6)
+            if key != 'status':
+                
+                c = rc[key]
 
-            for i in range(6):
-                self.assertIn(averages[i]['letter'], ['A', 'B', 'D', 'F', ''])
+                self.assertEqual(len(c), 6)
+                self.assertEqual(len(c['averages']), 6)
+                self.assertEqual(len(c['exams']), 2)
+                self.assertEqual(len(c['semesters']), 2)
 
-        # Simple Spot Checks
-        self.assertEqual(len(rc), 7)
-        for i, a in enumerate(['93', '90', '93', '', '', '']):
-            self.assertEqual(rc['03051 - 15']['averages'][i]['average'], a)
-
-        self.assertEqual(rc['10351 - 6']['name'], 'U S History AP')
-        self.assertEqual(rc['10351 - 6']['room'], '2211')
-        self.assertEqual(rc['10351 - 6']['teacher'], 'Walter, Christian')
-
-        self.assertEqual(rc['76501 - 1']['name'], 'Bnd IIIP/F-WD EN')
-
-        self.assertEqual(rc['35151 - 3']['teacher'], 'Shull, Jeffrey C')
+        
+        self.assertEqual(rc['03051 - 15']['teacher'], 'Rhodes, Ryan')
+        self.assertEqual(rc['03051 - 15']['averages'][2]['average'], 93.0)
+        self.assertEqual(rc['24111 - 15']['name'], 'Pre-Calculus K')
+        self.assertEqual(rc['24111 - 15']['semesters'][0]['average'], 94.0)
+        
             
                 
         
