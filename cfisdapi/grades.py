@@ -82,10 +82,17 @@ class HomeAccessCenter:
             for class_ in tree.find_class('AssignmentClass'):
 
                 try:
-
-                    class_id, classname = self.re_get_classname.findall(class_.find_class('sg-header-heading')[0].text_content())[0]
-
-                    class_average = class_.find_class('sg-header-heading sg-right')[0].text_content().split(' ')[-1]
+                    
+                    try:
+                        class_id, classname = self.re_get_classname.findall(class_.find_class('sg-header-heading')[0].text_content())[0]
+                    except Exception as e:
+                        print(str(e) + " -- AA")
+                    
+                    try:
+                        class_average = class_.find_class('sg-header-heading sg-right')[0].text_content().split(' ')[-1]
+                    except Exception as e:
+                        print(str(e) + " -- AB")
+                        class_average = "0%"
 
                     class_avgf = self._percent_to_float(class_average)
 
