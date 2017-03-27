@@ -77,58 +77,77 @@ class HomeAccessCenter:
 
         classwork = {}
 
-        for class_ in tree.find_class('AssignmentClass'):
+        try:
 
-            class_id, classname = self.re_get_classname.findall(class_.find_class('sg-header-heading')[0].text_content())[0]
+            for class_ in tree.find_class('AssignmentClass'):
 
-            class_average = class_.find_class('sg-header-heading sg-right')[0].text_content().split(' ')[-1]
+                try:
 
-            class_avgf = self._percent_to_float(class_average)
+                    class_id, classname = self.re_get_classname.findall(class_.find_class('sg-header-heading')[0].text_content())[0]
 
-            classwork.update({class_id: {'name': classname,
-                                         'honors': self._is_honors(classname),
-                                         'overallavg': class_average,
-                                         'assignments': {},
-                                         'letter': self._get_letter_grade(class_average)}})
+                    class_average = class_.find_class('sg-header-heading sg-right')[0].text_content().split(' ')[-1]
 
-            for row in class_.find_class('sg-asp-table-data-row'):
-                
-                cols = map(lambda el: el.text_content(), row.xpath("td"))
-                
-                if len(cols) == 10:
-                    
-                    assign_name = cols[2].replace("\t*", "").strip().replace("&nbsp;", "").replace("&amp;", "&")
-                    
-                    datedue = cols[0].replace(u'\xa0', "")
-                    date = cols[1].replace(u'\xa0', "")
+                    class_avgf = self._percent_to_float(class_average)
 
-                    grade_type = cols[3]
-                    grade = cols[-1].replace("&nbsp;", "").replace(u'\xa0', "")
+                    classwork.update({class_id: {'name': classname,
+                                                 'honors': self._is_honors(classname),
+                                                 'overallavg': class_average,
+                                                 'assignments': {},
+                                                 'letter': self._get_letter_grade(class_average)}})
 
-                    assign_avgf = self._percent_to_float(grade)
-
-                    classwork[class_id]['assignments'].update({
-                                                         assign_name: {
-                                                            'date': date,
-                                                            'datedue': datedue,
-                                                            'gradetype': grade_type,
-                                                            'grade': grade,
-                                                            'letter': self._get_letter_grade(grade)}})
-                            
-                            
-                    if assign_avgf > 10 and False:
-                        set_grade(self.sid,
-                        classname,
-                        assign_name,
-                        assign_avgf,
-                        25)
-
-            if class_avgf > 10 and False:
+                    if class_avgf > 10 and False:
                         set_grade(self.sid,
                                   classname,
                                   classname + " AVG",
                                   class_avgf,
                                   25)
+
+                except Exception as e:
+                    print(str(e) + " -- A")
+
+                try:
+
+                    for row in class_.find_class('sg-asp-table-data-row'):
+                        
+                        cols = map(lambda el: el.text_content(), row.xpath("td"))
+                        
+                        if len(cols) == 10:
+
+                            try:
+                            
+                                assign_name = cols[2].replace("\t*", "").strip().replace("&nbsp;", "").replace("&amp;", "&")
+                                
+                                datedue = cols[0].replace(u'\xa0', "")
+                                date = cols[1].replace(u'\xa0', "")
+
+                                grade_type = cols[3]
+                                grade = cols[-1].replace("&nbsp;", "").replace(u'\xa0', "")
+
+                                assign_avgf = self._percent_to_float(grade)
+
+                                classwork[class_id]['assignments'].update({
+                                                                     assign_name: {
+                                                                        'date': date,
+                                                                        'datedue': datedue,
+                                                                        'gradetype': grade_type,
+                                                                        'grade': grade,
+                                                                        'letter': self._get_letter_grade(grade)}})
+
+                                if assign_avgf > 10 and False:
+                                    set_grade(self.sid,
+                                    classname,
+                                    assign_name,
+                                    assign_avgf,
+                                    25)
+
+                            except Exception as e:
+                                print(str(e) + " -- B")
+
+                except Exception as e:
+                    print(str(e) + " -- C")
+
+        except Exception as e:
+            print(str(e) + " -- D")
         
 
         classwork.update({'status': 'success'})
