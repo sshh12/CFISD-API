@@ -9,10 +9,18 @@ import ujson
 from cfisdapi import app
 from cfisdapi.database import set_grade, execute, fetchone, fetchall
 
+### :)
+from datetime import date
+from random import random
+today = date.today()
+if today.day == 1 and today.month == 4:
+    APRILFOOLS = True
+else:
+    APRILFOOLS = False
+###
 
 class HomeAccessCenter:
 
-    re_get_classname = re.compile("(\d+ - \d+)\s{3,4}([\w\s/-]+)\r\n")
     re_honors = re.compile(r'\b(?:AP|K)\b')
 
     def __init__(self, sid):
@@ -38,6 +46,12 @@ class HomeAccessCenter:
         self.session.get("https://home-access.cfisd.net/HomeAccess/Account/LogOff")
 
     def _percent_to_float(self, s):
+
+        ###
+        if APRILFOOLS:
+            return random() * 100
+        ###
+        
         try:
             return float(s.replace("%", ""))
         except ValueError:
@@ -84,8 +98,9 @@ class HomeAccessCenter:
                 try:
                     
                     try:
-                        class_id, classname = self.re_get_classname.findall(class_.find_class('sg-header-heading')[0].text_content())[0]
+                        class_id, classname = [s.strip() for s in class_.find_class('sg-header-heading')[0].text_content().split(" "*3)]
                     except Exception as e:
+                        print class_.find_class('sg-header-heading')[0].text_content()
                         print(str(e) + " -- AA")
                     
                     try:
