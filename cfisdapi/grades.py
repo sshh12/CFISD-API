@@ -9,15 +9,6 @@ import ujson
 from cfisdapi import app
 from cfisdapi.database import set_grade, execute, fetchone, fetchall
 
-### :)
-from datetime import date
-from random import random
-today = date.today()
-if today.day == 1 and today.month == 4:
-    APRILFOOLS = True
-else:
-    APRILFOOLS = False
-###
 
 class HomeAccessCenter:
 
@@ -46,12 +37,6 @@ class HomeAccessCenter:
         self.session.get("https://home-access.cfisd.net/HomeAccess/Account/LogOff")
 
     def _percent_to_float(self, s):
-
-        ###
-        if APRILFOOLS:
-            return random() * 100
-        ###
-        
         try:
             return float(s.replace("%", ""))
         except ValueError:
@@ -80,6 +65,7 @@ class HomeAccessCenter:
         return name != '' and self.re_honors.search(name) != None
 
     def get_classwork(self, page=None):
+        
         if not page:
             try:
                 page = self.session.get(
@@ -98,16 +84,18 @@ class HomeAccessCenter:
                 try:
                     
                     try:
+                        
                         class_id, classname = [s.strip() for s in class_.find_class('sg-header-heading')[0].text_content().split(" "*3)]
+                        
                     except Exception as e:
-                        print class_.find_class('sg-header-heading')[0].text_content()
                         print(str(e) + " -- AA")
                     
                     try:
+                        
                         class_average = class_.find_class('sg-header-heading sg-right')[0].text_content().split(' ')[-1]
+                        
                     except Exception as e:
                         print(str(e) + " -- AB")
-                        class_average = "0%"
 
                     class_avgf = self._percent_to_float(class_average)
 
@@ -177,6 +165,7 @@ class HomeAccessCenter:
         return classwork
 
     def get_reportcard(self, page=None):
+        
         if not page:
             try:
                 page = self.session.get(
@@ -222,7 +211,9 @@ class HomeAccessCenter:
 
 @app.route("/homeaccess/classwork/<user>", methods=['POST'])
 def get_classwork(user=""):
+    
     try:
+        
         passw = unquote(request.form['password'])
 
         t = time.time()
@@ -236,6 +227,7 @@ def get_classwork(user=""):
         print "GOT Grades For {} in {}".format(user, time.time() - t)
 
         return ujson.dumps(grades)
+    
     except Exception as e:
         print str(e)
         return "Error"
@@ -243,7 +235,9 @@ def get_classwork(user=""):
 
 @app.route("/homeaccess/reportcard/<user>", methods=['POST'])
 def get_reportcard(user=""):
+    
     try:
+        
         passw = unquote(request.form['password'])
 
         t = time.time()
@@ -257,6 +251,7 @@ def get_reportcard(user=""):
         print "GOT ReportCard For {} in {}".format(user, time.time() - t)
 
         return ujson.dumps(reportcard)
+    
     except Exception as e:
         print str(e)
         return "Error"
@@ -284,6 +279,7 @@ def homeaccess_stats(subject="", name="", grade="0.0"):
         percentile = min(below_grades / float(total_grades - 1) * 100.0, 99.99)
 
         return ujson.dumps({'Average': avg, 'PercentBelow': percentile})
+    
     except Exception as e:
         print(e)
     return "Error"

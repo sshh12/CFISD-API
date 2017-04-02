@@ -8,6 +8,7 @@ The python backend for the Cy-Ranch App.
 * [Requests](http://docs.python-requests.org/en/master/)
 * [ujson](https://pypi.python.org/pypi/ujson)
 * [psycopg2](http://initd.org/psycopg/)
+* [lxml](http://lxml.de/)
 
 ### Tests
 
