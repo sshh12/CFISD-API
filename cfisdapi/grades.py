@@ -103,6 +103,7 @@ class HomeAccessCenter:
                                                  'honors': self._is_honors(classname),
                                                  'overallavg': class_average,
                                                  'assignments': {},
+                                                 'categories': {},
                                                  'letter': self._get_letter_grade(class_average)}})
 
                     if class_avgf > 10 and False:
@@ -152,6 +153,19 @@ class HomeAccessCenter:
 
                             except Exception as e:
                                 print(str(e) + " -- B")
+
+                        elif len(cols) == 6:
+                            
+                            category = cols[0]
+                            grade = cols[3].strip()
+                            weight = float(cols[4])
+                            letter = self._get_letter_grade(grade)
+                            
+                            classwork[class_id]['categories'].update({
+                                                                category: {
+                                                                    'grade':grade,
+                                                                    'weight':weight,
+                                                                    'letter':letter}})
 
                 except Exception as e:
                     print(str(e) + " -- C")
