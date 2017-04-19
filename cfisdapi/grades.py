@@ -25,13 +25,18 @@ class HomeAccessCenter:
                 'Database': '10',
                 'LogOnDetails.UserName': self.sid,
                 'LogOnDetails.Password': self.passwd}
+        try:
+            
+            resp = self.session.post(
+                "https://home-access.cfisd.net/HomeAccess/Account/LogOn", data=data)
 
-        resp = self.session.post(
-            "https://home-access.cfisd.net/HomeAccess/Account/LogOn", data=data)
+            if "ViewAssignments" in resp.text:  # Test If Login Worked
+                return True
 
-        if "ViewAssignments" not in resp.text:  # Test If Login Worked
-            return False
-        return True
+        except:
+            pass
+        
+        return False
 
     def logout(self):  # Ignored to Keep Resp. Times Lower
         self.session.get("https://home-access.cfisd.net/HomeAccess/Account/LogOff")
@@ -235,7 +240,7 @@ def get_classwork(user=""):
     
     except Exception as e:
         print str(e)
-        return "Error"
+    return "{}"
 
 
 @app.route("/homeaccess/reportcard/<user>", methods=['POST'])
@@ -259,32 +264,33 @@ def get_reportcard(user=""):
     
     except Exception as e:
         print str(e)
-        return "Error"
+    return "{}"
 
-
-@app.route("/homeaccess/stats/<subject>/<name>/<grade>")
+@app.route("/homeaccess/statistics/<subject>/<name>/<grade>")
 def homeaccess_stats(subject="", name="", grade="0.0"):
     try:
+        
         grade = float(grade)
 
         execute("SELECT AVG(grade) FROM grades WHERE name=%s AND subject=%s;", [name, subject])
-        avg = fetchone()[0]
+        avg, _ = fetchone()
 
-        #cur.execute("SELECT median(grade) FROM grades WHERE name=%s AND subject=%s;", [name, subject])
-        #median = cur.fetchone()[0]
-
-        execute("SELECT COUNT(grade) FROM grades WHERE name=%s AND subject=%s;",
+        execute("SELECT COUNT(DISTINCT grade) FROM grades WHERE name=%s AND subject=%s;",
                 [name, subject])
-        total_grades = fetchone()[0]
+        total_grades, _ = fetchone()
 
-        execute("SELECT COUNT(grade) FROM grades WHERE name=%s AND subject=%s AND grade <= %s;", [
+        execute("SELECT COUNT(DISTINCT grade) FROM grades WHERE name=%s AND subject=%s AND grade <= %s;", [
             name, subject, grade])
-        below_grades = fetchone()[0]
+        below_grades, _ = fetchone()
 
-        percentile = min(below_grades / float(total_grades - 1) * 100.0, 99.99)
 
-        return ujson.dumps({'Average': avg, 'PercentBelow': percentile})
+        return ujson.dumps({'average': avg, 'percentile': percentile})
     
     except Exception as e:
         print(e)
-    return "Error"
+    return "{}"
+
+##### Dep
+@app.route("/homeaccess/stats/<subject>/<name>/<grade>")
+def homeaccess_stats_old(subject="", name="", grade="0.0"):
+    return ujson.dumps({'Average': '0.0', 'PercentBelow': '0.0'})
