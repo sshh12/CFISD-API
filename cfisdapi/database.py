@@ -22,20 +22,29 @@ try:
     cur = conn.cursor()
 
 except Exception as e:
+    
     LOCAL = True
 
 
-def set_grade(user, subject, name, grade, grade_level):
+def set_grade(user, subject, name, grade, gradetype):
     if not LOCAL:
-        cur.execute("SELECT 1 FROM grades WHERE user_id=%s AND name=%s AND subject=%s;",
-                    [user, name, subject])
-        if cur.fetchone() == None:
-            cur.execute("INSERT INTO grades (user_id, name, subject, grade, gradelevel) values (%s,%s,%s,%s,%s);", [
-                user, name, subject, grade, grade_level])
-        else:
-            cur.execute("UPDATE grades SET grade=%s WHERE user_id=%s AND name=%s AND subject=%s;", [
-                grade, user, name, subject])
-        return True
+        
+        try:
+            
+            cur.execute("SELECT 1 FROM grades WHERE user_id=%s AND name=%s AND subject=%s;", [
+                        user, name, subject])
+            if cur.fetchone() == None:
+                cur.execute("INSERT INTO grades (user_id, name, subject, grade, gradetype) values (%s,%s,%s,%s,%s);", [
+                            user, name, subject, grade, gradetype])
+            else:
+                cur.execute("UPDATE grades SET grade=%s WHERE user_id=%s AND name=%s AND subject=%s;", [
+                            grade, user, name, subject])
+            conn.commit()
+            return True
+        
+        except Exception as e:
+            print("db error - " + str(e))
+            
     return False
 
 

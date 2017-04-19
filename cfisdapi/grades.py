@@ -83,19 +83,10 @@ class HomeAccessCenter:
 
                 try:
                     
-                    try:
                         
-                        class_id, classname = [s.strip() for s in class_.find_class('sg-header-heading')[0].text_content().split(" "*3)]
-                        
-                    except Exception as e:
-                        print(str(e) + " -- AA")
+                    class_id, classname = [s.strip() for s in class_.find_class('sg-header-heading')[0].text_content().split(" "*3)]
                     
-                    try:
-                        
-                        class_average = class_.find_class('sg-header-heading sg-right')[0].text_content().split(' ')[-1]
-                        
-                    except Exception as e:
-                        print(str(e) + " -- AB")
+                    class_average = class_.find_class('sg-header-heading sg-right')[0].text_content().split(' ')[-1]
 
                     class_avgf = self._percent_to_float(class_average)
 
@@ -106,12 +97,12 @@ class HomeAccessCenter:
                                                  'categories': {},
                                                  'letter': self._get_letter_grade(class_average)}})
 
-                    if class_avgf > 10 and False:
+                    if class_avgf > 10:
                         set_grade(self.sid,
                                   classname,
                                   classname + " AVG",
                                   class_avgf,
-                                  25)
+                                  "Class")
 
                 except Exception as e:
                     print(str(e) + " -- A")
@@ -144,12 +135,12 @@ class HomeAccessCenter:
                                                                         'grade': grade,
                                                                         'letter': self._get_letter_grade(grade)}})
 
-                                if assign_avgf > 10 and False:
+                                if assign_avgf > 10:
                                     set_grade(self.sid,
-                                    classname,
-                                    assign_name,
-                                    assign_avgf,
-                                    25)
+                                              classname,
+                                              assign_name,
+                                              assign_avgf,
+                                              grade_type)
 
                             except Exception as e:
                                 print(str(e) + " -- B")
