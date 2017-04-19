@@ -273,16 +273,17 @@ def homeaccess_stats(subject="", name="", grade="0.0"):
         grade = float(grade)
 
         execute("SELECT AVG(grade) FROM grades WHERE name=%s AND subject=%s;", [name, subject])
-        avg, _ = fetchone()
+        avg = fetchone()[0]
 
         execute("SELECT COUNT(DISTINCT grade) FROM grades WHERE name=%s AND subject=%s;",
                 [name, subject])
-        total_grades, _ = fetchone()
+        total_grades = fetchone()[0]
 
         execute("SELECT COUNT(DISTINCT grade) FROM grades WHERE name=%s AND subject=%s AND grade <= %s;", [
             name, subject, grade])
-        below_grades, _ = fetchone()
+        below_grades = fetchone()[0]
 
+        percentile = min(float(below_grades) / float(total_grades), 0.99) * 100
 
         return ujson.dumps({'average': avg, 'percentile': percentile})
     
