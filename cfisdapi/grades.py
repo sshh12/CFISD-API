@@ -7,7 +7,7 @@ import time
 import ujson
 
 from cfisdapi import app
-from cfisdapi.database import set_grade, execute, fetchone, fetchall
+from cfisdapi.database import set_grade, execute, fetchone, fetchall, add_user
 
 
 class HomeAccessCenter:
@@ -218,6 +218,39 @@ class HomeAccessCenter:
 
         return reportcard
 
+    def get_demo(self, page=None):
+
+        execute("SELECT 1 FROM demo WHERE user_id=%s;", [self.sid])
+        if fetchone() != None:
+            return {'status': 'already_added'}
+        
+        if not page:
+            try:
+                page = self.session.get(
+                    "https://home-access.cfisd.net/HomeAccess/Content/Student/Registration.aspx").content
+            except:
+                return {'status': 'connection_failed'}
+
+        tree = html.fromstring(page)
+
+        demo = {}
+
+        name = tree.xpath("//span[@id='plnMain_lblRegStudentName']")[0].text_content().strip()
+        school = tree.xpath("//span[@id='plnMain_lblBuildingName']")[0].text_content().strip().title()
+        gender = tree.xpath("//span[@id='plnMain_lblGender']")[0].text_content().strip().lower()
+        grade = int(tree.xpath("//span[@id='plnMain_lblGrade']")[0].text_content().strip())
+        language = tree.xpath("//span[@id='plnMain_lblLanguage']")[0].text_content().strip().lower()
+
+        demo.update({'name':name,
+                     'school':school,
+                     'gender':gender,
+                     'grade':grade,
+                     'language':language})
+
+        add_user(self.sid, demo)
+
+        return demo
+
 
 @app.route("/homeaccess/classwork/<user>", methods=['POST'])
 def get_classwork(user=""):
@@ -231,6 +264,7 @@ def get_classwork(user=""):
 
         if u.login(passw):
             grades = u.get_classwork()
+            u.get_demo()
         else:
             grades = {'status': 'login_failed'}
 

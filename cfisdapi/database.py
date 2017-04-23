@@ -47,6 +47,21 @@ def set_grade(user, subject, name, grade, gradetype):
             
     return False
 
+def add_user(user, demo):
+    if not LOCAL:
+        
+        try:
+            cur.execute("INSERT INTO grades (user_id, name, school, language, gender, gradelevel) values (%s,%s,%s,%s,%s,%s);", [
+                        user, demo['name'], demo['school'], demo['language'], demo['gender'], demo['gradelevel']])
+            conn.commit()
+            
+            return True
+        
+        except Exception as e:
+            print("db error - " + str(e))
+            
+    return False
+
 
 def add_news(icon, picture, organization, eventdate, text, link, type_, check=False):
     if not LOCAL:
