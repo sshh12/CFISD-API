@@ -85,32 +85,26 @@ class HomeAccessCenter:
         try:
 
             for class_ in tree.find_class('AssignmentClass'):
-
-                try:
+                       
+                class_id, classname = [s.strip() for s in class_.find_class('sg-header-heading')[0].text_content().split(" "*3)]
                     
-                        
-                    class_id, classname = [s.strip() for s in class_.find_class('sg-header-heading')[0].text_content().split(" "*3)]
-                    
-                    class_average = class_.find_class('sg-header-heading sg-right')[0].text_content().split(' ')[-1]
+                class_average = class_.find_class('sg-header-heading sg-right')[0].text_content().split(' ')[-1]
 
-                    class_avgf = self._percent_to_float(class_average)
+                class_avgf = self._percent_to_float(class_average)
 
-                    classwork.update({class_id: {'name': classname,
-                                                 'honors': self._is_honors(classname),
-                                                 'overallavg': class_average,
-                                                 'assignments': {},
-                                                 'categories': {},
-                                                 'letter': self._get_letter_grade(class_average)}})
+                classwork.update({class_id: {'name': classname,
+                                             'honors': self._is_honors(classname),
+                                             'overallavg': class_average,
+                                             'assignments': {},
+                                             'categories': {},
+                                             'letter': self._get_letter_grade(class_average)}})
 
-                    if class_avgf > 10:
-                        set_grade(self.sid,
-                                  classname,
-                                  classname + " AVG",
-                                  class_avgf,
-                                  "Class")
-
-                except Exception as e:
-                    print(str(e) + " -- A")
+                if class_avgf > 10:
+                    set_grade(self.sid,
+                              classname,
+                              classname + " AVG",
+                              class_avgf,
+                              "Class")
 
                 try:
 
@@ -119,36 +113,31 @@ class HomeAccessCenter:
                         cols = map(lambda el: el.text_content(), row.xpath("td"))
                         
                         if len(cols) == 10:
-
-                            try:
                             
-                                assign_name = cols[2].replace("\t*", "").strip().replace("&nbsp;", "").replace("&amp;", "&")
+                            assign_name = cols[2].replace("\t*", "").strip().replace("&nbsp;", "").replace("&amp;", "&")
                                 
-                                datedue = cols[0].replace(u'\xa0', "")
-                                date = cols[1].replace(u'\xa0', "")
+                            datedue = cols[0].replace(u'\xa0', "")
+                            date = cols[1].replace(u'\xa0', "")
 
-                                grade_type = cols[3]
-                                grade = cols[-1].replace("&nbsp;", "").replace(u'\xa0', "")
+                            grade_type = cols[3]
+                            grade = cols[-1].replace("&nbsp;", "").replace(u'\xa0', "")
 
-                                assign_avgf = self._percent_to_float(grade)
+                            assign_avgf = self._percent_to_float(grade)
 
-                                classwork[class_id]['assignments'].update({
-                                                                     assign_name: {
-                                                                        'date': date,
-                                                                        'datedue': datedue,
-                                                                        'gradetype': grade_type,
-                                                                        'grade': grade,
-                                                                        'letter': self._get_letter_grade(grade)}})
+                            classwork[class_id]['assignments'].update({
+                                                                 assign_name: {
+                                                                    'date': date,
+                                                                    'datedue': datedue,
+                                                                    'gradetype': grade_type,
+                                                                    'grade': grade,
+                                                                    'letter': self._get_letter_grade(grade)}})
 
-                                if assign_avgf > 10:
-                                    set_grade(self.sid,
-                                              classname,
-                                              assign_name,
-                                              assign_avgf,
-                                              grade_type)
-
-                            except Exception as e:
-                                print(str(e) + " -- B")
+                            if assign_avgf > 10:
+                                set_grade(self.sid,
+                                          classname,
+                                          assign_name,
+                                          assign_avgf,
+                                          grade_type)
 
                         elif len(cols) == 6:
                             
@@ -244,7 +233,7 @@ class HomeAccessCenter:
         demo.update({'name':name,
                      'school':school,
                      'gender':gender,
-                     'grade':grade,
+                     'gradelevel':grade,
                      'language':language})
 
         add_user(self.sid, demo)
