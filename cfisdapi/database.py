@@ -51,7 +51,7 @@ def add_user(user, demo):
     if not LOCAL:
         
         try:
-            cur.execute("INSERT INTO grades (user_id, name, school, language, gender, gradelevel) values (%s,%s,%s,%s,%s,%s);", [
+            cur.execute("INSERT INTO demo (user_id, name, school, language, gender, gradelevel) values (%s,%s,%s,%s,%s,%s);", [
                         user, demo['name'], demo['school'], demo['language'], demo['gender'], demo['gradelevel']])
             conn.commit()
             
