@@ -43,7 +43,8 @@ def set_grade(user, subject, name, grade, gradetype):
             return True
         
         except Exception as e:
-            print("db error - " + str(e))
+            print("grade db error - " + str(e))
+            conn.rollback()
             
     return False
 
@@ -58,23 +59,28 @@ def add_user(user, demo):
             return True
         
         except Exception as e:
-            print("db error - " + str(e))
+            print("add db error - " + str(e))
+            conn.rollback()
             
     return False
 
 
 def add_news(icon, picture, organization, eventdate, text, link, type_, check=False):
     if not LOCAL:
-        if check: # Check if event already exists
-            cur.execute("select 1 from news where description=%s and organization=%s",
-                        [text, organization])
-            if cur.fetchone() != None:
-                return False
+        try:
+            if check: # Check if event already exists
+                cur.execute("select 1 from news where description=%s and organization=%s",
+                            [text, organization])
+                if cur.fetchone() != None:
+                    return False
 
-        cur.execute("insert into news (icon, picture, organization, eventdate, description, link, contenttype) values (%s,%s,%s,%s,%s,%s,%s);", [
-                    icon, picture, organization, eventdate, text, link, type_])
-        conn.commit()
-        return True
+            cur.execute("insert into news (icon, picture, organization, eventdate, description, link, contenttype) values (%s,%s,%s,%s,%s,%s,%s);", [
+                        icon, picture, organization, eventdate, text, link, type_])
+            conn.commit()
+            return True
+        except Exception as e:
+            print("news db error - " + str(e))
+            conn.rollback()
     return False
 
 # Proxies for interacting with `cur` database object
