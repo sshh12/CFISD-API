@@ -37,8 +37,8 @@ def set_grade(user, subject, name, grade, gradetype):
                 cur.execute("INSERT INTO grades (user_id, name, subject, grade, gradetype) values (%s,%s,%s,%s,%s);", [
                             user, name, subject, grade, gradetype])
             else:
-                cur.execute("UPDATE grades SET grade=%s WHERE user_id=%s AND name=%s AND subject=%s;", [
-                            grade, user, name, subject])
+                cur.execute("UPDATE grades SET grade=%s, gradetype=%s WHERE user_id=%s AND name=%s AND subject=%s;", [
+                            grade, gradetype, user, name, subject])
             conn.commit()
             return True
         
