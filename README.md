@@ -10,7 +10,7 @@ The python backend for the Cy-Ranch App.
 * [psycopg2](http://initd.org/psycopg/)
 * [lxml](http://lxml.de/)
 
-### Tests
+## Tests
 
 ```shell
 python -m tests.unit -v
