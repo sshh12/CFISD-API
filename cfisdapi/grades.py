@@ -286,7 +286,7 @@ def homeaccess_stats(subject="", name="", grade="0.0"):
             name, subject, grade])
         below_grades = float(fetchone()[0])
 
-        if total_grades > 0
+        if total_grades > 0:
             percentile = min(below_grades / total_grades, 0.99) * 100
         else:
             percentile = 0
