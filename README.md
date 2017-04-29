@@ -2,6 +2,8 @@
 
 The python backend for the Cy-Ranch App.
 
+[Live Code](https://cfisdapi.herokuapp.com/)
+
 ## Key Dependencies
 
 * [Flask](http://flask.pocoo.org/)
@@ -126,8 +128,9 @@ Returns reportcard for student
 Returns statistics for a given assignment based on grade specified
 ```js
 {  
-   "average":80.0, // Average of All Users
-   "percentile":95.0 // % of students below {grade}
+   "average":80.0,    // Average of All Users
+   "percentile":95.0, // % of students below {grade}
+   "totalcount":10    // # of unique non-zero grades in db
 }
 ```
 

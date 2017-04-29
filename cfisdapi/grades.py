@@ -25,16 +25,12 @@ class HomeAccessCenter:
                 'Database': '10',
                 'LogOnDetails.UserName': self.sid,
                 'LogOnDetails.Password': self.passwd}
-        try:
             
-            resp = self.session.post(
-                "https://home-access.cfisd.net/HomeAccess/Account/LogOn", data=data)
+        resp = self.session.post(
+            "https://home-access.cfisd.net/HomeAccess/Account/LogOn", data=data)
 
-            if "ViewAssignments" in resp.text:  # Test If Login Worked
-                return True
-
-        except:
-            pass
+        if "ViewAssignments" in resp.text:  # Test If Login Worked
+            return True
         
         return False
 
@@ -106,57 +102,53 @@ class HomeAccessCenter:
                               class_avgf,
                               "Class")
 
-                try:
 
-                    for row in class_.find_class('sg-asp-table-data-row'):
+                for row in class_.find_class('sg-asp-table-data-row'):
                         
-                        cols = map(lambda el: el.text_content(), row.xpath("td"))
+                    cols = map(lambda el: el.text_content(), row.xpath("td"))
                         
-                        if len(cols) == 10:
+                    if len(cols) == 10:
                             
-                            assign_name = cols[2].replace("\t*", "").strip().replace("&nbsp;", "").replace("&amp;", "&")
+                        assign_name = cols[2].replace("\t*", "").strip().replace("&nbsp;", "").replace("&amp;", "&")
                                 
-                            datedue = cols[0].replace(u'\xa0', "")
-                            date = cols[1].replace(u'\xa0', "")
+                        datedue = cols[0].replace(u'\xa0', "")
+                        date = cols[1].replace(u'\xa0', "")
 
-                            grade_type = cols[3]
-                            grade = cols[-1].replace("&nbsp;", "").replace(u'\xa0', "")
+                        grade_type = cols[3]
+                        grade = cols[-1].replace("&nbsp;", "").replace(u'\xa0', "")
 
-                            assign_avgf = self._percent_to_float(grade)
+                        assign_avgf = self._percent_to_float(grade)
 
-                            classwork[class_id]['assignments'].update({
-                                                                 assign_name: {
-                                                                    'date': date,
-                                                                    'datedue': datedue,
-                                                                    'gradetype': grade_type,
-                                                                    'grade': grade,
-                                                                    'letter': self._get_letter_grade(grade)}})
+                        classwork[class_id]['assignments'].update({
+                                                            assign_name: {
+                                                                'date': date,
+                                                                'datedue': datedue,
+                                                                'gradetype': grade_type,
+                                                                'grade': grade,
+                                                                'letter': self._get_letter_grade(grade)}})
 
-                            if assign_avgf > 10:
-                                set_grade(self.sid,
-                                          classname,
-                                          assign_name,
-                                          assign_avgf,
-                                          grade_type)
+                        if assign_avgf > 10:
+                            set_grade(self.sid,
+                                    classname,
+                                    assign_name,
+                                    assign_avgf,
+                                    grade_type)
 
-                        elif len(cols) == 6:
+                    elif len(cols) == 6:
                             
-                            category = cols[0]
-                            grade = cols[3].strip()
-                            weight = float(cols[4])
-                            letter = self._get_letter_grade(grade)
+                        category = cols[0]
+                        grade = cols[3].strip()
+                        weight = float(cols[4])
+                        letter = self._get_letter_grade(grade)
                             
-                            classwork[class_id]['categories'].update({
-                                                                category: {
-                                                                    'grade':grade,
-                                                                    'weight':weight,
-                                                                    'letter':letter}})
-
-                except Exception as e:
-                    print(str(e) + " -- C")
-
+                        classwork[class_id]['categories'].update({
+                                                            category: {
+                                                                'grade':grade,
+                                                                'weight':weight,
+                                                                'letter':letter}})
+                        
         except Exception as e:
-            print(str(e) + " -- D")
+            print(str(e) + " -- grades")
         
 
         classwork.update({'status': 'success'})
@@ -243,51 +235,39 @@ class HomeAccessCenter:
 
 @app.route("/homeaccess/classwork/<user>", methods=['POST'])
 def get_classwork(user=""):
-    
-    try:
         
-        passw = unquote(request.form['password'])
+    passw = unquote(request.form['password'])
 
-        t = time.time()
-        u = HomeAccessCenter(user)
+    t = time.time()
+    u = HomeAccessCenter(user)
 
-        if u.login(passw):
-            grades = u.get_classwork()
-            u.get_demo()
-        else:
-            grades = {'status': 'login_failed'}
+    if u.login(passw):
+        grades = u.get_classwork()
+        u.get_demo()
+    else:
+        grades = {'status': 'login_failed'}
 
-        print "GOT Grades For {} in {}".format(user, time.time() - t)
+    print "GOT Grades For {} in {}".format(user, time.time() - t)
 
-        return ujson.dumps(grades)
-    
-    except Exception as e:
-        print str(e)
-    return "{}"
+    return ujson.dumps(grades)
 
 
 @app.route("/homeaccess/reportcard/<user>", methods=['POST'])
 def get_reportcard(user=""):
-    
-    try:
         
-        passw = unquote(request.form['password'])
+    passw = unquote(request.form['password'])
 
-        t = time.time()
-        u = HomeAccessCenter(user)
+    t = time.time()
+    u = HomeAccessCenter(user)
 
-        if u.login(passw):
-            reportcard = u.get_reportcard()
-        else:
-            reportcard = {'status': 'login_failed'}
+    if u.login(passw):
+        reportcard = u.get_reportcard()
+    else:
+        reportcard = {'status': 'login_failed'}
 
-        print "GOT ReportCard For {} in {}".format(user, time.time() - t)
+    print "GOT ReportCard For {} in {}".format(user, time.time() - t)
 
-        return ujson.dumps(reportcard)
-    
-    except Exception as e:
-        print str(e)
-    return "{}"
+    return ujson.dumps(reportcard)
 
 @app.route("/homeaccess/statistics/<subject>/<name>/<grade>")
 def homeaccess_stats(subject="", name="", grade="0.0"):
@@ -298,17 +278,20 @@ def homeaccess_stats(subject="", name="", grade="0.0"):
         execute("SELECT AVG(grade) FROM grades WHERE name=%s AND subject=%s;", [name, subject])
         avg = fetchone()[0]
 
-        execute("SELECT COUNT(DISTINCT grade) FROM grades WHERE name=%s AND subject=%s;",
+        execute("SELECT COUNT(DISTINCT grade) FROM grades WHERE name=%s AND subject=%s AND grade > 0;",
                 [name, subject])
-        total_grades = fetchone()[0]
+        total_grades = float(fetchone()[0])
 
-        execute("SELECT COUNT(DISTINCT grade) FROM grades WHERE name=%s AND subject=%s AND grade <= %s;", [
+        execute("SELECT COUNT(DISTINCT grade) FROM grades WHERE name=%s AND subject=%s AND grade <= %s AND grade > 0;", [
             name, subject, grade])
-        below_grades = fetchone()[0]
+        below_grades = float(fetchone()[0])
 
-        percentile = min(float(below_grades) / float(total_grades), 0.99) * 100
+        if total_grades > 0
+            percentile = min(below_grades / total_grades, 0.99) * 100
+        else:
+            percentile = 0
 
-        return ujson.dumps({'average': avg, 'percentile': percentile})
+        return ujson.dumps({'average': avg, 'percentile': percentile, 'totalcount': int(total_grades)})
     
     except Exception as e:
         print(e)
