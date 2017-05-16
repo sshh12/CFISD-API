@@ -1,4 +1,4 @@
-from requests import Session
+from requests import Session, Timeout
 from flask import request
 from urllib import unquote
 from lxml import html
@@ -25,9 +25,12 @@ class HomeAccessCenter:
                 'Database': '10',
                 'LogOnDetails.UserName': self.sid,
                 'LogOnDetails.Password': self.passwd}
-            
-        resp = self.session.post(
-            "https://home-access.cfisd.net/HomeAccess/Account/LogOn", data=data)
+
+        try:
+            resp = self.session.post(
+                "https://home-access.cfisd.net/HomeAccess/Account/LogOn", timeout=20, data=data)
+        except:
+            return False            
 
         if "ViewAssignments" in resp.text:  # Test If Login Worked
             return True
@@ -70,8 +73,8 @@ class HomeAccessCenter:
         if not page:
             try:
                 page = self.session.get(
-                    "https://home-access.cfisd.net/HomeAccess/Content/Student/Assignments.aspx").content
-            except:
+                    "https://home-access.cfisd.net/HomeAccess/Content/Student/Assignments.aspx", timeout=20).content
+            except Timeout:
                 return {'status': 'connection_failed'}
 
         tree = html.fromstring(page)
@@ -160,8 +163,8 @@ class HomeAccessCenter:
         if not page:
             try:
                 page = self.session.get(
-                    "https://home-access.cfisd.net/HomeAccess/Content/Student/ReportCards.aspx").content
-            except:
+                    "https://home-access.cfisd.net/HomeAccess/Content/Student/ReportCards.aspx", timeout=20).content
+            except Timeout:
                 return {'status': 'connection_failed'}
 
         tree = html.fromstring(page)
@@ -208,8 +211,8 @@ class HomeAccessCenter:
         if not page:
             try:
                 page = self.session.get(
-                    "https://home-access.cfisd.net/HomeAccess/Content/Student/Registration.aspx").content
-            except:
+                    "https://home-access.cfisd.net/HomeAccess/Content/Student/Registration.aspx", timeout=20).content
+            except Timeout:
                 return {'status': 'connection_failed'}
 
         tree = html.fromstring(page)
@@ -272,6 +275,9 @@ def get_reportcard(user=""):
 @app.route("/homeaccess/statistics/<subject>/<name>/<grade>")
 def homeaccess_stats(subject="", name="", grade="0.0"):
     try:
+
+        subject = subject.replace("~SLASH~", "/")
+        name = name.replace("~SLASH~", "/")
         
         grade = float(grade)
 
@@ -296,8 +302,3 @@ def homeaccess_stats(subject="", name="", grade="0.0"):
     except Exception as e:
         print(e)
     return "{}"
-
-##### Dep
-@app.route("/homeaccess/stats/<subject>/<name>/<grade>")
-def homeaccess_stats_old(subject="", name="", grade="0.0"):
-    return ujson.dumps({'Average': '0.0', 'PercentBelow': '0.0'})
