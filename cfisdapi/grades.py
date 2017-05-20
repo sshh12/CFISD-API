@@ -28,13 +28,13 @@ class HomeAccessCenter:
 
         try:
             resp = self.session.post(
-                "https://home-access.cfisd.net/HomeAccess/Account/LogOn", timeout=20, data=data)
+                "https://home-access.cfisd.net/HomeAccess/Account/LogOn", timeout=15, data=data)
         except:
-            return False            
+            return False
 
         if "ViewAssignments" in resp.text:  # Test If Login Worked
             return True
-        
+
         return False
 
     def logout(self):  # Ignored to Keep Resp. Times Lower
@@ -69,11 +69,11 @@ class HomeAccessCenter:
         return name != '' and self.re_honors.search(name) != None
 
     def get_classwork(self, page=None):
-        
+
         if not page:
             try:
                 page = self.session.get(
-                    "https://home-access.cfisd.net/HomeAccess/Content/Student/Assignments.aspx", timeout=20).content
+                    "https://home-access.cfisd.net/HomeAccess/Content/Student/Assignments.aspx", timeout=15).content
             except Timeout:
                 return {'status': 'connection_failed'}
 
@@ -84,10 +84,12 @@ class HomeAccessCenter:
         try:
 
             for class_ in tree.find_class('AssignmentClass'):
-                       
-                class_id, classname = [s.strip() for s in class_.find_class('sg-header-heading')[0].text_content().split(" "*3)]
-                    
-                class_average = class_.find_class('sg-header-heading sg-right')[0].text_content().split(' ')[-1]
+
+                class_id, classname = [s.strip() for s in class_.find_class(
+                    'sg-header-heading')[0].text_content().split(" " * 3)]
+
+                class_average = class_.find_class(
+                    'sg-header-heading sg-right')[0].text_content().split(' ')[-1]
 
                 class_avgf = self._percent_to_float(class_average)
 
@@ -105,15 +107,15 @@ class HomeAccessCenter:
                               class_avgf,
                               "Class")
 
-
                 for row in class_.find_class('sg-asp-table-data-row'):
-                        
+
                     cols = map(lambda el: el.text_content(), row.xpath("td"))
-                        
+
                     if len(cols) == 10:
-                            
-                        assign_name = cols[2].replace("\t*", "").strip().replace("&nbsp;", "").replace("&amp;", "&")
-                                
+
+                        assign_name = cols[2].replace(
+                            "\t*", "").strip().replace("&nbsp;", "").replace("&amp;", "&")
+
                         datedue = cols[0].replace(u'\xa0', "")
                         date = cols[1].replace(u'\xa0', "")
 
@@ -123,47 +125,46 @@ class HomeAccessCenter:
                         assign_avgf = self._percent_to_float(grade)
 
                         classwork[class_id]['assignments'].update({
-                                                            assign_name: {
-                                                                'date': date,
-                                                                'datedue': datedue,
-                                                                'gradetype': grade_type,
-                                                                'grade': grade,
-                                                                'letter': self._get_letter_grade(grade)}})
+                            assign_name: {
+                                'date': date,
+                                'datedue': datedue,
+                                'gradetype': grade_type,
+                                'grade': grade,
+                                'letter': self._get_letter_grade(grade)}})
 
                         if assign_avgf > 10:
                             set_grade(self.sid,
-                                    classname,
-                                    assign_name,
-                                    assign_avgf,
-                                    grade_type)
+                                      classname,
+                                      assign_name,
+                                      assign_avgf,
+                                      grade_type)
 
                     elif len(cols) == 6:
-                            
+
                         category = cols[0]
                         grade = cols[3].strip()
                         weight = float(cols[4])
                         letter = self._get_letter_grade(grade)
-                            
+
                         classwork[class_id]['categories'].update({
-                                                            category: {
-                                                                'grade':grade,
-                                                                'weight':weight,
-                                                                'letter':letter}})
-                        
+                            category: {
+                                'grade': grade,
+                                'weight': weight,
+                                'letter': letter}})
+
         except Exception as e:
             print(str(e) + " -- grades")
-        
 
         classwork.update({'status': 'success'})
 
         return classwork
 
     def get_reportcard(self, page=None):
-        
+
         if not page:
             try:
                 page = self.session.get(
-                    "https://home-access.cfisd.net/HomeAccess/Content/Student/ReportCards.aspx", timeout=20).content
+                    "https://home-access.cfisd.net/HomeAccess/Content/Student/ReportCards.aspx", timeout=15).content
             except Timeout:
                 return {'status': 'connection_failed'}
 
@@ -173,30 +174,32 @@ class HomeAccessCenter:
 
         for row in tree.find_class('sg-asp-table-data-row'):
 
-           cols = map(lambda el: el.text_content().strip(), row.xpath("td"))
+            cols = map(lambda el: el.text_content().strip(), row.xpath("td"))
 
-           classid = cols[0]
-           classname = cols[1]
-           teacher = cols[3].title()
-           room = cols[4]
+            classid = cols[0]
+            classname = cols[1]
+            teacher = cols[3].title()
+            room = cols[4]
 
-           averages = []
-           for i in [7,8,9,12,13,14]:
-               averages.append({'average':self._percent_to_float(cols[i]), 'letter':self._get_letter_grade(cols[i])})
+            averages = []
+            for i in [7, 8, 9, 12, 13, 14]:
+                averages.append({'average': self._percent_to_float(
+                    cols[i]), 'letter': self._get_letter_grade(cols[i])})
 
-           exams = []
-           sems = []
-           for i in [10, 15]:
-               exams.append({'average':self._percent_to_float(cols[i]), 'letter':self._get_letter_grade(cols[i])})
-               sems.append({'average':self._percent_to_float(cols[i+1]), 'letter':self._get_letter_grade(cols[i+1])})
+            exams = []
+            sems = []
+            for i in [10, 15]:
+                exams.append({'average': self._percent_to_float(
+                    cols[i]), 'letter': self._get_letter_grade(cols[i])})
+                sems.append({'average': self._percent_to_float(
+                    cols[i + 1]), 'letter': self._get_letter_grade(cols[i + 1])})
 
-           reportcard.update({classid: {'name': classname,
-                                        'teacher': teacher,
-                                        'room': room,
-                                        'averages': averages,
-                                        'exams':exams,
-                                        'semesters':sems}})
-               
+            reportcard.update({classid: {'name': classname,
+                                         'teacher': teacher,
+                                         'room': room,
+                                         'averages': averages,
+                                         'exams': exams,
+                                         'semesters': sems}})
 
         reportcard.update({'status': 'success'})
 
@@ -207,7 +210,7 @@ class HomeAccessCenter:
         execute("SELECT 1 FROM demo WHERE user_id=%s;", [self.sid])
         if fetchone() != None:
             return {'status': 'already_added'}
-        
+
         if not page:
             try:
                 page = self.session.get(
@@ -220,16 +223,17 @@ class HomeAccessCenter:
         demo = {}
 
         name = tree.xpath("//span[@id='plnMain_lblRegStudentName']")[0].text_content().strip()
-        school = tree.xpath("//span[@id='plnMain_lblBuildingName']")[0].text_content().strip().title()
+        school = tree.xpath(
+            "//span[@id='plnMain_lblBuildingName']")[0].text_content().strip().title()
         gender = tree.xpath("//span[@id='plnMain_lblGender']")[0].text_content().strip().lower()
         grade = int(tree.xpath("//span[@id='plnMain_lblGrade']")[0].text_content().strip())
         language = tree.xpath("//span[@id='plnMain_lblLanguage']")[0].text_content().strip().lower()
 
-        demo.update({'name':name,
-                     'school':school,
-                     'gender':gender,
-                     'gradelevel':grade,
-                     'language':language})
+        demo.update({'name': name,
+                     'school': school,
+                     'gender': gender,
+                     'gradelevel': grade,
+                     'language': language})
 
         add_user(self.sid, demo)
 
@@ -238,7 +242,7 @@ class HomeAccessCenter:
 
 @app.route("/homeaccess/classwork/<user>", methods=['POST'])
 def get_classwork(user=""):
-        
+
     passw = unquote(request.form['password'])
 
     t = time.time()
@@ -250,14 +254,14 @@ def get_classwork(user=""):
     else:
         grades = {'status': 'login_failed'}
 
-    print "GOT Grades For {} in {}".format(user, time.time() - t)
+    print "GOT Classwork For {0} in {1:.2f}".format(user, time.time() - t)
 
     return ujson.dumps(grades)
 
 
 @app.route("/homeaccess/reportcard/<user>", methods=['POST'])
 def get_reportcard(user=""):
-        
+
     passw = unquote(request.form['password'])
 
     t = time.time()
@@ -268,17 +272,19 @@ def get_reportcard(user=""):
     else:
         reportcard = {'status': 'login_failed'}
 
-    print "GOT ReportCard For {} in {}".format(user, time.time() - t)
+    print "GOT Reportcard For {0} in {1:.2f}".format(user, time.time() - t)
 
     return ujson.dumps(reportcard)
+
 
 @app.route("/homeaccess/statistics/<subject>/<name>/<grade>")
 def homeaccess_stats(subject="", name="", grade="0.0"):
     try:
 
+        # B/c '/' is a url char & urlencode didn't work
         subject = subject.replace("~SLASH~", "/")
         name = name.replace("~SLASH~", "/")
-        
+
         grade = float(grade)
 
         execute("SELECT AVG(grade) FROM grades WHERE name=%s AND subject=%s;", [name, subject])
@@ -298,7 +304,7 @@ def homeaccess_stats(subject="", name="", grade="0.0"):
             percentile = 0
 
         return ujson.dumps({'average': avg, 'percentile': percentile, 'totalcount': int(total_grades)})
-    
+
     except Exception as e:
         print(e)
     return "{}"
