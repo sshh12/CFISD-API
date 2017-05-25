@@ -1,0 +1,1280 @@
+
+
+
+<!DOCTYPE html>
+<html>
+<head><title>
+	HomeAccess
+</title>
+    
+    <link href="/HomeAccess/Stylesheets/Themes/custom-theme/jquery?v=uqv12MpqsgUZl2tyOuQEmZP7fbSE23Yz-see4j7kRtc1" rel="Stylesheet" type="text/css" /> 
+
+    
+    <link rel="Stylesheet" href="../../StyleSheets/Common/CrossSite.css" />
+    <link rel="Stylesheet" href="../../StyleSheets/Common/Combobox.css" />
+    <link rel="Stylesheet" href="../../Stylesheets/Common/font-awesome.css" />
+    
+    
+    <link rel="Stylesheet" href="../../Stylesheets/Site.css" />
+    <link rel="stylesheet" href="../../Stylesheets/Frame/Frame.css" /> 
+    <style>
+        .sg-asp-table-header-row {
+	        background-color: #006699;
+            color: #FFFFFF;
+        }
+    </style>
+
+    <script src="/HomeAccess/Scripts/libs/jquery?v=VyihCQeLYprLqH1GJIGx132sc3WZ99r6OVB7axY5Zho1" type="text/javascript"></script>   
+    <script src="../../Scripts/libs/modernizr-1.7.min.js" type="text/javascript"></script>   
+    <script src="../../Scripts/Trirand/ui.multiselect.js" type="text/javascript" ></script>
+    <script src="../../Scripts/Trirand/i18n/grid.locale-en.js" type="text/javascript"></script>
+    <script src="../../Scripts/Trirand/jquery.jqGrid.min.js" type="text/javascript"></script>
+    <script src="../../Scripts/libs/json2.js" type="text/javascript"></script>
+    <script src="../../Scripts/libs/jquery.multi-open-accordion.js" type="text/javascript"></script>
+    <script src="../../CommonResource/GetEmbeddedScript?file=SungardCommon" type="text/javascript"></script>    
+    <script src="../../CommonResource/GetEmbeddedScript?file=Combobox" type="text/javascript"></script>
+    
+    <script src="../../Scripts/libs/jquery.hotkeys.js" type="text/javascript"></script>
+
+    <script type="text/javascript">
+        $(SunGard.Common.Init);
+    </script>
+    
+    
+    
+	<link href="../../Stylesheets/Assignments/AssignmentsStyle.css" type="text/css" rel="stylesheet">
+	<script type="text/javascript" src="Assignments.js"></script>
+	<script type="text/javascript" src="OpenClassPopUp.js"></script>
+	<script type="text/javascript" src="../Common/functional.js"></script>
+	<meta name="format-detection" content="telephone=no">
+	<script type="text/javascript">
+		$(function () {
+			$('.comment-tooltip').tooltip({ tooltipClass: "comment-tooltip-hover" });
+		});
+	</script>
+
+</head>
+<body>
+    
+    <div id='MainContent' class='sg-main-content'>
+        <div class='sg-hac-content'>
+            <form method="post" action="Assignments.aspx" id="fmMain">
+<div class="aspNetHidden">
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="dX3QTrVYojIWU3c06nVzuOpth+MlXrN7fUuoBIfX7OPTvljZmaT39zWEE/W1bDvKwvs8MZUSumBXut9KwLuaJnuEvOoQJVKmB9RnOW+YmW2QgqQGMNjGZgFLu7rcqzIfwrSQd+iqXoE7CPh7e0CphMeZwbUS5mGF+y3HbD2JxsPRVTsy8Bc6ERitQX6C03rZeTZy1bb9gEAwkAbOZ6J3ZqBIRYSV0mWVapV3S+WXpbJ8z6aw0a3oveh4+kDnsESVrvewiwdVrTWwXsmEVliyB/3dMSXMfeuvN1DvHetNbli8+7SHeiztFvvaZ9uhqH5woaVIg//ylQokI/ESBE/d21G2MoKm/Ot3rrwE54xsVRDQXgEasgqMTWrluiteDDGzXcJ/61Vljld9gsUU01iVMgDhuTf5lBZcsNZtHoIzqudZ5jVNmb+CyHabqVm/k1cMKEZENMS4EiPs8frISSFhuTk/4S7rcCgjAD3pKUg1x5/dUs5Y0uS45sGOY05v8PSdwx5ApPjDtsGITPds8X65bgGW1Tg9pux+Ht05Q0I7dMe1AJt1VmiAqaB86Rcm/gDkCw+cJwvG7dTysfB92LKWlDSJmOCesywtItjpXBVPbON77uB7llJKF3wEvdLTNoQqVDr9shxg6Sd229XcZE1dxqHzStoxEx9XurFnqk7BREUTPxBc0IrD9GiUnoV5lg6nFOhJJzthaPV5JtIZ4io3oMt4t4vqPsla1laXqnb6qvsgnCEpKmfyKNnwqmJgZwKfomtqrnRbYaBdfyO9P+lNz1i/nK2rbynVUgYWOigpyCIEbjtMgjMaeOs3YTsfI8WFs8fbX89EeEyf/cnrNp3Xwf7qrJW/y8JyqgAzoB2/4abxGYt+OS7IIyHZ+Bu2jJHkWyEnbeVtuzvI3tbba0zxUWuBdbqapP0oywj0/abV5tRnbGclDuhP34heGr7POXWGgU+WvIC4o3b4ap68ySnyEHVCrhp/QFEtXTuGSc7slW7KFKka1qlES7PVeKt4hQiF9dVQYTtHJ68bXgoo9c6oTejEJ+AUJor0hqrgBjlfIhwqYymKNm/e/gac2OIUoWNzAYELjVRaBycPUjEGRXYdJp8DlKZM+ZUw3t4REzXt1QCZpcwY34FsM+qfG+9s0AtzIqF5y4LD+U7JdAffb2Ii1cAmSekfTf3pAFOxQIufU1fzCa2sbGCYG5XLjxzsywSsufs3lWps05SIJ/wXfdRPFR37D0crFFcWitEQ55z9T/6H+YtfMY9L5wHbwhQ/neG/A62n3fOFdmWX5It5GhgA2CIVmPauc8s1YNCSViYp+4jhJfiaYR7Uiasr8YDSLmE71JmXZUiMUoE6gM0E8Klupub5zTbxExdeu4o0/+lRSJqVjwbXtuAoRZLm3zZg5jCzk0RslSllrnuBHy5zmu9B5UrkJ91LdCLDTiDOuB2XSPjlb/dnsbdvs9UyOnVyhY5LtI6marguu0XhoUomJSA+HmptLFXYh1PIDfygImZRYF9gwUSPhLN/IxLAFgqTyc5Sk+TCIGaLv/8YPDkuheO7VJzCBoTr+WuETC/46VuMRGzSKHksurb1IFtpSf89EtZEx7VyCa/+e/yZ5MQNy+1S0trKe1twIJXzOyLB+JWMMRBhHU+qV+wn5LOMbIKGD9qEd+ktJJy+VSoAZHa5AAz5XmlmwaXyzHph/HMRBpTMZsvy/lJTCCzd+w06xyclsu0yEJ/fNqj7JGcb2n+fFDcNWc4ZtzrR7hF73zoE6azgYcQx0NxFMcwR6uIcv+Pol4hx" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['fmMain'];
+if (!theForm) {
+    theForm = document.fmMain;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="IanFraxix0XJonmKYtZTK6iCKkQgSkqblZWzxIfw9WRclCCIArbq5nuPTLS6foEX1C2mev/B+GvZpVTdPgC82PAN2uUZF6QfuknGvRgqQpdY24wZ6nSNstEW/RLfeRWBV+YZcHu9mWJopnsxuuMRyGEfk556uT0Y8HhPvpzMCiAujXa9002c9FZ9Pn9jZJbY1Rv5jX02PFll1TMepeGYZIqlG5T1x4KPhLJSpw926bBLKnovtpCXZiz0tALrLKVa7DJL8f+og3gvkNv1IfMaHzbk6aBtDEUafnOC0zkerGBAd/YCxHqozN2vpifPR2xwf/5jM6ohm8TYil3Qzx7+M8aC4V61AA6e75XbjCoTgtJG8/5pAqXxBuStFZ0JaOl6THoIrq8M5k0cPTcslJMcjp/yzplpjOxRr+/V1AKaz6MF2lQvE1WAsmDJlMoX8M/o/ampDjw3NHHcv2oCa4SU46MfcopBxQ88EWS4oex+gIoNR5enElJwDNRuTXgM3xIWBQDiRv6RtLpykUkvumGwADfnLqTu+beGXwL+Zj3LvyUOR8wHZEB2++RjPCs0njwhU5S4/RW1wjKNfDPwm6auQKcQnF63nxwtS1xRle4SC+VIMT89pX5onV+Q82Gv1Mpz5M0faZZN/OxRx74FJQfrJD/fRWeFRrhggtaMRZpYCH1j87JhNWVhi2lDvqK89+9qniriOyR77ESgkpXOiEhV0qjh8MaOblm9GPFE81w0Q6EkDKx0kAxYSzNekV7GqbNXbzIcK/J/SDFMyBwH1pP2S9IHsg3xxMZ6Dw4bV0eSLlWrwLbpanM0JxfjvE79KeJSpQ3eRC15P9NIsafm4zqmXw8eDBY6nqHgdrYmEMkp0k/xlimuJzSze+ATBqN07SnivnVQ25b09F+L9Ohq3A6jApA//1uYx+CjW1C+FkCIPdHqguQ0Yo5+onQKXmMX/5RYHPSbCzpP2uO1qwhKXvtT9oYhvU/avVzcJM6cmr1x8GFSgxquusFGlFjyV3p8ZW3QnucCXdv3Ss5RA6lRpHlRG28n8BoeR8vZev9W7k/RJVuTNGK0K3JZ59qqerkTGEgfwmZH8Ymb3asfwixhhISxEAOWvXyKU1NDtDOvy78c0qooJEinDJTpwrnZOSgZ7NlmKpoTGBpbhvOQMhk+TY8bmNMFisbEacRMcJoRElJg9r+t029j3jHf7vNOHk4WQ+7IXrbbTcCztQYTy+A96HSgD0LjztRA8D+TsPVwettlAgdaHnHRBOjcdpRgb3DaWoFEcOspG8rfbEbZT0mnqsZpoSGUSR3Ctt9jkvT0NcQFw7RNR3a4BoDGvyUdhy4LEmQ8bjjHiZL8q1SaxhwlvEXO3FtyXGVd3b/rLTCHF25+bYJwkRQFmkSfKh/0xX/xT0sY7xa0FZe4U+rXVI2/BxgPwY1czSzUL4RERCx6SVsykl/2kW2UMTVp+R7b48gDcgU+" />
+</div>
+                
+<div class="sg-header">
+		<input name="ctl00$plnMain$hdnValidMHACLicense" type="hidden" id="plnMain_hdnValidMHACLicense" value="Y" />
+        <input name="ctl00$plnMain$hdnIsVisibleClsWrk" type="hidden" id="plnMain_hdnIsVisibleClsWrk" value="N" />
+        <input name="ctl00$plnMain$hdnIsVisibleCrsAvg" type="hidden" id="plnMain_hdnIsVisibleCrsAvg" value="N" />
+		<input name="ctl00$plnMain$hdnJsAlert" type="hidden" id="plnMain_hdnJsAlert" value="Averages cannot be displayed when  Report Card Run is set to (All Runs)." />
+		<input name="ctl00$plnMain$hdnTitle" type="hidden" id="plnMain_hdnTitle" value="Classwork" />
+		<input name="ctl00$plnMain$hdnLastUpdated" type="hidden" id="plnMain_hdnLastUpdated" value="Last Updated" />
+		<input name="ctl00$plnMain$hdnDroppedCourse" type="hidden" id="plnMain_hdnDroppedCourse" value=" This course was dropped as of " />
+		<input name="ctl00$plnMain$hdnddlClasses" type="hidden" id="plnMain_hdnddlClasses" value="(All Classes)" /> 
+		<input name="ctl00$plnMain$hdnddlCompetencies" type="hidden" id="plnMain_hdnddlCompetencies" value="(All Classes)" /> 
+		<input name="ctl00$plnMain$hdnCompDateDue" type="hidden" id="plnMain_hdnCompDateDue" value="Date Due" /> 
+		<input name="ctl00$plnMain$hdnCompDateAssigned" type="hidden" id="plnMain_hdnCompDateAssigned" value="Date Assigned" /> 
+		<input name="ctl00$plnMain$hdnCompCourse" type="hidden" id="plnMain_hdnCompCourse" value="Course" /> 
+		<input name="ctl00$plnMain$hdnCompAssignment" type="hidden" id="plnMain_hdnCompAssignment" value="Assignment" /> 
+		<input name="ctl00$plnMain$hdnCompAssignmentLabel" type="hidden" id="plnMain_hdnCompAssignmentLabel" value="Assignments Not Related to Any Competency" /> 
+		<input name="ctl00$plnMain$hdnCompNoAssignments" type="hidden" id="plnMain_hdnCompNoAssignments" value="No assignments found" /> 
+		<input name="ctl00$plnMain$hdnCompNoClasswork" type="hidden" id="plnMain_hdnCompNoClasswork" value="Classwork could not be found for this competency for the selected report card run." /> 
+		<input name="ctl00$plnMain$hdnCompScore" type="hidden" id="plnMain_hdnCompScore" value="Score" /> 
+		<input name="ctl00$plnMain$hdnCompPoints" type="hidden" id="plnMain_hdnCompPoints" value="Points" /> 
+        <input name="ctl00$plnMain$hdnddlReportCardRuns1" type="hidden" id="plnMain_hdnddlReportCardRuns1" value="(All Runs)" /> 
+		<input name="ctl00$plnMain$hdnddlReportCardRuns2" type="hidden" id="plnMain_hdnddlReportCardRuns2" value="(All Terms)" /> 
+		<input name="ctl00$plnMain$hdnbtnShowAverage" type="hidden" id="plnMain_hdnbtnShowAverage" value="Show All Averages" />
+		<input name="ctl00$plnMain$hdnShowAveragesToolTip" type="hidden" id="plnMain_hdnShowAveragesToolTip" value="Show all student&#39;s averages" />
+		<input name="ctl00$plnMain$hdnCollapseToolTip" type="hidden" id="plnMain_hdnCollapseToolTip" value="Collapse all courses" />
+		<input name="ctl00$plnMain$hdnCollapse" type="hidden" id="plnMain_hdnCollapse" value="Collapse All" />
+		<input name="ctl00$plnMain$hdnFullToolTip" type="hidden" id="plnMain_hdnFullToolTip" value="Switch courses to Full View" />
+		<input name="ctl00$plnMain$hdnViewFull" type="hidden" id="plnMain_hdnViewFull" value="Full View" />
+		<input name="ctl00$plnMain$hdnQuickToolTip" type="hidden" id="plnMain_hdnQuickToolTip" value="Switch courses to Quick View" />
+		<input name="ctl00$plnMain$hdnViewQuick" type="hidden" id="plnMain_hdnViewQuick" value="Quick View" />
+		<input name="ctl00$plnMain$hdnExpand" type="hidden" id="plnMain_hdnExpand" value="Expand All" />
+		<input name="ctl00$plnMain$hdnExpandToolTip" type="hidden" id="plnMain_hdnExpandToolTip" value="Expand all courses" />
+        
+         <input name="ctl00$plnMain$SCSPI201401" type="hidden" id="plnMain_SCSPI201401" value="FALSE" />
+		<span id="plnMain_spnView"><button id="btnView" onclick="btnView_onclick(); return false;" class="sg-button sg-right sg-5px-margin btnView" title="Switch courses to Full View">Full View</button></span>
+		<button id="plnMain_btnCollapseExpand" type="button" class="sg-button sg-right sg-5px-margin btnCollapseExpand" title="Collapse all courses" onClick="javascript:return btnCollapseExpand_onclick(event);">Collapse All</button>
+	</div>
+	<div id="plnMain_pnlFullPage" class="sg-content-grid">
+	
+		<div class="sg-content-grid-container sg-container-content">
+			<div>
+				<span id="plnMain_lblViewClassworkfor" style="font-weight:bold;">View Classwork for</span>
+				
+				
+			<span id="plnMain_lblForRCardRun" style="font-weight:bold;">&nbsp Report Card Run</span>
+			
+            <select name="ctl00$plnMain$ddlReportCardRuns" id="plnMain_ddlReportCardRuns" class="sg-combobox">
+		<option value="ALL">(All Runs)</option>
+		<option value="1">1</option>
+		<option value="2">2</option>
+		<option value="3">3</option>
+		<option value="4">4</option>
+		<option value="5">5</option>
+		<option selected="selected" value="6">6</option>
+
+	</select>
+            <button onclick="__doPostBack('ctl00$plnMain$btnRefreshView','')" id="plnMain_btnRefreshView" type="button" class="sg-button sg-right">Refresh View</button>
+			</div>
+			<div>
+				<label id="plnMain_lblShow">Show</label>
+				<span id="plnMain_spnCourse" class="asmt-course" style="display:;"><select name="ctl00$plnMain$ddlClasses" id="plnMain_ddlClasses" class="sg-combobox">
+		<option selected="selected" value="ALL">(All Classes)</option>
+		<option value="2260815|1">03051 - 15   Eng III AP</option>
+		<option value="2260816|1">03052 - 15   Eng III AP</option>
+		<option value="2261777|1">03052 - 19   Eng III AP</option>
+		<option value="2258611|1">10351 - 6    U S History AP</option>
+		<option value="2258612|1">10352 - 6    U S History AP</option>
+		<option value="2258616|1">10352 - 7    U S History AP</option>
+		<option value="2259465|1">24111 - 15   Pre-Calculus K</option>
+		<option value="2259466|1">24112 - 15   DO NOT USE Pre-Calculus K</option>
+		<option value="2335676|1">24112 - 18   Pre-Calculus K</option>
+		<option value="2262437|1">26651 - 3    ADV COM SCI K</option>
+		<option value="2262150|1">26652 - 2    ADV COM SCI K</option>
+		<option value="2262438|1">26652 - 3    ADV COM SCI K</option>
+		<option value="2260543|1">35151 - 3    CHEMISTRY AP</option>
+		<option value="2260544|1">35152 - 3    CHEMISTRY AP</option>
+		<option value="2260507|1">37451 - 2    AP PHYSICS I</option>
+		<option value="2260508|1">37452 - 2    AP PHYSICS I</option>
+		<option value="2258847|1">76102 - 5    Band III P/F-SY WD</option>
+		<option value="2258487|1">76122 - 3    Band III-SYM WNDS</option>
+		<option value="2259888|1">76501 - 1    Bnd IIIP/F-WD EN</option>
+		<option value="2257637|1">76511 - 1    Band III-WIND ENS</option>
+		<option value="2257639|1">76512 - 1    Band III-WIND ENS</option>
+
+	</select></span>
+				<span id="plnMain_spnCompetency" class="asmt-competency" style="display:none;"><select name="ctl00$plnMain$ddlCompetencies" id="plnMain_ddlCompetencies" class="sg-combobox">
+		<option selected="selected" value="ALL">(All Classes)</option>
+
+	</select></span>
+				<label id="plnMain_lblOrderBy">Order by</label>
+				<span class="asmt-order"><select name="ctl00$plnMain$ddlOrderBy" id="plnMain_ddlOrderBy" class="sg-combobox">
+		<option selected="selected" value="Class">Class</option>
+		<option value="Date">Date Due</option>
+
+	</select></span>
+				
+			</div>
+			   
+		</div>
+		<div id="dvAlerts" class="sg-content-alert-container sg-container-content">
+			
+			
+		</div>
+	<div id="plnMain_vsAvgValidate" style="display:none;">
+
+	</div>
+	
+	
+	
+		<div class="AssignmentClass">
+			<div class="sg-header sg-header-square">
+				<button id="plnMain_rptAssigmnetsByCourse_btnShowHide_0" type="button" class="sg-button sg-button-show-hide sg-left sg-5px-margin icon-minus" onClick="javascript:return btnShowHide_onclick(event);"></button>  
+				<a class="sg-header-heading" href="#" onclick="OpenClassPopUp('2261777'); return false;">
+					03052 - 19   Eng III AP
+				</a>
+				<span id="plnMain_rptAssigmnetsByCourse_lblLastUpdDate_0" class="sg-header-sub-heading"></span>
+				
+				<span id="plnMain_rptAssigmnetsByCourse_lblHdrAverage_0" class="sg-header-heading sg-right" title="Average of all marking period scores">Marking Period Avg 91.45%</span>    
+			</div>
+			<div class="sg-content-grid">
+				<table class="sg-asp-table" cellspacing="0" rules="all" border="1" id="plnMain_rptAssigmnetsByCourse_dgCourseAssignments_0" style="border-collapse:collapse;">
+		<tr class="sg-asp-table-header-row">
+			<td>Date Due</td><td>Date Assigned</td><td>Assignment</td><td>Category</td><td>Score</td><td>Total Points</td><td class="sg-view-quick">Weight</td><td class="sg-view-quick">Weighted Score</td><td class="sg-view-quick">Weighted Total Points</td><td class="sg-view-quick">Percentage</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>05/15/2017</td><td>05/01/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2261777', '1', '47'); return false;">
+									Independent Novel Essay
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Major Grades</td><td>88.00</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">88.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">88.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>05/15/2017</td><td>05/01/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2261777', '1', '46'); return false;">
+									Independent Novel Project
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Major Grades</td><td>96.00</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">96.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">96.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>05/11/2017</td><td>05/01/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2261777', '1', '45'); return false;">
+									Rhetorical Response #2
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>92.00</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">92.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">92.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>05/04/2017</td><td>05/01/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2261777', '1', '44'); return false;">
+									Rhetorical Response #1
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>94.00</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">94.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">94.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>05/04/2017</td><td>05/04/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2261777', '1', '50'); return false;">
+									AP Terms Quiz #3
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Assessments</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/28/2017</td><td>04/28/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2261777', '1', '49'); return false;">
+									AP Terms Quiz #2
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Assessments</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/26/2017</td><td>04/26/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2261777', '1', '43'); return false;">
+									Rhetorical Practice
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>50.00</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">50.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">50.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/25/2017</td><td>04/21/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2261777', '1', '51'); return false;">
+									AP Terms Flash Cards
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Assessments</td><td>NG   </td><td>N/A</td><td class="sg-view-quick">N/A</td><td class="sg-view-quick">N/A</td><td class="sg-view-quick">15.0000</td><td class="sg-view-quick">0.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/25/2017</td><td>04/25/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2261777', '1', '48'); return false;">
+									AP Terms Quiz #1
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Assessments</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/20/2017</td><td>04/20/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2261777', '1', '41'); return false;">
+									Multiple Choice Exam
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Major Grades</td><td>85.00</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">85.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">85.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/19/2017</td><td>04/18/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2261777', '1', '40'); return false;">
+									Synthesis Practice
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>80.00</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">80.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">80.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/13/2017</td><td>04/13/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2261777', '1', '39'); return false;">
+									Argumentative Essay
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Major Grades</td><td>85.00</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">85.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">85.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/11/2017</td><td>04/10/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2261777', '1', '38'); return false;">
+									Argumentative Samples 4-6
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/10/2017</td><td>04/10/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2261777', '1', '37'); return false;">
+									Argumentative Samples 1-3
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr>
+	</table>
+				<div class="sg-asp-table-group">
+					<span id="plnMain_rptAssigmnetsByCourse_lblCategories_0" class="LabelCatogery">
+						<div class="sg-view-quick sg-clearfix" >
+							<div class="sg-header-group">
+								<label id="plnMain_rptAssigmnetsByCourse_hdrCategories_0" CssClass="sg-header-heading">Categories</label>
+							</div>
+							<table class="sg-asp-table" cellspacing="0" rules="all" border="1" id="plnMain_rptAssigmnetsByCourse_dgCourseCategories_0" style="border-collapse:collapse;">
+		<tr class="sg-asp-table-header-row">
+			<td align="center" valign="middle">Category</td><td align="center" valign="middle">Student's<br>Points</td><td align="center" valign="middle"> / Maximum<br>Points</td><td align="center" valign="middle"> = Percent</td><td align="center" valign="middle"> * Category<br>Weight</td><td align="center" valign="middle"> = Category<br>Points</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>Assessments</td><td>300.00</td><td>300.00</td><td>100.00%</td><td>30.00</td><td>30.00000</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>Daily Grades</td><td>516.00</td><td>600.00</td><td>86.00%</td><td>20.00</td><td>17.20000</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>Major Grades</td><td>354.00</td><td>400.00</td><td>88.50%</td><td>50.00</td><td>44.25000</td>
+		</tr><tr style="color:White;background-color:#CCCCCC;border-color:#CCCCCC;">
+			<td><b>Total Points:</b></td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td><b>100.00</b></td><td style="background-color:#CCCCCC;"><b>91.45000</b></td>
+		</tr>
+	</table>
+							<br />
+							
+								<div style="display:inline-block;">
+								<table id="plnMain_rptAssigmnetsByCourse_tblAverage_0" style="font-weight:bold;">
+		<tr>
+			<td><span id="plnMain_rptAssigmnetsByCourse_lblStudentOvAverage_0">Course overall average is:</span></td><td><span id="plnMain_rptAssigmnetsByCourse_lblStuPoints_0">91.45000</span></td><td>/</td><td><span id="plnMain_rptAssigmnetsByCourse_lblMaxPoints_0">100.00</span></td><td>=</td><td style="text-align: right"><span id="plnMain_rptAssigmnetsByCourse_lblOverallAverage_0">91.45</span></td><td>%</td>
+		</tr>
+	</table>
+							</div>
+							<span id="plnMain_rptAssigmnetsByCourse_lblShowAverages_0" class="sg-right">
+								<button class="LabelCatogery sg-button"  id="btnShowAverages" onclick="btnShowAverages_onclick('2261777', '1'); return false;" title="Show all student's averages"  >Show All Averages</button>	
+							</span>
+						</div>
+					</span>
+				</div>
+			</div>
+		</div>
+		
+		<div class="AssignmentClass">
+			<div class="sg-header sg-header-square">
+				<button id="plnMain_rptAssigmnetsByCourse_btnShowHide_1" type="button" class="sg-button sg-button-show-hide sg-left sg-5px-margin icon-minus" onClick="javascript:return btnShowHide_onclick(event);"></button>  
+				<a class="sg-header-heading" href="#" onclick="OpenClassPopUp('2258616'); return false;">
+					10352 - 7    U S History AP
+				</a>
+				<span id="plnMain_rptAssigmnetsByCourse_lblLastUpdDate_1" class="sg-header-sub-heading"></span>
+				
+				<span id="plnMain_rptAssigmnetsByCourse_lblHdrAverage_1" class="sg-header-heading sg-right" title="Average of all marking period scores">Marking Period Avg 94.60%</span>    
+			</div>
+			<div class="sg-content-grid">
+				<table class="sg-asp-table" cellspacing="0" rules="all" border="1" id="plnMain_rptAssigmnetsByCourse_dgCourseAssignments_1" style="border-collapse:collapse;">
+		<tr class="sg-asp-table-header-row">
+			<td>Date Due</td><td>Date Assigned</td><td>Assignment</td><td>Category</td><td>Score</td><td>Total Points</td><td class="sg-view-quick">Weight</td><td class="sg-view-quick">Weighted Score</td><td class="sg-view-quick">Weighted Total Points</td><td class="sg-view-quick">Percentage</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>05/17/2017</td><td>&nbsp;</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2258616', '1', '30'); return false;">
+									Children&#39;s Book
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Major Grades</td><td>91.00</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">91.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">91.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>05/12/2017</td><td>&nbsp;</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2258616', '1', '27'); return false;">
+									Forrest Gump Dinner Party
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Assessments</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>05/12/2017</td><td>&nbsp;</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2258616', '1', '29'); return false;">
+									Children&#39;s Book Action Plan
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>05/08/2017</td><td>&nbsp;</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2258616', '1', '28'); return false;">
+									Review Packet Daily Grade
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/24/2017</td><td>&nbsp;</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2258616', '1', '26'); return false;">
+									Presidential Bracketology
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Assessments</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/24/2017</td><td>&nbsp;</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2258616', '1', '25'); return false;">
+									8.2 Test Corrections
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/17/2017</td><td>&nbsp;</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2258616', '1', '23'); return false;">
+									Clinton to Obama
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>70.00</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">70.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">70.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/13/2017</td><td>&nbsp;</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2258616', '1', '22'); return false;">
+									Reagan ToTD
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/10/2017</td><td>&nbsp;</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2258616', '1', '21'); return false;">
+									Spring DPM
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Major Grades</td><td>96.00</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">96.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">96.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/10/2017</td><td>&nbsp;</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2258616', '1', '24'); return false;">
+									TEST: Period 8.2
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Major Grades</td><td>92.00</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">92.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">92.00%</td>
+		</tr>
+	</table>
+				<div class="sg-asp-table-group">
+					<span id="plnMain_rptAssigmnetsByCourse_lblCategories_1" class="LabelCatogery">
+						<div class="sg-view-quick sg-clearfix" >
+							<div class="sg-header-group">
+								<label id="plnMain_rptAssigmnetsByCourse_hdrCategories_1" CssClass="sg-header-heading">Categories</label>
+							</div>
+							<table class="sg-asp-table" cellspacing="0" rules="all" border="1" id="plnMain_rptAssigmnetsByCourse_dgCourseCategories_1" style="border-collapse:collapse;">
+		<tr class="sg-asp-table-header-row">
+			<td align="center" valign="middle">Category</td><td align="center" valign="middle">Student's<br>Points</td><td align="center" valign="middle"> / Maximum<br>Points</td><td align="center" valign="middle"> = Percent</td><td align="center" valign="middle"> * Category<br>Weight</td><td align="center" valign="middle"> = Category<br>Points</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>Assessments</td><td>200.00</td><td>200.00</td><td>100.00%</td><td>20.00</td><td>20.00000</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>Daily Grades</td><td>470.00</td><td>500.00</td><td>94.00%</td><td>20.00</td><td>18.80000</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>Major Grades</td><td>279.00</td><td>300.00</td><td>93.00%</td><td>60.00</td><td>55.80000</td>
+		</tr><tr style="color:White;background-color:#CCCCCC;border-color:#CCCCCC;">
+			<td><b>Total Points:</b></td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td><b>100.00</b></td><td style="background-color:#CCCCCC;"><b>94.60000</b></td>
+		</tr>
+	</table>
+							<br />
+							
+								<div style="display:inline-block;">
+								<table id="plnMain_rptAssigmnetsByCourse_tblAverage_1" style="font-weight:bold;">
+		<tr>
+			<td><span id="plnMain_rptAssigmnetsByCourse_lblStudentOvAverage_1">Course overall average is:</span></td><td><span id="plnMain_rptAssigmnetsByCourse_lblStuPoints_1">94.60000</span></td><td>/</td><td><span id="plnMain_rptAssigmnetsByCourse_lblMaxPoints_1">100.00</span></td><td>=</td><td style="text-align: right"><span id="plnMain_rptAssigmnetsByCourse_lblOverallAverage_1">94.60</span></td><td>%</td>
+		</tr>
+	</table>
+							</div>
+							<span id="plnMain_rptAssigmnetsByCourse_lblShowAverages_1" class="sg-right">
+								<button class="LabelCatogery sg-button"  id="btnShowAverages" onclick="btnShowAverages_onclick('2258616', '1'); return false;" title="Show all student's averages"  >Show All Averages</button>	
+							</span>
+						</div>
+					</span>
+				</div>
+			</div>
+		</div>
+		
+		<div class="AssignmentClass">
+			<div class="sg-header sg-header-square">
+				<button id="plnMain_rptAssigmnetsByCourse_btnShowHide_2" type="button" class="sg-button sg-button-show-hide sg-left sg-5px-margin icon-minus" onClick="javascript:return btnShowHide_onclick(event);"></button>  
+				<a class="sg-header-heading" href="#" onclick="OpenClassPopUp('2335676'); return false;">
+					24112 - 18   Pre-Calculus K
+				</a>
+				<span id="plnMain_rptAssigmnetsByCourse_lblLastUpdDate_2" class="sg-header-sub-heading"></span>
+				
+				<span id="plnMain_rptAssigmnetsByCourse_lblHdrAverage_2" class="sg-header-heading sg-right" title="Average of all marking period scores">Marking Period Avg 94.57%</span>    
+			</div>
+			<div class="sg-content-grid">
+				<table class="sg-asp-table" cellspacing="0" rules="all" border="1" id="plnMain_rptAssigmnetsByCourse_dgCourseAssignments_2" style="border-collapse:collapse;">
+		<tr class="sg-asp-table-header-row">
+			<td>Date Due</td><td>Date Assigned</td><td>Assignment</td><td>Category</td><td>Score</td><td>Total Points</td><td class="sg-view-quick">Weight</td><td class="sg-view-quick">Weighted Score</td><td class="sg-view-quick">Weighted Total Points</td><td class="sg-view-quick">Percentage</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>05/22/2017</td><td>&nbsp;</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2335676', '1', '40'); return false;">
+									Final exam
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>&nbsp;</td><td>100.00</td><td class="sg-view-quick">0.00</td><td class="sg-view-quick">&nbsp;</td><td class="sg-view-quick">0.0000</td><td class="sg-view-quick">&nbsp;</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>05/17/2017</td><td>&nbsp;</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2335676', '1', '39'); return false;">
+									Partial Fractions/DPM Review Sheet
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>05/17/2017</td><td>&nbsp;</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2335676', '1', '33'); return false;">
+									DPM Test
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Major Grades</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>05/15/2017</td><td>&nbsp;</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2335676', '1', '38'); return false;">
+									Unit Circle Quiz
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>05/15/2017</td><td>&nbsp;</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2335676', '1', '37'); return false;">
+									Unit Circle Worksheet
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>05/09/2017</td><td>&nbsp;</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2335676', '1', '35'); return false;">
+									Homework Packet #2
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>98.00</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">98.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">98.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>05/09/2017</td><td>&nbsp;</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2335676', '1', '36'); return false;">
+									Test #2 Rational Functions
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Major Grades</td><td>86.00</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">86.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">86.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>05/04/2017</td><td>&nbsp;</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2335676', '1', '34'); return false;">
+									Quiz #3 - Rationals
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td style="text-decoration: line-through;">79.00</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">79.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">79.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/28/2017</td><td>&nbsp;</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2335676', '1', '32'); return false;">
+									Assessment #2 - Rational Functions
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Assessments</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/27/2017</td><td>&nbsp;</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2335676', '1', '31'); return false;">
+									Quiz #2 - Long Run Behavior
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/21/2017</td><td>&nbsp;</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2335676', '1', '29'); return false;">
+									Homework Packet #1
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/21/2017</td><td>&nbsp;</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2335676', '1', '30'); return false;">
+									Test #1 - Polynomials
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Major Grades</td><td>89.00</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">89.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">89.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/19/2017</td><td>&nbsp;</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2335676', '1', '28'); return false;">
+									Quiz #1 - Polynomials
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/18/2017</td><td>&nbsp;</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2335676', '1', '27'); return false;">
+									Assessment - Polynomial Waterpark
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Assessments</td><td>92.00</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">92.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">92.00%</td>
+		</tr>
+	</table>
+				<div class="sg-asp-table-group">
+					<span id="plnMain_rptAssigmnetsByCourse_lblCategories_2" class="LabelCatogery">
+						<div class="sg-view-quick sg-clearfix" >
+							<div class="sg-header-group">
+								<label id="plnMain_rptAssigmnetsByCourse_hdrCategories_2" CssClass="sg-header-heading">Categories</label>
+							</div>
+							<table class="sg-asp-table" cellspacing="0" rules="all" border="1" id="plnMain_rptAssigmnetsByCourse_dgCourseCategories_2" style="border-collapse:collapse;">
+		<tr class="sg-asp-table-header-row">
+			<td align="center" valign="middle">Category</td><td align="center" valign="middle">Student's<br>Points</td><td align="center" valign="middle"> / Maximum<br>Points</td><td align="center" valign="middle"> = Percent</td><td align="center" valign="middle"> * Category<br>Weight</td><td align="center" valign="middle"> = Category<br>Points</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>Assessments</td><td>192.00</td><td>200.00</td><td>96.00%</td><td>30.00</td><td>28.80000</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>Daily Grades</td><td>698.00</td><td>700.00</td><td>99.71%</td><td>20.00</td><td>19.94284</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>Major Grades</td><td>275.00</td><td>300.00</td><td>91.66%</td><td>50.00</td><td>45.83330</td>
+		</tr><tr style="color:White;background-color:#CCCCCC;border-color:#CCCCCC;">
+			<td><b>Total Points:</b></td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td><b>100.00</b></td><td style="background-color:#CCCCCC;"><b>94.57614</b></td>
+		</tr>
+	</table>
+							<br />
+							
+								<div style="display:inline-block;">
+								<table id="plnMain_rptAssigmnetsByCourse_tblAverage_2" style="font-weight:bold;">
+		<tr>
+			<td><span id="plnMain_rptAssigmnetsByCourse_lblStudentOvAverage_2">Course overall average is:</span></td><td><span id="plnMain_rptAssigmnetsByCourse_lblStuPoints_2">94.57614</span></td><td>/</td><td><span id="plnMain_rptAssigmnetsByCourse_lblMaxPoints_2">100.00</span></td><td>=</td><td style="text-align: right"><span id="plnMain_rptAssigmnetsByCourse_lblOverallAverage_2">94.57</span></td><td>%</td>
+		</tr>
+	</table>
+							</div>
+							<span id="plnMain_rptAssigmnetsByCourse_lblShowAverages_2" class="sg-right">
+								<button class="LabelCatogery sg-button"  id="btnShowAverages" onclick="btnShowAverages_onclick('2335676', '1'); return false;" title="Show all student's averages"  >Show All Averages</button>	
+							</span>
+						</div>
+					</span>
+				</div>
+			</div>
+		</div>
+		
+		<div class="AssignmentClass">
+			<div class="sg-header sg-header-square">
+				<button id="plnMain_rptAssigmnetsByCourse_btnShowHide_3" type="button" class="sg-button sg-button-show-hide sg-left sg-5px-margin icon-minus" onClick="javascript:return btnShowHide_onclick(event);"></button>  
+				<a class="sg-header-heading" href="#" onclick="OpenClassPopUp('2262150'); return false;">
+					26652 - 2    ADV COM SCI K
+				</a>
+				<span id="plnMain_rptAssigmnetsByCourse_lblLastUpdDate_3" class="sg-header-sub-heading"></span>
+				
+				<span id="plnMain_rptAssigmnetsByCourse_lblHdrAverage_3" class="sg-header-heading sg-right" title="Average of all marking period scores">Marking Period Avg 97.93%</span>    
+			</div>
+			<div class="sg-content-grid">
+				<table class="sg-asp-table" cellspacing="0" rules="all" border="1" id="plnMain_rptAssigmnetsByCourse_dgCourseAssignments_3" style="border-collapse:collapse;">
+		<tr class="sg-asp-table-header-row">
+			<td>Date Due</td><td>Date Assigned</td><td>Assignment</td><td>Category</td><td>Score</td><td>Total Points</td><td class="sg-view-quick">Weight</td><td class="sg-view-quick">Weighted Score</td><td class="sg-view-quick">Weighted Total Points</td><td class="sg-view-quick">Percentage</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>05/18/2017</td><td>05/18/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2262150', '1', '53'); return false;">
+									Maze
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Major Grades</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>05/15/2017</td><td>05/15/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2262150', '1', '51'); return false;">
+									Maze part 4
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>05/12/2017</td><td>05/12/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2262150', '1', '50'); return false;">
+									Maze part 3
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>05/11/2017</td><td>05/11/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2262150', '1', '49'); return false;">
+									Maze part 2
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>05/11/2017</td><td>05/11/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2262150', '1', '52'); return false;">
+									Teks
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Major Grades</td><td>92.00</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">92.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">92.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>05/10/2017</td><td>05/10/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2262150', '1', '48'); return false;">
+									Maze part 1
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>05/10/2017</td><td>05/10/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2262150', '1', '47'); return false;">
+									Teks review
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>05/03/2017</td><td>05/03/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2262150', '1', '46'); return false;">
+									Puzzle
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Assessments</td><td>95.00</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">95.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">95.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/27/2017</td><td>04/27/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2262150', '1', '43'); return false;">
+									SpinningEarth
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/27/2017</td><td>04/27/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2262150', '1', '44'); return false;">
+									Squares
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/25/2017</td><td>04/25/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2262150', '1', '42'); return false;">
+									Huffman
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Major Grades</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/21/2017</td><td>04/18/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2262150', '1', '41'); return false;">
+									Prim/Kruskal
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Assessments</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/18/2017</td><td>04/18/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2262150', '1', '40'); return false;">
+									jobs
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/18/2017</td><td>04/18/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2262150', '1', '39'); return false;">
+									summands
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/13/2017</td><td>04/13/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2262150', '1', '38'); return false;">
+									dot product
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/12/2017</td><td>04/12/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2262150', '1', '36'); return false;">
+									change
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/12/2017</td><td>04/12/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2262150', '1', '37'); return false;">
+									knapsack
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr>
+	</table>
+				<div class="sg-asp-table-group">
+					<span id="plnMain_rptAssigmnetsByCourse_lblCategories_3" class="LabelCatogery">
+						<div class="sg-view-quick sg-clearfix" >
+							<div class="sg-header-group">
+								<label id="plnMain_rptAssigmnetsByCourse_hdrCategories_3" CssClass="sg-header-heading">Categories</label>
+							</div>
+							<table class="sg-asp-table" cellspacing="0" rules="all" border="1" id="plnMain_rptAssigmnetsByCourse_dgCourseCategories_3" style="border-collapse:collapse;">
+		<tr class="sg-asp-table-header-row">
+			<td align="center" valign="middle">Category</td><td align="center" valign="middle">Student's<br>Points</td><td align="center" valign="middle"> / Maximum<br>Points</td><td align="center" valign="middle"> = Percent</td><td align="center" valign="middle"> * Category<br>Weight</td><td align="center" valign="middle"> = Category<br>Points</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>Assessments</td><td>195.00</td><td>200.00</td><td>97.50%</td><td>0.40</td><td>0.39000</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>Daily Grades</td><td>1200.00</td><td>1200.00</td><td>100.00%</td><td>0.20</td><td>0.20000</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>Major Grades</td><td>292.00</td><td>300.00</td><td>97.33%</td><td>0.40</td><td>0.38933</td>
+		</tr><tr style="color:White;background-color:#CCCCCC;border-color:#CCCCCC;">
+			<td><b>Total Points:</b></td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td><b>1.00</b></td><td style="background-color:#CCCCCC;"><b>0.97933</b></td>
+		</tr>
+	</table>
+							<br />
+							
+								<div style="display:inline-block;">
+								<table id="plnMain_rptAssigmnetsByCourse_tblAverage_3" style="font-weight:bold;">
+		<tr>
+			<td><span id="plnMain_rptAssigmnetsByCourse_lblStudentOvAverage_3">Course overall average is:</span></td><td><span id="plnMain_rptAssigmnetsByCourse_lblStuPoints_3">0.97933</span></td><td>/</td><td><span id="plnMain_rptAssigmnetsByCourse_lblMaxPoints_3">1.00</span></td><td>=</td><td style="text-align: right"><span id="plnMain_rptAssigmnetsByCourse_lblOverallAverage_3">97.93</span></td><td>%</td>
+		</tr>
+	</table>
+							</div>
+							<span id="plnMain_rptAssigmnetsByCourse_lblShowAverages_3" class="sg-right">
+								<button class="LabelCatogery sg-button"  id="btnShowAverages" onclick="btnShowAverages_onclick('2262150', '1'); return false;" title="Show all student's averages"  >Show All Averages</button>	
+							</span>
+						</div>
+					</span>
+				</div>
+			</div>
+		</div>
+		
+		<div class="AssignmentClass">
+			<div class="sg-header sg-header-square">
+				<button id="plnMain_rptAssigmnetsByCourse_btnShowHide_4" type="button" class="sg-button sg-button-show-hide sg-left sg-5px-margin icon-minus" onClick="javascript:return btnShowHide_onclick(event);"></button>  
+				<a class="sg-header-heading" href="#" onclick="OpenClassPopUp('2260544'); return false;">
+					35152 - 3    CHEMISTRY AP
+				</a>
+				<span id="plnMain_rptAssigmnetsByCourse_lblLastUpdDate_4" class="sg-header-sub-heading"></span>
+				
+				<span id="plnMain_rptAssigmnetsByCourse_lblHdrAverage_4" class="sg-header-heading sg-right" title="Average of all marking period scores">Marking Period Avg 101.58%</span>    
+			</div>
+			<div class="sg-content-grid">
+				<table class="sg-asp-table" cellspacing="0" rules="all" border="1" id="plnMain_rptAssigmnetsByCourse_dgCourseAssignments_4" style="border-collapse:collapse;">
+		<tr class="sg-asp-table-header-row">
+			<td>Date Due</td><td>Date Assigned</td><td>Assignment</td><td>Category</td><td>Score</td><td>Total Points</td><td class="sg-view-quick">Weight</td><td class="sg-view-quick">Weighted Score</td><td class="sg-view-quick">Weighted Total Points</td><td class="sg-view-quick">Percentage</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>05/18/2017</td><td>05/04/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2260544', '1', '43'); return false;">
+									After AP Test Assessment #2
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Assessments</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>05/12/2017</td><td>05/04/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2260544', '1', '42'); return false;">
+									After AP Test Assessment #1
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Assessments</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/28/2017</td><td>04/28/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2260544', '1', '41'); return false;">
+									DPM
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Major Grades</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/27/2017</td><td>04/10/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2260544', '1', '40'); return false;">
+									Spring Semester Review
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Assessments</td><td>95.00</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">95.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">95.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/26/2017</td><td>04/26/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2260544', '1', '39'); return false;">
+									Electrochemistry TEST
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Major Grades</td><td>110.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">110.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">110.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/25/2017</td><td>04/24/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2260544', '1', '38'); return false;">
+									Electrolytic Cell HW
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/24/2017</td><td>04/20/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2260544', '1', '37'); return false;">
+									Electrochemical Cell Math HW
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/20/2017</td><td>04/19/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2260544', '1', '36'); return false;">
+									Electrochemical Cells Concepts HW
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/18/2017</td><td>04/18/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2260544', '1', '35'); return false;">
+									Thermodynamics TEST
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Major Grades</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/17/2017</td><td>04/13/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2260544', '1', '34'); return false;">
+									Balancing RedOX Rxns HW
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/12/2017</td><td>04/10/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2260544', '1', '33'); return false;">
+									Thermodynamics HW
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr>
+	</table>
+				<div class="sg-asp-table-group">
+					<span id="plnMain_rptAssigmnetsByCourse_lblCategories_4" class="LabelCatogery">
+						<div class="sg-view-quick sg-clearfix" >
+							<div class="sg-header-group">
+								<label id="plnMain_rptAssigmnetsByCourse_hdrCategories_4" CssClass="sg-header-heading">Categories</label>
+							</div>
+							<table class="sg-asp-table" cellspacing="0" rules="all" border="1" id="plnMain_rptAssigmnetsByCourse_dgCourseCategories_4" style="border-collapse:collapse;">
+		<tr class="sg-asp-table-header-row">
+			<td align="center" valign="middle">Category</td><td align="center" valign="middle">Student's<br>Points</td><td align="center" valign="middle"> / Maximum<br>Points</td><td align="center" valign="middle"> = Percent</td><td align="center" valign="middle"> * Category<br>Weight</td><td align="center" valign="middle"> = Category<br>Points</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>Assessments</td><td>295.00</td><td>300.00</td><td>98.33%</td><td>25.00</td><td>24.58333</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>Daily Grades</td><td>500.00</td><td>500.00</td><td>100.00%</td><td>15.00</td><td>15.00000</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>Major Grades</td><td>310.00</td><td>300.00</td><td>103.33%</td><td>60.00</td><td>61.99998</td>
+		</tr><tr style="color:White;background-color:#CCCCCC;border-color:#CCCCCC;">
+			<td><b>Total Points:</b></td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td><b>100.00</b></td><td style="background-color:#CCCCCC;"><b>101.58331</b></td>
+		</tr>
+	</table>
+							<br />
+							
+								<div style="display:inline-block;">
+								<table id="plnMain_rptAssigmnetsByCourse_tblAverage_4" style="font-weight:bold;">
+		<tr>
+			<td><span id="plnMain_rptAssigmnetsByCourse_lblStudentOvAverage_4">Course overall average is:</span></td><td><span id="plnMain_rptAssigmnetsByCourse_lblStuPoints_4">101.58331</span></td><td>/</td><td><span id="plnMain_rptAssigmnetsByCourse_lblMaxPoints_4">100.00</span></td><td>=</td><td style="text-align: right"><span id="plnMain_rptAssigmnetsByCourse_lblOverallAverage_4">101.58</span></td><td>%</td>
+		</tr>
+	</table>
+							</div>
+							<span id="plnMain_rptAssigmnetsByCourse_lblShowAverages_4" class="sg-right">
+								<button class="LabelCatogery sg-button"  id="btnShowAverages" onclick="btnShowAverages_onclick('2260544', '1'); return false;" title="Show all student's averages"  >Show All Averages</button>	
+							</span>
+						</div>
+					</span>
+				</div>
+			</div>
+		</div>
+		
+		<div class="AssignmentClass">
+			<div class="sg-header sg-header-square">
+				<button id="plnMain_rptAssigmnetsByCourse_btnShowHide_5" type="button" class="sg-button sg-button-show-hide sg-left sg-5px-margin icon-minus" onClick="javascript:return btnShowHide_onclick(event);"></button>  
+				<a class="sg-header-heading" href="#" onclick="OpenClassPopUp('2260508'); return false;">
+					37452 - 2    AP PHYSICS I
+				</a>
+				<span id="plnMain_rptAssigmnetsByCourse_lblLastUpdDate_5" class="sg-header-sub-heading"></span>
+				
+				<span id="plnMain_rptAssigmnetsByCourse_lblHdrAverage_5" class="sg-header-heading sg-right" title="Average of all marking period scores">Marking Period Avg 100.40%</span>    
+			</div>
+			<div class="sg-content-grid">
+				<table class="sg-asp-table" cellspacing="0" rules="all" border="1" id="plnMain_rptAssigmnetsByCourse_dgCourseAssignments_5" style="border-collapse:collapse;">
+		<tr class="sg-asp-table-header-row">
+			<td>Date Due</td><td>Date Assigned</td><td>Assignment</td><td>Category</td><td>Score</td><td>Total Points</td><td class="sg-view-quick">Weight</td><td class="sg-view-quick">Weighted Score</td><td class="sg-view-quick">Weighted Total Points</td><td class="sg-view-quick">Percentage</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>05/18/2017</td><td>05/16/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2260508', '1', '54'); return false;">
+									Unit 11 Review
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>Z    </td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">0.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">0.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>05/18/2017</td><td>05/18/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2260508', '1', '53'); return false;">
+									Unit 11 Exam Magnetism Light &amp; Optics
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Major Grades</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>05/16/2017</td><td>05/16/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2260508', '1', '52'); return false;">
+									Optics Fastcheck
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>90.00</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">90.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">90.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>05/15/2017</td><td>04/11/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2260508', '1', '46'); return false;">
+									Musics Video Project
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Major Grades</td><td>120.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">120.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">120.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>05/11/2017</td><td>05/11/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2260508', '1', '51'); return false;">
+									Light &amp; EM Spetrum Fastcheck
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>05/09/2017</td><td>05/09/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2260508', '1', '50'); return false;">
+									Magentism Fastcheck
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>87.00</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">87.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">87.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/28/2017</td><td>04/11/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2260508', '1', '49'); return false;">
+									Video Notes
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Assessments</td><td>103.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">103.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">103.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/28/2017</td><td>04/11/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2260508', '1', '45'); return false;">
+									Music Video Lyrics
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/28/2017</td><td>04/12/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2260508', '1', '44'); return false;">
+									FRQ Presentations
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Assessments</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/27/2017</td><td>04/27/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2260508', '1', '43'); return false;">
+									AP FRQ Practice
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/26/2017</td><td>04/26/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2260508', '1', '42'); return false;">
+									AP Multiple Choice Practice
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/24/2017</td><td>04/12/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2260508', '1', '47'); return false;">
+									AP Topics Review Part 1
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Assessments</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/24/2017</td><td>04/12/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2260508', '1', '48'); return false;">
+									AP Topics Review Part 2
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Assessments</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/24/2017</td><td>04/24/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2260508', '1', '41'); return false;">
+									District Benchmark Exam
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Major Grades</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/21/2017</td><td>04/21/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2260508', '1', '40'); return false;">
+									Sound &amp; Waves Review Problem See Saw
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>X    </td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">&nbsp;</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">0.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/10/2017</td><td>04/10/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2260508', '1', '39'); return false;">
+									Unit 9 Exam
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Major Grades</td><td>99.00</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">99.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">99.00%</td>
+		</tr>
+	</table>
+				<div class="sg-asp-table-group">
+					<span id="plnMain_rptAssigmnetsByCourse_lblCategories_5" class="LabelCatogery">
+						<div class="sg-view-quick sg-clearfix" >
+							<div class="sg-header-group">
+								<label id="plnMain_rptAssigmnetsByCourse_hdrCategories_5" CssClass="sg-header-heading">Categories</label>
+							</div>
+							<table class="sg-asp-table" cellspacing="0" rules="all" border="1" id="plnMain_rptAssigmnetsByCourse_dgCourseCategories_5" style="border-collapse:collapse;">
+		<tr class="sg-asp-table-header-row">
+			<td align="center" valign="middle">Category</td><td align="center" valign="middle">Student's<br>Points</td><td align="center" valign="middle"> / Maximum<br>Points</td><td align="center" valign="middle"> = Percent</td><td align="center" valign="middle"> * Category<br>Weight</td><td align="center" valign="middle"> = Category<br>Points</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>Assessments</td><td>403.00</td><td>400.00</td><td>100.75%</td><td>25.00</td><td>25.18750</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>Daily Grades</td><td>577.00</td><td>700.00</td><td>82.42%</td><td>15.00</td><td>12.36428</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>Major Grades</td><td>419.00</td><td>400.00</td><td>104.75%</td><td>60.00</td><td>62.85000</td>
+		</tr><tr style="color:White;background-color:#CCCCCC;border-color:#CCCCCC;">
+			<td><b>Total Points:</b></td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td><b>100.00</b></td><td style="background-color:#CCCCCC;"><b>100.40178</b></td>
+		</tr>
+	</table>
+							<br />
+							
+								<div style="display:inline-block;">
+								<table id="plnMain_rptAssigmnetsByCourse_tblAverage_5" style="font-weight:bold;">
+		<tr>
+			<td><span id="plnMain_rptAssigmnetsByCourse_lblStudentOvAverage_5">Course overall average is:</span></td><td><span id="plnMain_rptAssigmnetsByCourse_lblStuPoints_5">100.40178</span></td><td>/</td><td><span id="plnMain_rptAssigmnetsByCourse_lblMaxPoints_5">100.00</span></td><td>=</td><td style="text-align: right"><span id="plnMain_rptAssigmnetsByCourse_lblOverallAverage_5">100.40</span></td><td>%</td>
+		</tr>
+	</table>
+							</div>
+							<span id="plnMain_rptAssigmnetsByCourse_lblShowAverages_5" class="sg-right">
+								<button class="LabelCatogery sg-button"  id="btnShowAverages" onclick="btnShowAverages_onclick('2260508', '1'); return false;" title="Show all student's averages"  >Show All Averages</button>	
+							</span>
+						</div>
+					</span>
+				</div>
+			</div>
+		</div>
+		
+		<div class="AssignmentClass">
+			<div class="sg-header sg-header-square">
+				<button id="plnMain_rptAssigmnetsByCourse_btnShowHide_6" type="button" class="sg-button sg-button-show-hide sg-left sg-5px-margin icon-minus" onClick="javascript:return btnShowHide_onclick(event);"></button>  
+				<a class="sg-header-heading" href="#" onclick="OpenClassPopUp('2258847'); return false;">
+					76102 - 5    Band III P/F-SY WD
+				</a>
+				<span id="plnMain_rptAssigmnetsByCourse_lblLastUpdDate_6" class="sg-header-sub-heading"></span>
+				
+				<span id="plnMain_rptAssigmnetsByCourse_lblHdrAverage_6" class="sg-header-heading sg-right" title="Average of all marking period scores">Marking Period Avg 92.56%</span>    
+			</div>
+			<div class="sg-content-grid">
+				<table class="sg-asp-table" cellspacing="0" rules="all" border="1" id="plnMain_rptAssigmnetsByCourse_dgCourseAssignments_6" style="border-collapse:collapse;">
+		<tr class="sg-asp-table-header-row">
+			<td>Date Due</td><td>Date Assigned</td><td>Assignment</td><td>Category</td><td>Score</td><td>Total Points</td><td class="sg-view-quick">Weight</td><td class="sg-view-quick">Weighted Score</td><td class="sg-view-quick">Weighted Total Points</td><td class="sg-view-quick">Percentage</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>05/19/2017</td><td>05/15/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2258847', '1', '55'); return false;">
+									Participation
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>05/12/2017</td><td>04/10/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2258847', '1', '56'); return false;">
+									Spring Concert
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Major Grades</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>05/12/2017</td><td>04/24/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2258847', '1', '57'); return false;">
+									Concert Bb
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Assessments</td><td>105.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">105.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">105.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>05/12/2017</td><td>05/08/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2258847', '1', '54'); return false;">
+									Particiption
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>05/05/2017</td><td>04/10/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2258847', '1', '49'); return false;">
+									Concert F
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Assessments</td><td>0.00 </td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">0.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">0.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>05/05/2017</td><td>05/01/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2258847', '1', '53'); return false;">
+									Participation
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/28/2017</td><td>04/10/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2258847', '1', '48'); return false;">
+									Concert C
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Assessments</td><td>105.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">105.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">105.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/28/2017</td><td>04/24/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2258847', '1', '52'); return false;">
+									Participation
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/21/2017</td><td>04/10/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2258847', '1', '47'); return false;">
+									Concert G
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Assessments</td><td>105.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">105.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">105.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/21/2017</td><td>04/17/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2258847', '1', '51'); return false;">
+									Participation
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/13/2017</td><td>04/10/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2258847', '1', '50'); return false;">
+									Participation
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Daily Grades</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>04/12/2017</td><td>04/10/2017</td><td>
+								<a href="#" onclick="OpenAssignmentPopUp('2258847', '1', '46'); return false;">
+									UIL
+								</a>
+								<label style="display:none">*</label>
+							</td><td>Major Grades</td><td>100.0</td><td>100.00</td><td class="sg-view-quick">1.00</td><td class="sg-view-quick">100.00</td><td class="sg-view-quick">100.0000</td><td class="sg-view-quick">100.00%</td>
+		</tr>
+	</table>
+				<div class="sg-asp-table-group">
+					<span id="plnMain_rptAssigmnetsByCourse_lblCategories_6" class="LabelCatogery">
+						<div class="sg-view-quick sg-clearfix" >
+							<div class="sg-header-group">
+								<label id="plnMain_rptAssigmnetsByCourse_hdrCategories_6" CssClass="sg-header-heading">Categories</label>
+							</div>
+							<table class="sg-asp-table" cellspacing="0" rules="all" border="1" id="plnMain_rptAssigmnetsByCourse_dgCourseCategories_6" style="border-collapse:collapse;">
+		<tr class="sg-asp-table-header-row">
+			<td align="center" valign="middle">Category</td><td align="center" valign="middle">Student's<br>Points</td><td align="center" valign="middle"> / Maximum<br>Points</td><td align="center" valign="middle"> = Percent</td><td align="center" valign="middle"> * Category<br>Weight</td><td align="center" valign="middle"> = Category<br>Points</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>Assessments</td><td>315.00</td><td>400.00</td><td>78.75%</td><td>35.00</td><td>27.56250</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>Daily Grades</td><td>600.00</td><td>600.00</td><td>100.00%</td><td>25.00</td><td>25.00000</td>
+		</tr><tr class="sg-asp-table-data-row">
+			<td>Major Grades</td><td>200.00</td><td>200.00</td><td>100.00%</td><td>40.00</td><td>40.00000</td>
+		</tr><tr style="color:White;background-color:#CCCCCC;border-color:#CCCCCC;">
+			<td><b>Total Points:</b></td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td><b>100.00</b></td><td style="background-color:#CCCCCC;"><b>92.56250</b></td>
+		</tr>
+	</table>
+							<br />
+							
+								<div style="display:inline-block;">
+								<table id="plnMain_rptAssigmnetsByCourse_tblAverage_6" style="font-weight:bold;">
+		<tr>
+			<td><span id="plnMain_rptAssigmnetsByCourse_lblStudentOvAverage_6">Course overall average is:</span></td><td><span id="plnMain_rptAssigmnetsByCourse_lblStuPoints_6">92.56250</span></td><td>/</td><td><span id="plnMain_rptAssigmnetsByCourse_lblMaxPoints_6">100.00</span></td><td>=</td><td style="text-align: right"><span id="plnMain_rptAssigmnetsByCourse_lblOverallAverage_6">92.56</span></td><td>%</td>
+		</tr>
+	</table>
+							</div>
+							<span id="plnMain_rptAssigmnetsByCourse_lblShowAverages_6" class="sg-right">
+								<button class="LabelCatogery sg-button"  id="btnShowAverages" onclick="btnShowAverages_onclick('2258847', '1'); return false;" title="Show all student's averages"  >Show All Averages</button>	
+							</span>
+						</div>
+					</span>
+				</div>
+			</div>
+		</div>
+		    
+	
+
+	
+	
+	
+  
+</div>
+  
+	
+
+	<script type="text/javascript">
+	   if (document.getElementById("ddlClasses")) {
+		   document.getElementById("ddlClasses").onclick = ddlClasses_onclick
+		}
+		
+		function ddlClasses_onclick() {
+			if(document.getElementById("ddlClasses").value.toUpperCase() == "ALL")
+				document.getElementById("ddlOrderBy").disabled = false;
+			else {
+				document.getElementById("ddlOrderBy").value = "Class";
+				document.getElementById("ddlOrderBy").disabled = true;	
+			}
+		}		
+	</script>
+
+            
+<script type="text/javascript">
+//<![CDATA[
+var Page_ValidationSummaries =  new Array(document.getElementById("plnMain_vsAvgValidate"));
+//]]>
+</script>
+
+<script type="text/javascript">
+//<![CDATA[
+var plnMain_vsAvgValidate = document.all ? document.all["plnMain_vsAvgValidate"] : document.getElementById("plnMain_vsAvgValidate");
+plnMain_vsAvgValidate.headertext = "The following errors were found:";
+plnMain_vsAvgValidate.showmessagebox = "True";
+plnMain_vsAvgValidate.showsummary = "False";
+plnMain_vsAvgValidate.validationGroup = "AvgValidate";
+//]]>
+</script>
+</form>
+        </div>
+    </div>
+    <script>
+        $(function () {
+            // Build the jQuery UI buttons
+            $('.sg-buttonset').buttonset();
+            $('.sg-button').button();
+            window.parent.$('.sg-legacy-iframe').height($('.sg-main-content').height()); // set the init size
+        })
+    </script>
+</body>
+</html>

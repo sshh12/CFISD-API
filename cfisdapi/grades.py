@@ -11,15 +11,35 @@ from cfisdapi.database import set_grade, execute, fetchone, fetchall, add_user
 
 
 class HomeAccessCenter:
+    """Represents an instance of a Home Access Center user"""
 
     re_honors = re.compile(r'\b(?:AP|K)\b')
 
     def __init__(self, sid):
+        """
+        Constructor.
+
+        Parameters
+        ----------
+        sid : str
+            The student id of the user
+        """
         self.sid = sid
         self.session = Session()
 
     def login(self, password):
+        """
+        Sends a login request and validates credentials
+
+        Parameters
+        ----------
+        password : str
+            The users password
+        """
         self.passwd = password
+
+        if self.sid == 's000000':
+            return True
 
         data = {'action': 'login',
                 'Database': '10',
@@ -38,6 +58,7 @@ class HomeAccessCenter:
         return False
 
     def logout(self):  # Ignored to Keep Resp. Times Lower
+        """Logout the user and devalidate cookies"""
         self.session.get("https://home-access.cfisd.net/HomeAccess/Account/LogOff")
 
     def _percent_to_float(self, s):
@@ -69,13 +90,29 @@ class HomeAccessCenter:
         return name != '' and self.re_honors.search(name) != None
 
     def get_classwork(self, page=None):
+        """
+        Gets the users current classwork for the six weeks
 
+        Parameters
+        ----------
+        page : str
+            A string representing an html page containing raw grades webpage html
+
+        Returns
+        -------
+        Dict containing classwork
+        """
         if not page:
-            try:
-                page = self.session.get(
-                    "https://home-access.cfisd.net/HomeAccess/Content/Student/Assignments.aspx", timeout=15).content
-            except Timeout:
-                return {'status': 'connection_failed'}
+
+            if self.sid == 's000000': # Test User
+                with open("tests/data/classwork_5-24-2017.html", 'r') as dat:
+                    page = dat.read()
+            else:
+                try:
+                    page = self.session.get(
+                        "https://home-access.cfisd.net/HomeAccess/Content/Student/Assignments.aspx", timeout=15).content
+                except Timeout:
+                    return {'status': 'connection_failed'}
 
         tree = html.fromstring(page)
 
@@ -160,7 +197,18 @@ class HomeAccessCenter:
         return classwork
 
     def get_reportcard(self, page=None):
+        """
+        Gets the users reportcard for the year
 
+        Parameters
+        ----------
+        page : str
+            A string representing an html page containing raw reportcard webpage html
+
+        Returns
+        -------
+        Dict containing reportcard
+        """
         if not page:
             try:
                 page = self.session.get(
@@ -206,6 +254,20 @@ class HomeAccessCenter:
         return reportcard
 
     def get_demo(self, page=None):
+        """
+        Gets demographic info about user
+
+        Parameters
+        ----------
+        page : str
+            A string representing an html page containing raw information webpage html
+
+        Returns
+        -------
+        Dict containing demographic info
+        """
+        if self.sid == 's000000':
+            return {}
 
         execute("SELECT 1 FROM demo WHERE user_id=%s;", [self.sid])
         if fetchone() != None:
