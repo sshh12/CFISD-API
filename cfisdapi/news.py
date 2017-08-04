@@ -9,13 +9,14 @@ from cfisdapi import app
 from cfisdapi.database import add_news, execute, fetchone, fetchall
 
 class NewsType:
+    """News Enum"""
     BASIC = 0
     ARTICLE = 1
     TEXT = 2
 
-re_get_cyranch_article = re.compile(
-    r'<div class="sno-animate categorypreviewbox[\w\s]+"><a href="([\w\d:/.\-_]+)"><img src="([\w\d:/.\-_]+)" class="previewstaffpic" alt="[\w\s\S]+?" \/><\/a><h1 class="catprofile \w+"><a href="[\w\d:/.\-_]+" rel="bookmark">([\w\s\d&;#]+)<\/a><\/h1><p class="categorydate">(\w{3,10} \d{1,2}, \d{4})<\/p>')
-cyranch_news_last = 0
+# Uber long regex for maximum oneliner parseage
+re_get_cyranch_article = re.compile(r'<div class="sno-animate categorypreviewbox[\w\s]+"><a href="([\w\d:/.\-_]+)"><img src="([\w\d:/.\-_]+)" class="previewstaffpic" alt="[\w\s\S]+?" \/><\/a><h1 class="catprofile \w+"><a href="[\w\d:/.\-_]+" rel="bookmark">([\w\s\d&;#]+)<\/a><\/h1><p class="categorydate">(\w{3,10} \d{1,2}, \d{4})<\/p>')
+cyranch_news_last = 0 # Last time the news was updated
 cyranch_pages = {'Mustang News': ['/news/', '/news/page/2/'],
                  'Mustang Sports': ['/sports/', '/sports/page/2/'],
                  'Mustang Arts': ['/arts-and-entertainment/', '/arts-and-entertainment/page/2/'],
@@ -24,6 +25,7 @@ cyranch_pages = {'Mustang News': ['/news/', '/news/page/2/'],
 
 
 def update_cyranch_news():
+    """Updates the database with the lastest Cy-Ranch news articles."""
     for category in cyranch_pages.keys():
         print("Updating " + category)
         for url in cyranch_pages[category]:
@@ -41,7 +43,19 @@ def update_cyranch_news():
 
 @app.route("/news/<org>")
 def get_org_news(org=""):
+    """
+    Get the news for an organization
 
+    Parameters
+    ----------
+    org : str
+        The organization/news source
+
+    Returns
+    -------
+    str (json)
+        All news articles associated with the given organization 
+    """
     global cyranch_news_last
     if time.time() - cyranch_news_last > 86400:
         cyranch_news_last = time.time()
@@ -82,10 +96,17 @@ Password: <input type="password" name="password"><br>
 </html>
 """
 
-
 @app.route("/news/create", methods=['GET', 'POST'])
 def create_org_news():
+    """
+    Creates a news item
+
+    This will add a new news article to the database. If the page is requested
+    from a GET a form will be displayed and if a POST is sent the form data will
+    be used to add the article to the database.
+    """
     if request.method == 'POST':
+
         pic = request.form['pic']
         org = request.form['organization']
         text = request.form['text']
@@ -97,22 +118,34 @@ def create_org_news():
         icon = fetchone()[0]
 
         if hashlib.sha256(org + "!").hexdigest()[:8] == password:  # Still Not Secure
+
             add_news(icon, pic, org, date, text, link, NewsType.ARTICLE)
             return "Success"
+
         return "Error"
+
     else:
+
         orgs = []
 
         execute("select distinct organization from news")
         for org in fetchall():
             orgs.append(org[0])
 
-        return form_html.replace("OPTIONS",
-                                 "\n".join(map(lambda s: "<option value=\"{}\">{}</option>".format(s, s), orgs)))
+        return form_html.replace("OPTIONS","\n".join(map(lambda s: "<option value=\"{}\">{}</option>".format(s, s), orgs)))
 
 
 @app.route("/news/list")
 def list_news():
+    """
+    Lists the news sources
+
+    Returns
+    -------
+    str (json)
+        A json with every news source and its respective icon location in the
+        mobile app.
+    """
     orgs = {}
     execute("select distinct organization, icon from news")
     for org in fetchall():

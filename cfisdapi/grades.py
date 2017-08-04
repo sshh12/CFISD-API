@@ -211,8 +211,7 @@ class HomeAccessCenter:
         """
         if not page:
             try:
-                page = self.session.get(
-                    "https://home-access.cfisd.net/HomeAccess/Content/Student/ReportCards.aspx", timeout=15).content
+                page = self.session.get("https://home-access.cfisd.net/HomeAccess/Content/Student/ReportCards.aspx", timeout=15).content
             except Timeout:
                 return {'status': 'connection_failed'}
 
@@ -231,16 +230,13 @@ class HomeAccessCenter:
 
             averages = []
             for i in [7, 8, 9, 12, 13, 14]:
-                averages.append({'average': self._percent_to_float(
-                    cols[i]), 'letter': self._get_letter_grade(cols[i])})
+                averages.append({'average': self._percent_to_float(cols[i]), 'letter': self._get_letter_grade(cols[i])})
 
             exams = []
             sems = []
             for i in [10, 15]:
-                exams.append({'average': self._percent_to_float(
-                    cols[i]), 'letter': self._get_letter_grade(cols[i])})
-                sems.append({'average': self._percent_to_float(
-                    cols[i + 1]), 'letter': self._get_letter_grade(cols[i + 1])})
+                exams.append({'average': self._percent_to_float(cols[i]), 'letter': self._get_letter_grade(cols[i])})
+                sems.append({'average': self._percent_to_float(cols[i + 1]), 'letter': self._get_letter_grade(cols[i + 1])})
 
             reportcard.update({classid: {'name': classname,
                                          'teacher': teacher,
@@ -285,8 +281,7 @@ class HomeAccessCenter:
         demo = {}
 
         name = tree.xpath("//span[@id='plnMain_lblRegStudentName']")[0].text_content().strip()
-        school = tree.xpath(
-            "//span[@id='plnMain_lblBuildingName']")[0].text_content().strip().title()
+        school = tree.xpath("//span[@id='plnMain_lblBuildingName']")[0].text_content().strip().title()
         gender = tree.xpath("//span[@id='plnMain_lblGender']")[0].text_content().strip().lower()
         grade = int(tree.xpath("//span[@id='plnMain_lblGrade']")[0].text_content().strip())
         language = tree.xpath("//span[@id='plnMain_lblLanguage']")[0].text_content().strip().lower()
@@ -304,7 +299,26 @@ class HomeAccessCenter:
 
 @app.route("/homeaccess/classwork/<user>", methods=['POST'])
 def get_classwork(user=""):
+    """
+    Classwork
 
+    Parameters
+    ----------
+    user : str
+        Username
+    password : str (form)
+        Password
+
+    Returns
+    -------
+    str (json)
+        A json formatted compilation of the users latest grades. In the event
+        of an error the 'status' attribute will reflect the issue that occured.
+
+    Note
+    ----
+    Every request will print username and fetch time for debugging.
+    """
     passw = unquote(request.form['password'])
 
     t = time.time()
@@ -323,7 +337,26 @@ def get_classwork(user=""):
 
 @app.route("/homeaccess/reportcard/<user>", methods=['POST'])
 def get_reportcard(user=""):
+    """
+    Report Card
 
+    Parameters
+    ----------
+    user : str
+        Username
+    password : str (form)
+        Password
+
+    Returns
+    -------
+    str (json)
+        A json formatted compilation of the users reportcard. In the event
+        of an error the 'status' attribute will reflect the issue that occured.
+
+    Note
+    ----
+    Every request will print username and fetch time for debugging.
+    """
     passw = unquote(request.form['password'])
 
     t = time.time()
@@ -341,6 +374,28 @@ def get_reportcard(user=""):
 
 @app.route("/homeaccess/statistics/<subject>/<name>/<grade>")
 def homeaccess_stats(subject="", name="", grade="0.0"):
+    """
+    Stats
+
+    Parameters
+    ----------
+    subject : str
+        The class of the statistic
+    name : str
+        The name of the assignment in the class
+    grade : str (float)
+        The grade at which to base statistics off of e.g. percentile.
+
+    Returns
+    -------
+    str (json)
+        A json formatted compilation statistics relating to given parameters.
+
+    Note
+    ----
+    Percentile ATM is calculated from the number of distinct non-zero grades at
+    or below the one specified.
+    """
     try:
 
         # B/c '/' is a url char & urlencode didn't work
@@ -367,6 +422,7 @@ def homeaccess_stats(subject="", name="", grade="0.0"):
 
         return ujson.dumps({'average': avg, 'percentile': percentile, 'totalcount': int(total_grades)})
 
-    except Exception as e:
+    except Exception as e: # There always manages to be another edge case so this will alert the issue into the console
         print(e)
+
     return "{}"

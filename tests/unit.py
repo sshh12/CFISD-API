@@ -5,12 +5,13 @@ from cfisdapi.grades import HomeAccessCenter
 
 
 class GradesTest(unittest.TestCase):
-
+    """Tests methods in the Grades class."""
     def _load(self, filename):
         with open(os.path.join('tests','data', filename + '.html'), 'r') as f:
             return f.read()
 
     def test_letters(self):
+        """Tests conversion of float/int/string/letter -> Letter Grade."""
         c = HomeAccessCenter('s123456')
 
         self.assertEqual(c._get_letter_grade('90%'),   'A')
@@ -22,8 +23,9 @@ class GradesTest(unittest.TestCase):
         self.assertEqual(c._get_letter_grade('X'),     'U')
 
     def test_honors(self):
+        """Tests honors detection based on name."""
         c = HomeAccessCenter('s123456')
-        
+
         self.assertEqual(c._is_honors("U S History AP"), True)
         self.assertEqual(c._is_honors("AP Physics I"), True)
         self.assertEqual(c._is_honors("CHEMISTRY AP"), True)
@@ -35,7 +37,7 @@ class GradesTest(unittest.TestCase):
         self.assertEqual(c._is_honors("Kinematics On Level"), False)
 
     def test_reportcard(self):
-        
+        """Tests the parsing of reportcard pages."""
         c = HomeAccessCenter('s123456')
 
         rc = c.get_reportcard(page=self._load("reportcard_2-3-2017"))
@@ -45,9 +47,9 @@ class GradesTest(unittest.TestCase):
         self.assertEqual(len(rc), 8)
 
         for key in rc:
-            
+
             if key != 'status':
-                
+
                 c = rc[key]
 
                 self.assertEqual(len(c), 6)
@@ -55,15 +57,15 @@ class GradesTest(unittest.TestCase):
                 self.assertEqual(len(c['exams']), 2)
                 self.assertEqual(len(c['semesters']), 2)
 
-        
+
         self.assertEqual(rc['03051 - 15']['teacher'], 'Rhodes, Ryan')
         self.assertEqual(rc['03051 - 15']['averages'][2]['average'], 93.0)
         self.assertEqual(rc['24111 - 15']['name'], 'Pre-Calculus K')
         self.assertEqual(rc['24111 - 15']['semesters'][0]['average'], 94.0)
-        
-            
-                
-        
+
+
+
+
 
 # TODO
 #  - get_classwork

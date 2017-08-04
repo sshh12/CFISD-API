@@ -32,6 +32,17 @@ special_schedule = """
 
 @app.route("/schedule")
 def get_schedule():
+    """
+    Returns the schedule if different from A, B, or Pep Rally.
+
+    If the schedule of a given day is abnormal this method will
+    return a js object (json) that can be directly eval()'d in the
+    mobile app.
+
+    Note
+    ----
+    Currently toggled manually with code updates...
+    """
     if False and len(special_schedule) > 10:  # TODO Allow for remote updating of schedules
         return special_schedule
     return ""
