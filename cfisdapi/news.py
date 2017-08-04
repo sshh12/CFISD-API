@@ -54,7 +54,7 @@ def get_org_news(org=""):
     Returns
     -------
     str (json)
-        All news articles associated with the given organization 
+        All news articles associated with the given organization
     """
     global cyranch_news_last
     if time.time() - cyranch_news_last > 86400:
@@ -149,5 +149,5 @@ def list_news():
     orgs = {}
     execute("select distinct organization, icon from news")
     for org in fetchall():
-        orgs.update({org[0]: org[1]})
+        orgs[org[0]] = org[1]
     return ujson.dumps(orgs)

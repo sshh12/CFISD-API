@@ -192,7 +192,7 @@ class HomeAccessCenter:
         except Exception as e:
             print(str(e) + " -- grades")
 
-        classwork.update({'status': 'success'})
+        classwork['status'] = 'success'
 
         return classwork
 
@@ -245,7 +245,7 @@ class HomeAccessCenter:
                                          'exams': exams,
                                          'semesters': sems}})
 
-        reportcard.update({'status': 'success'})
+        reportcard['status'] = 'success'
 
         return reportcard
 
@@ -398,7 +398,7 @@ def homeaccess_stats(subject="", name="", grade="0.0"):
     """
     try:
 
-        # B/c '/' is a url char & urlencode didn't work
+        # B/c '/' is a url char & urlencode didn't work ):
         subject = subject.replace("~SLASH~", "/")
         name = name.replace("~SLASH~", "/")
 
