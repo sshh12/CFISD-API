@@ -1,9 +1,9 @@
-import re
-import ujson
-import time
+from flask import request
 import requests
 import hashlib
-from flask import request
+import ujson
+import time
+import re
 
 from cfisdapi import app
 from cfisdapi.database import add_news, execute, fetchone, fetchall
@@ -27,7 +27,9 @@ cyranch_pages = {'Mustang News': ['/news/', '/news/page/2/'],
 def update_cyranch_news():
     """Updates the database with the lastest Cy-Ranch news articles."""
     for category in cyranch_pages.keys():
+
         print("Updating " + category)
+
         for url in cyranch_pages[category]:
 
             text = requests.get("http://cyranchnews.com/category" + url).text
@@ -57,7 +59,7 @@ def get_org_news(org=""):
         All news articles associated with the given organization
     """
     global cyranch_news_last
-    if time.time() - cyranch_news_last > 86400:
+    if time.time() - cyranch_news_last > 86400: # 86400 = A Long enough time to update news
         cyranch_news_last = time.time()
         update_cyranch_news()
 
@@ -150,4 +152,5 @@ def list_news():
     execute("select distinct organization, icon from news")
     for org in fetchall():
         orgs[org[0]] = org[1]
+
     return ujson.dumps(orgs)

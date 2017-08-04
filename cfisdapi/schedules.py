@@ -43,6 +43,6 @@ def get_schedule():
     ----
     Currently toggled manually with code updates...
     """
-    if False and len(special_schedule) > 10:  # TODO Allow for remote updating of schedules
+    if False:  # TODO Allow for remote updating of schedules
         return special_schedule
     return ""

@@ -1,10 +1,10 @@
 from requests import Session, Timeout
-from flask import request
 from urllib import unquote
+from flask import request
 from lxml import html
-import re
-import time
 import ujson
+import time
+import re
 
 from cfisdapi import app
 from cfisdapi.database import set_grade, execute, fetchone, fetchall, add_user
@@ -78,13 +78,14 @@ class HomeAccessCenter:
         num = self._percent_to_float(percent)
         if num >= 89.5:
             return 'A'
-        if num >= 79.5:
+        elif num >= 79.5:
             return 'B'
-        if num >= 69.5:
+        elif num >= 69.5:
             return 'C'
-        if num >= 15:
+        elif num >= 15:
             return 'D'
-        return 'F'
+        else:
+            return 'F'
 
     def _is_honors(self, name):
         return name != '' and self.re_honors.search(name) != None
@@ -105,13 +106,18 @@ class HomeAccessCenter:
         if not page:
 
             if self.sid == 's000000': # Test User
+
                 with open("tests/data/classwork_5-24-2017.html", 'r') as dat:
                     page = dat.read()
+
             else:
+
                 try:
-                    page = self.session.get(
-                        "https://home-access.cfisd.net/HomeAccess/Content/Student/Assignments.aspx", timeout=15).content
+
+                    page = self.session.get("https://home-access.cfisd.net/HomeAccess/Content/Student/Assignments.aspx", timeout=15).content
+
                 except Timeout:
+
                     return {'status': 'connection_failed'}
 
         tree = html.fromstring(page)
@@ -122,13 +128,11 @@ class HomeAccessCenter:
 
             for class_ in tree.find_class('AssignmentClass'):
 
-                class_id, classname = [s.strip() for s in class_.find_class(
-                    'sg-header-heading')[0].text_content().split(" " * 3)]
+                class_id, classname = [s.strip() for s in class_.find_class('sg-header-heading')[0].text_content().split(" " * 3)]
 
-                class_average = class_.find_class(
-                    'sg-header-heading sg-right')[0].text_content().split(' ')[-1]
+                class_average = class_.find_class('sg-header-heading sg-right')[0].text_content().split(' ')[-1]
 
-                class_avgf = self._percent_to_float(class_average)
+                class_avg_asfloat = self._percent_to_float(class_average)
 
                 classwork.update({class_id: {'name': classname,
                                              'honors': self._is_honors(classname),
@@ -137,11 +141,11 @@ class HomeAccessCenter:
                                              'categories': {},
                                              'letter': self._get_letter_grade(class_average)}})
 
-                if class_avgf > 10:
+                if class_avg_asfloat > 10:
                     set_grade(self.sid,
                               classname,
                               classname + " AVG",
-                              class_avgf,
+                              class_avg_asfloat,
                               "Class")
 
                 for row in class_.find_class('sg-asp-table-data-row'):
@@ -150,8 +154,7 @@ class HomeAccessCenter:
 
                     if len(cols) == 10:
 
-                        assign_name = cols[2].replace(
-                            "\t*", "").strip().replace("&nbsp;", "").replace("&amp;", "&")
+                        assign_name = cols[2].replace("\t*", "").strip().replace("&nbsp;", "").replace("&amp;", "&")
 
                         datedue = cols[0].replace(u'\xa0', "")
                         date = cols[1].replace(u'\xa0', "")
@@ -159,7 +162,7 @@ class HomeAccessCenter:
                         grade_type = cols[3]
                         grade = cols[-1].replace("&nbsp;", "").replace(u'\xa0', "")
 
-                        assign_avgf = self._percent_to_float(grade)
+                        assign_avg_asfloat = self._percent_to_float(grade)
 
                         classwork[class_id]['assignments'].update({
                             assign_name: {
@@ -169,11 +172,11 @@ class HomeAccessCenter:
                                 'grade': grade,
                                 'letter': self._get_letter_grade(grade)}})
 
-                        if assign_avgf > 10:
+                        if assign_avg_asfloat > 10:
                             set_grade(self.sid,
                                       classname,
                                       assign_name,
-                                      assign_avgf,
+                                      assign_avg_asfloat,
                                       grade_type)
 
                     elif len(cols) == 6:
@@ -210,9 +213,13 @@ class HomeAccessCenter:
         Dict containing reportcard
         """
         if not page:
+
             try:
+
                 page = self.session.get("https://home-access.cfisd.net/HomeAccess/Content/Student/ReportCards.aspx", timeout=15).content
+
             except Timeout:
+
                 return {'status': 'connection_failed'}
 
         tree = html.fromstring(page)
@@ -261,6 +268,10 @@ class HomeAccessCenter:
         Returns
         -------
         Dict containing demographic info
+
+        Note
+        ----
+        Demo account will return empty dict
         """
         if self.sid == 's000000':
             return {}
@@ -270,10 +281,13 @@ class HomeAccessCenter:
             return {'status': 'already_added'}
 
         if not page:
+
             try:
-                page = self.session.get(
-                    "https://home-access.cfisd.net/HomeAccess/Content/Student/Registration.aspx", timeout=20).content
+
+                page = self.session.get("https://home-access.cfisd.net/HomeAccess/Content/Student/Registration.aspx", timeout=20).content
+
             except Timeout:
+
                 return {'status': 'connection_failed'}
 
         tree = html.fromstring(page)
@@ -325,9 +339,12 @@ def get_classwork(user=""):
     u = HomeAccessCenter(user)
 
     if u.login(passw):
+
         grades = u.get_classwork()
         u.get_demo()
+
     else:
+
         grades = {'status': 'login_failed'}
 
     print("GOT Classwork For {0} in {1:.2f}".format(user, time.time() - t))
@@ -363,8 +380,11 @@ def get_reportcard(user=""):
     u = HomeAccessCenter(user)
 
     if u.login(passw):
+
         reportcard = u.get_reportcard()
+
     else:
+
         reportcard = {'status': 'login_failed'}
 
     print("GOT Reportcard For {0} in {1:.2f}".format(user, time.time() - t))
@@ -397,7 +417,6 @@ def homeaccess_stats(subject="", name="", grade="0.0"):
     or below the one specified.
     """
     try:
-
         # B/c '/' is a url char & urlencode didn't work ):
         subject = subject.replace("~SLASH~", "/")
         name = name.replace("~SLASH~", "/")

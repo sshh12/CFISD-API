@@ -2,11 +2,11 @@ from flask import Flask
 
 app = Flask(__name__)
 
+import cfisdapi.schedules
 import cfisdapi.database
 import cfisdapi.faculty
-import cfisdapi.schedules
-import cfisdapi.news
 import cfisdapi.grades
+import cfisdapi.news
 
 
 @app.route("/")
@@ -15,13 +15,13 @@ def index_page():
     return "Hi! This is the Unoffical CyRanch Api, for info email: shrivu1122@gmail.com"
 
 
-@app.after_request  # For Allowing Access to JS Clients using fetch()
+@app.after_request
 def after_request(response):
     """
 	Appends every request with allow-origin header.
-	
+
 	This allows for the api to be used directly from javascript
-	without cross-origin security issues/exceptions locally.
+	without cross-origin security issues/exceptions locally e.g. fetch() and ajax.
 	"""
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
