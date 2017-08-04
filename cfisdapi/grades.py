@@ -316,7 +316,7 @@ def get_classwork(user=""):
     else:
         grades = {'status': 'login_failed'}
 
-    print "GOT Classwork For {0} in {1:.2f}".format(user, time.time() - t)
+    print("GOT Classwork For {0} in {1:.2f}".format(user, time.time() - t))
 
     return ujson.dumps(grades)
 
@@ -334,7 +334,7 @@ def get_reportcard(user=""):
     else:
         reportcard = {'status': 'login_failed'}
 
-    print "GOT Reportcard For {0} in {1:.2f}".format(user, time.time() - t)
+    print("GOT Reportcard For {0} in {1:.2f}".format(user, time.time() - t))
 
     return ujson.dumps(reportcard)
 

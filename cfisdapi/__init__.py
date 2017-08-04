@@ -10,11 +10,18 @@ import cfisdapi.grades
 
 
 @app.route("/")
-def index_page():  # Super Basic index page
+def index_page():
+    """Returns basic index page."""
     return "Hi! This is the Unoffical CyRanch Api, for info email: shrivu1122@gmail.com"
 
 
 @app.after_request  # For Allowing Access to JS Clients using fetch()
 def after_request(response):
+    """
+	Appends every request with allow-origin header.
+	
+	This allows for the api to be used directly from javascript
+	without cross-origin security issues/exceptions locally.
+	"""
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response

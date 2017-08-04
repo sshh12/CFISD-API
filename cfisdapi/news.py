@@ -25,7 +25,7 @@ cyranch_pages = {'Mustang News': ['/news/', '/news/page/2/'],
 
 def update_cyranch_news():
     for category in cyranch_pages.keys():
-        print "Updating " + category
+        print("Updating " + category)
         for url in cyranch_pages[category]:
 
             text = requests.get("http://cyranchnews.com/category" + url).text
