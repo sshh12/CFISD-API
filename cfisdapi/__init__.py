@@ -14,6 +14,10 @@ def index_page():
     """Returns basic index page."""
     return "Hi! This is the Unoffical CyRanch Api, for info email: shrivu1122@gmail.com"
 
+@app.route("/ping")
+def test_page():
+    """Checks connection to server."""
+    return "pong"
 
 @app.after_request
 def after_request(response):
