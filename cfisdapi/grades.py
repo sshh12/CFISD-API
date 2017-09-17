@@ -9,6 +9,7 @@ import re
 from cfisdapi import app
 from cfisdapi.database import set_grade, execute, fetchone, fetchall, add_user
 
+HAC_SERVER_TIMEOUT = 15
 
 class HomeAccessCenter:
     """Represents an instance of a Home Access Center user"""
@@ -38,7 +39,7 @@ class HomeAccessCenter:
         """
         self.passwd = password
 
-        if self.sid == 's000000':
+        if self.sid == 's000000': # Test Account
             return True
 
         data = {'action': 'login',
@@ -48,7 +49,7 @@ class HomeAccessCenter:
 
         try:
             resp = self.session.post(
-                "https://home-access.cfisd.net/HomeAccess/Account/LogOn", timeout=15, data=data)
+                "https://home-access.cfisd.net/HomeAccess/Account/LogOn", timeout=HAC_SERVER_TIMEOUT, data=data)
         except:
             return False
 
@@ -114,7 +115,7 @@ class HomeAccessCenter:
 
                 try:
 
-                    page = self.session.get("https://home-access.cfisd.net/HomeAccess/Content/Student/Assignments.aspx", timeout=15).content
+                    page = self.session.get("https://home-access.cfisd.net/HomeAccess/Content/Student/Assignments.aspx", timeout=HAC_SERVER_TIMEOUT).content
 
                 except Timeout:
 
@@ -216,7 +217,7 @@ class HomeAccessCenter:
 
             try:
 
-                page = self.session.get("https://home-access.cfisd.net/HomeAccess/Content/Student/ReportCards.aspx", timeout=15).content
+                page = self.session.get("https://home-access.cfisd.net/HomeAccess/Content/Student/ReportCards.aspx", timeout=HAC_SERVER_TIMEOUT).content
 
             except Timeout:
 
@@ -284,7 +285,7 @@ class HomeAccessCenter:
 
             try:
 
-                page = self.session.get("https://home-access.cfisd.net/HomeAccess/Content/Student/Registration.aspx", timeout=20).content
+                page = self.session.get("https://home-access.cfisd.net/HomeAccess/Content/Student/Registration.aspx", timeout=HAC_SERVER_TIMEOUT).content
 
             except Timeout:
 
@@ -347,7 +348,7 @@ def get_classwork(user=""):
 
         grades = {'status': 'login_failed'}
 
-    print("GOT Classwork For {0} in {1:.2f}".format(user, time.time() - t))
+    print("GOT Classwork for {0} in {1:.2f}".format(user, time.time() - t))
 
     return ujson.dumps(grades)
 
@@ -387,7 +388,7 @@ def get_reportcard(user=""):
 
         reportcard = {'status': 'login_failed'}
 
-    print("GOT Reportcard For {0} in {1:.2f}".format(user, time.time() - t))
+    print("GOT Reportcard for {0} in {1:.2f}".format(user, time.time() - t))
 
     return ujson.dumps(reportcard)
 
@@ -413,7 +414,7 @@ def homeaccess_stats(subject="", name="", grade="0.0"):
 
     Note
     ----
-    Percentile ATM is calculated from the number of distinct non-zero grades at
+    Percentile ATM is calculated from the number of non-zero grades at
     or below the one specified.
     """
     try:
@@ -426,12 +427,10 @@ def homeaccess_stats(subject="", name="", grade="0.0"):
         execute("SELECT AVG(grade) FROM grades WHERE name=%s AND subject=%s;", [name, subject])
         avg = fetchone()[0]
 
-        execute("SELECT COUNT(DISTINCT grade) FROM grades WHERE name=%s AND subject=%s AND grade > 0;",
-                [name, subject])
+        execute("SELECT COUNT(grade) FROM grades WHERE name=%s AND subject=%s AND grade > 0;", [name, subject])
         total_grades = float(fetchone()[0])
 
-        execute("SELECT COUNT(DISTINCT grade) FROM grades WHERE name=%s AND subject=%s AND grade <= %s AND grade > 0;", [
-            name, subject, grade])
+        execute("SELECT COUNT(grade) FROM grades WHERE name=%s AND subject=%s AND grade <= %s AND grade > 0;", [name, subject, grade])
         below_grades = float(fetchone()[0])
 
         if total_grades > 0:
@@ -439,7 +438,10 @@ def homeaccess_stats(subject="", name="", grade="0.0"):
         else:
             percentile = 0
 
-        return ujson.dumps({'average': avg, 'percentile': percentile, 'totalcount': int(total_grades)})
+        return ujson.dumps({
+                    'average': avg,
+                    'percentile': percentile,
+                    'totalcount': int(total_grades)})
 
     except Exception as e: # There always manages to be another edge case so this will alert the issue into the console
         print(e)
