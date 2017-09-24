@@ -418,9 +418,9 @@ def homeaccess_stats(subject="", name="", grade="0.0"):
     or below the one specified.
     """
     try:
-        # B/c '/' is a url char & urlencode didn't work ):
-        subject = subject.replace("~SLASH~", "/")
-        name = name.replace("~SLASH~", "/")
+        # B/c '/' and '#' are url chars & urlencode didn't work ):
+        subject = subject.replace("~SLASH~", "/").replace("~NUM~", "#")
+        name = name.replace("~SLASH~", "/").replace("~NUM~", "#")
 
         grade = float(grade)
 
