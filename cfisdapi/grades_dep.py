@@ -11,7 +11,7 @@ from cfisdapi.database import set_grade, execute, fetchone, fetchall, add_user
 
 HAC_SERVER_TIMEOUT = 15
 
-class HomeAccessCenterUser:
+class HomeAccessCenter:
     """Represents an instance of a Home Access Center user"""
 
     re_honors = re.compile(r'\b(?:AP|K)\b')
@@ -123,7 +123,7 @@ class HomeAccessCenterUser:
 
         tree = html.fromstring(page)
 
-        classwork = []
+        classwork = {}
 
         try:
 
@@ -135,14 +135,12 @@ class HomeAccessCenterUser:
 
                 class_avg_asfloat = self._percent_to_float(class_average)
 
-                classwork.append({
-                                  'name': classname,
-                                  'honors': self._is_honors(classname),
-                                  'overallavg': class_average,
-                                  'assignments': {},
-                                  'categories': {},
-                                  'letter': self._get_letter_grade(class_average)
-                                 })
+                classwork.update({class_id: {'name': classname,
+                                             'honors': self._is_honors(classname),
+                                             'overallavg': class_average,
+                                             'assignments': {},
+                                             'categories': {},
+                                             'letter': self._get_letter_grade(class_average)}})
 
                 if class_avg_asfloat > 10:
                     set_grade(self.sid,
@@ -167,7 +165,7 @@ class HomeAccessCenterUser:
 
                         assign_avg_asfloat = self._percent_to_float(grade)
 
-                        classwork[-1]['assignments'].update({
+                        classwork[class_id]['assignments'].update({
                             assign_name: {
                                 'date': date,
                                 'datedue': datedue,
@@ -189,7 +187,7 @@ class HomeAccessCenterUser:
                         weight = float(cols[4])
                         letter = self._get_letter_grade(grade)
 
-                        classwork[-1]['categories'].update({
+                        classwork[class_id]['categories'].update({
                             category: {
                                 'grade': grade,
                                 'weight': weight,
@@ -198,7 +196,9 @@ class HomeAccessCenterUser:
         except Exception as e:
             print(str(e) + " -- grades")
 
-        return {'grades': classwork, 'status': 'success'}
+        classwork['status'] = 'success'
+
+        return classwork
 
     def get_reportcard(self, page=None):
         """
@@ -312,8 +312,8 @@ class HomeAccessCenterUser:
         return demo
 
 
-@app.route("/api/classwork/<user>", methods=['POST'])
-def get_hac_classwork(user=""):
+@app.route("/homeaccess/classwork/<user>", methods=['POST'])
+def get_classwork(user=""):
     """
     Classwork
 
@@ -334,10 +334,10 @@ def get_hac_classwork(user=""):
     ----
     Every request will print username and fetch time for debugging.
     """
-    passw = unquote(request.get_json()['password'])
+    passw = unquote(request.form['password'])
 
     t = time.time()
-    u = HomeAccessCenterUser(user)
+    u = HomeAccessCenter(user)
 
     if u.login(passw):
 
@@ -351,3 +351,100 @@ def get_hac_classwork(user=""):
     print("GOT Classwork for {0} in {1:.2f}".format(user, time.time() - t))
 
     return jsonify(grades)
+
+
+@app.route("/homeaccess/reportcard/<user>", methods=['POST'])
+def get_reportcard(user=""):
+    """
+    Report Card
+
+    Parameters
+    ----------
+    user : str
+        Username
+    password : str (form)
+        Password
+
+    Returns
+    -------
+    str (json)
+        A json formatted compilation of the users reportcard. In the event
+        of an error the 'status' attribute will reflect the issue that occured.
+
+    Note
+    ----
+    Every request will print username and fetch time for debugging.
+    """
+    passw = unquote(request.form['password'])
+
+    t = time.time()
+    u = HomeAccessCenter(user)
+
+    if u.login(passw):
+
+        reportcard = u.get_reportcard()
+
+    else:
+
+        reportcard = {'status': 'login_failed'}
+
+    print("GOT Reportcard for {0} in {1:.2f}".format(user, time.time() - t))
+
+    return jsonify(reportcard)
+
+
+@app.route("/homeaccess/statistics/<subject>/<name>/<grade>")
+def homeaccess_stats(subject="", name="", grade="0.0"):
+    """
+    Stats
+
+    Parameters
+    ----------
+    subject : str
+        The class of the statistic
+    name : str
+        The name of the assignment in the class
+    grade : str (float)
+        The grade at which to base statistics off of e.g. percentile.
+
+    Returns
+    -------
+    str (json)
+        A json formatted compilation statistics relating to given parameters.
+
+    Note
+    ----
+    Percentile ATM is calculated from the number of non-zero grades at
+    or below the one specified.
+    """
+    try:
+        # B/c '/' and '#' are url chars & urlencode didn't work ):
+        subject = subject.replace("~SLASH~", "/").replace("~NUM~", "#")
+        name = name.replace("~SLASH~", "/").replace("~NUM~", "#")
+
+        grade = float(grade)
+
+        execute("SELECT AVG(grade) FROM grades WHERE name=%s AND subject=%s;", [name, subject])
+        avg = fetchone()[0]
+
+        execute("SELECT COUNT(grade) FROM grades WHERE name=%s AND subject=%s AND grade > 0;", [name, subject])
+        total_grades = float(fetchone()[0])
+
+        execute("SELECT COUNT(grade) FROM grades WHERE name=%s AND subject=%s AND grade <= %s AND grade > 0;", [name, subject, grade])
+        below_grades = float(fetchone()[0])
+
+        if total_grades > 0:
+            percentile = min(below_grades / total_grades, 0.99) * 100
+        else:
+            percentile = 0
+
+        return jsonify({
+                        'average': avg,
+                        'percentile': percentile,
+                        'totalcount': int(total_grades)
+                       })
+
+    except Exception as e: # There always manages to be another edge case so this will alert the issue into the console
+        print(e)
+
+    return "{}"

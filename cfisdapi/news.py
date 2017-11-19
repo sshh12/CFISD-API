@@ -3,7 +3,6 @@ from flask import jsonify
 from lxml import html
 import requests
 import hashlib
-import ujson
 import time
 import re
 
@@ -148,4 +147,4 @@ def list_news():
     for org in get_db_news_orgs():
         orgs['news'].append(org)
 
-    return ujson.dumps(orgs)
+    return jsonify(orgs)

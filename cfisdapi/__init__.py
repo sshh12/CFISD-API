@@ -1,12 +1,18 @@
 from flask import Flask
+from flask_cors import CORS
 
 app = Flask(__name__)
+cors = CORS(app)
+
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 import cfisdapi.schedules
 import cfisdapi.database
 import cfisdapi.faculty
 import cfisdapi.grades
 import cfisdapi.news
+
+import cfisdapi.grades_dep
 
 
 @app.route("/")
@@ -18,14 +24,3 @@ def index_page():
 def test_page():
     """Checks connection to server."""
     return "pong"
-
-@app.after_request
-def after_request(response):
-    """
-	Appends every request with allow-origin header.
-
-	This allows for the api to be used directly from javascript
-	without cross-origin security issues/exceptions locally e.g. fetch() and ajax.
-	"""
-    response.headers.add('Access-Control-Allow-Origin', '*')
-    return response
