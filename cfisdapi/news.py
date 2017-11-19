@@ -1,4 +1,5 @@
 from flask import request
+from lxml import html
 import requests
 import hashlib
 import ujson
@@ -6,7 +7,7 @@ import time
 import re
 
 from cfisdapi import app
-from cfisdapi.database import add_news, execute, fetchone, fetchall
+from cfisdapi.database import get_db_news, add_db_news, get_db_news_orgs
 
 class NewsType:
     """News Enum"""
@@ -14,9 +15,7 @@ class NewsType:
     ARTICLE = 1
     TEXT = 2
 
-# Uber long regex for maximum oneliner parseage
-re_get_cyranch_article = re.compile(r'<div class="sno-animate categorypreviewbox[\w\s]+"><a href="([\w\d:/.\-_]+)"><img src="([\w\d:/.\-_]+)" class="previewstaffpic" alt="[\w\s\S]+?" \/><\/a><h1 class="catprofile \w+"><a href="[\w\d:/.\-_]+" rel="bookmark">([\w\s\d&;#]+)<\/a><\/h1><p class="categorydate">(\w{3,10} \d{1,2}, \d{4})<\/p>')
-cyranch_news_last = 0 # Last time the news was updated
+news_last_updated = 0 # Last time the news was updated
 cyranch_pages = {'Mustang News': ['/news/', '/news/page/2/'],
                  'Mustang Sports': ['/sports/', '/sports/page/2/'],
                  'Mustang Arts': ['/arts-and-entertainment/', '/arts-and-entertainment/page/2/'],
@@ -24,7 +23,7 @@ cyranch_pages = {'Mustang News': ['/news/', '/news/page/2/'],
                  'Mustang Opinion': ['/category/opinion-2/', '/opinion-2/page/2/']}
 
 
-def update_cyranch_news():
+def update_news(): # TODO Make this async
     """Updates the database with the lastest Cy-Ranch news articles."""
     for category in cyranch_pages.keys():
 
@@ -34,107 +33,103 @@ def update_cyranch_news():
 
             text = requests.get("http://cyranchnews.com/category" + url).text
 
-            for a in re_get_cyranch_article.finditer(text):
-                add_news("/icons/CyRanchMustangs.png",
-                         a.group(2),
-                         category,
-                         a.group(4),
-                         a.group(3).replace("&#8217;", "'").replace("&#8220;", "\"").replace("&#8221;", "\"").replace("&semi;", "").replace("&quot;", "'"),
-                         a.group(1), NewsType.ARTICLE, check=True)
+            tree = html.fromstring(text)
+
+            for class_ in tree.find_class('sno-animate categorypreviewbox'):
+
+                picture = class_.find_class('previewstaffpic')[0].attrib['src']
+                eventdate = class_.find_class('time-wrapper')[0].text_content().strip()
+                text = class_.find_class('previewstaffpic')[0].attrib['alt'].encode("utf8")
+                link = class_.xpath('a')[0].attrib['href']
+
+                add_db_news(picture, category, eventdate, text, link, NewsType.ARTICLE, check=True)
 
 
-@app.route("/news/<org>")
-def get_org_news(org=""):
+@app.route("/news/all")
+def get_news():
     """
-    Get the news for an organization
-
-    Parameters
-    ----------
-    org : str
-        The organization/news source
+    Get the news
 
     Returns
     -------
     str (json)
         All news articles associated with the given organization
     """
-    global cyranch_news_last
-    if time.time() - cyranch_news_last > 86400: # 86400 = A Long enough time to update news
-        cyranch_news_last = time.time()
-        update_cyranch_news()
+    global news_last_updated
+    if True or time.time() - news_last_updated > 86400: # 86400 = A Long enough time to update news
+        news_last_updated = time.time()
+        update_news()
 
     news = []
-    if execute("select * from news where organization=%s", [org]):
-        for n in fetchall():
-            news.append({
-                        'date': n[4].strftime("%B %d, %Y"),
-                        'image': n[2],
-                        'icon': n[1],
-                        'organization': n[3],
-                        'text': n[5],
-                        'link': n[6],
-                        'type': n[7]
-                        })
+    for article in get_db_news():
+        news.append({
+                    'date': article[4].strftime("%B %d, %Y"),
+                    'image': article[2],
+                    'organization': article[3],
+                    'text': article[5],
+                    'link': article[6],
+                    'type': article[7]
+                    })
     return ujson.dumps(news)
 
-form_html = """
-<html>
-<head>
-</head>
-<body>
-<form action="/news/create" method="POST">
-<select name="organization">
-OPTIONS
-</select><br>
-Picture: <input type="text" name="pic"><br>
-Text: <input type="text" name="text"><br>
-Link: <input type="text" name="link"><br>
-Date: <input type="date" name="date"><br>
-Type (1=Article,2=Text): <input type="number" name="type"><br>
-Password: <input type="password" name="password"><br>
-<input type="submit" name="submit">
-</form>
-</body>
-</html>
-"""
+# form_html = """
+# <html>
+# <head>
+# </head>
+# <body>
+# <form action="/news/create" method="POST">
+# <select name="organization">
+# OPTIONS
+# </select><br>
+# Picture: <input type="text" name="pic"><br>
+# Text: <input type="text" name="text"><br>
+# Link: <input type="text" name="link"><br>
+# Date: <input type="date" name="date"><br>
+# Type (1=Article,2=Text): <input type="number" name="type"><br>
+# Password: <input type="password" name="password"><br>
+# <input type="submit" name="submit">
+# </form>
+# </body>
+# </html>
+# """
 
-@app.route("/news/create", methods=['GET', 'POST'])
-def create_org_news():
-    """
-    Creates a news item
-
-    This will add a new news article to the database. If the page is requested
-    from a GET a form will be displayed and if a POST is sent the form data will
-    be used to add the article to the database.
-    """
-    if request.method == 'POST':
-
-        pic = request.form['pic']
-        org = request.form['organization']
-        text = request.form['text']
-        link = request.form['link']
-        date = request.form['date']
-        password = request.form['password']
-
-        execute("select distinct icon from news where organization=%s", [org])
-        icon = fetchone()[0]
-
-        if hashlib.sha256(org + "!").hexdigest()[:8] == password:  # Still Not Secure
-
-            add_news(icon, pic, org, date, text, link, NewsType.ARTICLE)
-            return "Success"
-
-        return "Error"
-
-    else:
-
-        orgs = []
-
-        execute("select distinct organization from news")
-        for org in fetchall():
-            orgs.append(org[0])
-
-        return form_html.replace("OPTIONS","\n".join(map(lambda s: "<option value=\"{}\">{}</option>".format(s, s), orgs)))
+# @app.route("/news/create", methods=['GET', 'POST'])
+# def create_org_news():
+#     """
+#     Creates a news item
+#
+#     This will add a new news article to the database. If the page is requested
+#     from a GET a form will be displayed and if a POST is sent the form data will
+#     be used to add the article to the database.
+#     """
+#     if request.method == 'POST':
+#
+#         pic = request.form['pic']
+#         org = request.form['organization']
+#         text = request.form['text']
+#         link = request.form['link']
+#         date = request.form['date']
+#         password = request.form['password']
+#
+#         execute("select distinct icon from news where organization=%s", [org])
+#         icon = fetchone()[0]
+#
+#         if hashlib.sha256(org + "!").hexdigest()[:8] == password:  # Still Not Secure
+#
+#             add_db_news(icon, pic, org, date, text, link, NewsType.ARTICLE)
+#             return "Success"
+#
+#         return "Error"
+#
+#     else:
+#
+#         orgs = []
+#
+#         execute("select distinct organization from news")
+#         for org in fetchall():
+#             orgs.append(org[0])
+#
+#         return form_html.replace("OPTIONS","\n".join(map(lambda s: "<option value=\"{}\">{}</option>".format(s, s), orgs)))
 
 
 @app.route("/news/list")
@@ -148,9 +143,8 @@ def list_news():
         A json with every news source and its respective icon location in the
         mobile app.
     """
-    orgs = {}
-    execute("select distinct organization, icon from news")
-    for org in fetchall():
-        orgs[org[0]] = org[1]
+    orgs = {'news': []}
+    for org in get_db_news_orgs():
+        orgs['news'].append(org)
 
     return ujson.dumps(orgs)
