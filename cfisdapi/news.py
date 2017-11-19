@@ -1,4 +1,5 @@
 from flask import request
+from flask import jsonify
 from lxml import html
 import requests
 import hashlib
@@ -20,7 +21,7 @@ cyranch_pages = {'Mustang News': ['/news/', '/news/page/2/'],
                  'Mustang Sports': ['/sports/', '/sports/page/2/'],
                  'Mustang Arts': ['/arts-and-entertainment/', '/arts-and-entertainment/page/2/'],
                  'Mustang Students': ['/student-life/', '/student-life/page/2/'],
-                 'Mustang Opinion': ['/category/opinion-2/', '/opinion-2/page/2/']}
+                 'Mustang Editorial': ['/category/editorial-2/', '/editorial-2/page/2/']}
 
 
 def update_news(): # TODO Make this async
@@ -45,7 +46,7 @@ def update_news(): # TODO Make this async
                 add_db_news(picture, category, eventdate, text, link, NewsType.ARTICLE, check=True)
 
 
-@app.route("/news/all")
+@app.route("/api/news/all")
 def get_news():
     """
     Get the news
@@ -56,21 +57,21 @@ def get_news():
         All news articles associated with the given organization
     """
     global news_last_updated
-    if True or time.time() - news_last_updated > 86400: # 86400 = A Long enough time to update news
+    if time.time() - news_last_updated > 86400: # 86400 = A Long enough time to update news
         news_last_updated = time.time()
         update_news()
 
-    news = []
+    news = {'news': {'all': []}}
     for article in get_db_news():
-        news.append({
-                    'date': article[4].strftime("%B %d, %Y"),
-                    'image': article[2],
-                    'organization': article[3],
-                    'text': article[5],
-                    'link': article[6],
-                    'type': article[7]
-                    })
-    return ujson.dumps(news)
+        news['news']['all'].append({
+                                    'date': article[4].strftime("%B %d, %Y"),
+                                    'image': article[2],
+                                    'organization': article[3],
+                                    'text': article[5],
+                                    'link': article[6],
+                                    'type': article[7]
+                                   })
+    return jsonify(news)
 
 # form_html = """
 # <html>
@@ -132,7 +133,7 @@ def get_news():
 #         return form_html.replace("OPTIONS","\n".join(map(lambda s: "<option value=\"{}\">{}</option>".format(s, s), orgs)))
 
 
-@app.route("/news/list")
+@app.route("/api/news/list")
 def list_news():
     """
     Lists the news sources

@@ -14,29 +14,31 @@ The python backend for the Cy-Ranch App.
 
 ## API
 
-##### GET /news/{Organization}
-Returns the news for an organization
+##### GET /api/news/all
+Returns all news
 ```js
-[  
-   {  
-      "date":"January 01, 2017",
-      "organization":"Organization",
-      "text":"News Text",
-      "icon":"/local/path/to/icon",
-      "image":"http://example.com/link/to/image",
-      "link":"http://example.com/article",
-      "type":1 // Type Enum: BASIC, ARTICLE, TEXTONLY
-   },
-   ...
-]
+{
+	"news": {
+		"all": [
+			{
+				"date": "January 01, 2000", 
+				"image": "", 
+				"link": "#", 
+				"organization": "The Cy-Ranch App", 
+				"text": "This is a test.", 
+				"type": 2
+			},
+			...
+		]
+	}
+}
 ```
 
-##### GET /news/list
-Returns the all the current news sources and icons
+##### GET /api/news/list
+Returns the all the current news organizations
 ```js
-{  
-   "Organization":"/local/path/to/icon",
-   ...
+{
+	"news": ["Mustang Editorial","Mustang Arts",...]
 }
 ```
 
