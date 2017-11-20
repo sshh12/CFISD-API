@@ -13,6 +13,7 @@ import cfisdapi.grades
 import cfisdapi.news
 
 import cfisdapi.grades_dep
+import cfisdapi.news_dep
 
 
 @app.route("/")
