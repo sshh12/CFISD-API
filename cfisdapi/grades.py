@@ -140,7 +140,7 @@ class HomeAccessCenterUser:
                                   'honors': self._is_honors(classname),
                                   'overallavg': class_average,
                                   'assignments': [],
-                                  'categories': {},
+                                  'categories': [],
                                   'letter': self._get_letter_grade(class_average)
                                  })
 
@@ -190,11 +190,12 @@ class HomeAccessCenterUser:
                         weight = float(cols[4])
                         letter = self._get_letter_grade(grade)
 
-                        classwork[-1]['categories'].update({category: {
-                                                                    'grade': grade,
-                                                                    'weight': weight,
-                                                                    'letter': letter
-                                                            }})
+                        classwork[-1]['categories'].append({
+                                                            'name': category,
+                                                            'grade': grade,
+                                                            'weight': weight,
+                                                            'letter': letter
+                                                           })
 
         except Exception as e:
             print(str(e) + " -- grades")
