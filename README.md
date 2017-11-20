@@ -18,19 +18,19 @@ The python backend for the Cy-Ranch App.
 Returns all news
 ```js
 {
-	"news": {
-		"all": [
-			{
-				"date": "January 01, 2000", 
-				"image": "", 
-				"link": "#", 
-				"organization": "The Cy-Ranch App", 
-				"text": "This is a test.", 
-				"type": 2
-			},
-			...
-		]
-	}
+  "news": {
+    "all": [
+      {
+        "date": "January 01, 2000", 
+        "image": "", 
+        "link": "#", 
+        "organization": "The Cy-Ranch App", 
+        "text": "This is a test.", 
+        "type": 2
+      }, 
+	  ...
+	]
+  }
 }
 ```
 
@@ -38,7 +38,11 @@ Returns all news
 Returns the all the current news organizations
 ```js
 {
-	"news": ["Mustang Editorial","Mustang Arts",...]
+  "news": [
+    "Mustang Editorial", 
+    "Mustang Arts", 
+    ...
+  ]
 }
 ```
 
@@ -58,34 +62,38 @@ Returns a list of all teachers at Cy-Ranch
 }
 ```
 
-##### POST password -> /homeaccess/classwork/{Student ID}
+##### POST password -> /api/classwork/{Student ID}
 Returns current grades and classwork for student
 ```js
 {  
-   "12345 - 6":{  
-      "name":"Honors Class",
-      "honors":true,
-      "letter":"A",
-      "overallavg":"100.00%",
-      "categories":{  
-         "Major Grades":{  
-            "weight":0.4,
-            "letter":"A",
-            "grade":"100.00%"
-         },
-         ...
+   "grades":[
+	  {
+		  "name":"Honors Class",
+		  "honors":true,
+		  "letter":"A",
+		  "overallavg":"100.00%",
+		  "categories":{  
+			 "Major Grades":{  
+				"weight":0.4,
+				"letter":"A",
+				"grade":"100.00%"
+			 },
+			 ...
+		  },
+		  "assignments":[  
+			 {  
+				"name":"A Class Assignment",
+				"date":"MM/DD/YYYY",
+				"datedue":"MM/DD/YYYY",
+				"gradetype":"Major Grades",
+				"letter":"A",
+				"grade":"100.00%"
+			 },
+			 ...
+		  ]
       },
-      "assignments":{  
-         "A Class Assignment":{  
-            "date":"MM/DD/YYYY",
-            "datedue":"MM/DD/YYYY",
-            "gradetype":"Major Grades",
-            "letter":"A",
-            "grade":"100.00%"
-         },
-		 ...
-      }
-   },
+	  ...
+   ],
    ...
    "status":"success"
 }

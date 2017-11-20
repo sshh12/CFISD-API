@@ -139,7 +139,7 @@ class HomeAccessCenterUser:
                                   'name': classname,
                                   'honors': self._is_honors(classname),
                                   'overallavg': class_average,
-                                  'assignments': {},
+                                  'assignments': [],
                                   'categories': {},
                                   'letter': self._get_letter_grade(class_average)
                                  })
@@ -167,13 +167,14 @@ class HomeAccessCenterUser:
 
                         assign_avg_asfloat = self._percent_to_float(grade)
 
-                        classwork[-1]['assignments'].update({
-                            assign_name: {
-                                'date': date,
-                                'datedue': datedue,
-                                'gradetype': grade_type,
-                                'grade': grade,
-                                'letter': self._get_letter_grade(grade)}})
+                        classwork[-1]['assignments'].append({
+                                                            'name': assign_name,
+                                                            'date': date,
+                                                            'datedue': datedue,
+                                                            'gradetype': grade_type,
+                                                            'grade': grade,
+                                                            'letter': self._get_letter_grade(grade)
+                                                            })
 
                         if assign_avg_asfloat > 10:
                             set_grade(self.sid,
@@ -189,11 +190,11 @@ class HomeAccessCenterUser:
                         weight = float(cols[4])
                         letter = self._get_letter_grade(grade)
 
-                        classwork[-1]['categories'].update({
-                            category: {
-                                'grade': grade,
-                                'weight': weight,
-                                'letter': letter}})
+                        classwork[-1]['categories'].update({category: {
+                                                                    'grade': grade,
+                                                                    'weight': weight,
+                                                                    'letter': letter
+                                                            }})
 
         except Exception as e:
             print(str(e) + " -- grades")
