@@ -14,7 +14,7 @@ The python backend for the Cy-Ranch App.
 
 ## API
 
-##### GET /api/news/<school>/all
+##### GET /api/news/{ school }/all
 Returns all news
 ```js
 {
@@ -34,7 +34,7 @@ Returns all news
 }
 ```
 
-##### GET /api/news/<school>/list
+##### GET /api/news/{ school }/list
 Returns the all the current news organizations
 ```js
 {
@@ -52,9 +52,9 @@ Returns a list of all teachers at Cy-Ranch
 {  
    "A":[  // Last Name Letter
       {  
-         "website":"https://sites.google.com/path/to/site",
-         "name":"Last, First",
-         "email":"email@cfisd.net"
+         "website": "https://sites.google.com/path/to/site",
+         "name": "Last, First",
+         "email": "email@cfisd.net"
       },
       ...
    ],
@@ -62,7 +62,7 @@ Returns a list of all teachers at Cy-Ranch
 }
 ```
 
-##### POST password -> /api/classwork/<student id>
+##### POST password -> /api/current/{ student id }
 Returns current grades and classwork for student
 ```js
 {  
@@ -98,7 +98,7 @@ Returns current grades and classwork for student
 }
 ```
 
-##### POST password -> /api/reportcard/<student id>
+##### POST password -> /api/reportcard/{ student id }
 Returns reportcard for student
 ```js
 {
