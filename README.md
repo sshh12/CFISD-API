@@ -14,39 +14,39 @@ The python backend for the Cy-Ranch App.
 
 ## API
 
-##### GET /api/news/all
+##### GET /api/news/<school>/all
 Returns all news
 ```js
 {
   "news": {
     "all": [
       {
-        "date": "January 01, 2000", 
-        "image": "", 
-        "link": "#", 
-        "organization": "The Cy-Ranch App", 
-        "text": "This is a test.", 
+        "date": "January 01, 2000",
+        "image": "",
+        "link": "#",
+        "organization": "The Cy-Ranch App",
+        "text": "This is a test.",
         "type": 2
-      }, 
+      },
 	  ...
 	]
   }
 }
 ```
 
-##### GET /api/news/list
+##### GET /api/news/<school>/list
 Returns the all the current news organizations
 ```js
 {
   "news": [
-    "Mustang Editorial", 
-    "Mustang Arts", 
+    "Mustang Editorial",
+    "Mustang Arts",
     ...
   ]
 }
 ```
 
-##### GET /faculty
+##### GET /api/faculty
 Returns a list of all teachers at Cy-Ranch
 ```js
 {  
@@ -62,7 +62,7 @@ Returns a list of all teachers at Cy-Ranch
 }
 ```
 
-##### POST password -> /api/classwork/{Student ID}
+##### POST password -> /api/classwork/<student id>
 Returns current grades and classwork for student
 ```js
 {  
@@ -94,42 +94,43 @@ Returns current grades and classwork for student
       },
 	  ...
    ],
-   ...
    "status":"success"
 }
 ```
 
-##### POST password -> /homeaccess/reportcard/{Student ID}
+##### POST password -> /api/reportcard/<student id>
 Returns reportcard for student
 ```js
 {
-   "12345 - 6":{  
-      "name":"A Class",
-      "exams":[  
-         {  
-            "average":100.0,
-            "letter":"A"
-         },
-         ...
-      ],
-      "semesters":[  
-         {  
-            "average":100.0,
-            "letter":"A"
-         },
-         ...
-      ],
-      "teacher":"Last, First",
-      "room":"4231",
-      "averages":[  
-         {  
-            "average":100,
-            "letter":"A"
-         },
-         ...
-      ]
-   },
-   ...
+   "reportcard": [
+     {
+        "name":"A Class",
+        "exams":[  
+           {  
+              "average":100.0,
+              "letter":"A"
+           },
+           ...
+        ],
+        "semesters":[  
+           {  
+              "average":100.0,
+              "letter":"A"
+           },
+           ...
+        ],
+        "teacher":"Last, First",
+        "room":"4231",
+        "averages":[  
+           {  
+              "average":100,
+              "letter":"A"
+           },
+           ...
+        ]
+     },
+     ...
+   ],
    "status":"success"
 }
 ```

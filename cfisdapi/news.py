@@ -45,7 +45,7 @@ def update_news(): # TODO Make this async
                 add_db_news(picture, category, eventdate, text, link, NewsType.ARTICLE, check=True)
 
 
-@app.route("/api/news/all")
+@app.route("/api/news/cyranch/all")
 def get_news():
     """
     Get the news
@@ -132,7 +132,7 @@ def get_news():
 #         return form_html.replace("OPTIONS","\n".join(map(lambda s: "<option value=\"{}\">{}</option>".format(s, s), orgs)))
 
 
-@app.route("/api/news/list")
+@app.route("/api/news/cyranch/list")
 def list_news():
     """
     Lists the news sources

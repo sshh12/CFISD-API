@@ -227,7 +227,7 @@ class HomeAccessCenterUser:
 
         tree = html.fromstring(page)
 
-        reportcard = {}
+        reportcard = []
 
         for row in tree.find_class('sg-asp-table-data-row'):
 
@@ -239,25 +239,23 @@ class HomeAccessCenterUser:
             room = cols[4]
 
             averages = []
-            for i in [7, 8, 9, 12, 13, 14]:
+            for i in [7, 8, 11, 12]:
                 averages.append({'average': self._percent_to_float(cols[i]), 'letter': self._get_letter_grade(cols[i])})
 
             exams = []
             sems = []
-            for i in [10, 15]:
+            for i in [9, 13]:
                 exams.append({'average': self._percent_to_float(cols[i]), 'letter': self._get_letter_grade(cols[i])})
                 sems.append({'average': self._percent_to_float(cols[i + 1]), 'letter': self._get_letter_grade(cols[i + 1])})
 
-            reportcard.update({classid: {'name': classname,
-                                         'teacher': teacher,
-                                         'room': room,
-                                         'averages': averages,
-                                         'exams': exams,
-                                         'semesters': sems}})
+            reportcard.append({'name': classname,
+                               'teacher': teacher,
+                               'room': room,
+                               'averages': averages,
+                               'exams': exams,
+                               'semesters': sems})
 
-        reportcard['status'] = 'success'
-
-        return reportcard
+        return {'reportcard': reportcard, 'status': 'success'}
 
     def get_demo(self, page=None):
         """
@@ -314,7 +312,7 @@ class HomeAccessCenterUser:
         return demo
 
 
-@app.route("/api/classwork/<user>", methods=['POST'])
+@app.route("/api/current/<user>", methods=['POST'])
 def get_hac_classwork(user=""):
     """
     Classwork
@@ -353,3 +351,42 @@ def get_hac_classwork(user=""):
     print("GOT Classwork for {0} in {1:.2f}".format(user, time.time() - t))
 
     return jsonify(grades)
+
+@app.route("/api/reportcard/<user>", methods=['POST'])
+def get_hac_reportcard(user=""):
+    """
+    Report Card
+
+    Parameters
+    ----------
+    user : str
+        Username
+    password : str (form)
+        Password
+
+    Returns
+    -------
+    str (json)
+        A json formatted compilation of the users reportcard. In the event
+        of an error the 'status' attribute will reflect the issue that occured.
+
+    Note
+    ----
+    Every request will print username and fetch time for debugging.
+    """
+    passw = unquote(request.get_json()['password'])
+
+    t = time.time()
+    u = HomeAccessCenterUser(user)
+
+    if u.login(passw):
+
+        reportcard = u.get_reportcard()
+
+    else:
+
+        reportcard = {'status': 'login_failed'}
+
+    print("GOT Reportcard for {0} in {1:.2f}".format(user, time.time() - t))
+
+    return jsonify(reportcard)
