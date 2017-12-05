@@ -13,17 +13,15 @@ from cfisdapi.database import get_db_news, add_db_news, get_db_news_orgs
 def get_news_deprecated(org=""):
 
     news = []
-    for article in get_db_news():
-        if article[3] == org:
-            news.append({
-                        'date': article[4].strftime("%B %d, %Y"),
-                        'image': article[2],
-                        'organization': article[3],
-                        'text': article[5],
-                        'link': article[6],
-                        'type': article[7],
-                        'icon': ''
-                        })
+    news.append({
+            'date': 'Jan 1, 2099',
+            'image': 'https://cdn.pixabay.com/photo/2016/09/15/18/29/update-1672356_960_720.png',
+            'organization': 'Mustang News',
+            'text': 'Update Your App!!',
+            'link': '#',
+            'type': 1,
+            'icon': ''
+            })
     return jsonify(news)
 
 @app.route("/news/list")
