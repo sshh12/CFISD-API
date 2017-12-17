@@ -135,10 +135,8 @@ Returns reportcard for student
 }
 ```
 
-## Tests \*Broken\*
+## Tests
 
 ```shell
-python -m tests.unit -v
-
 python -m tests.manual
 ```
