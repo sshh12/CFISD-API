@@ -257,6 +257,60 @@ class HomeAccessCenterUser:
 
         return {'reportcard': reportcard, 'status': 'success'}
 
+    def get_transcript(self, page=None):
+        """
+        Gets transcript info about user
+
+        Parameters
+        ----------
+        page : str
+            A string representing an html page containing raw information webpage html
+
+        Returns
+        -------
+        Dict containing transcript info
+
+        Note
+        ----
+        Demo account will return empty dict
+        """
+        if self.sid == 's000000':
+            return {}
+
+        if not page:
+
+            try:
+
+                page = self.session.get("https://home-access.cfisd.net/HomeAccess/Content/Student/Transcript.aspx", timeout=HAC_SERVER_TIMEOUT).content
+
+            except Timeout:
+
+                return {'status': 'connection_failed'}
+
+        tree = html.fromstring(page)
+
+        transcript = {}
+
+        try:
+
+            current_gpa = tree.xpath("//span[@id='plnMain_rpTranscriptGroup_lblGPACum1']")[0].text_content().strip()
+            rank = tree.xpath("//span[@id='plnMain_rpTranscriptGroup_lblGPARank1']")[0].text_content().strip().split(' / ')
+
+            transcript.update({
+                'gpa': {
+                    'value': float(current_gpa),
+                    'rank': int(rank[0]),
+                    'class_size': int(rank[1])
+                },
+                'status': 'success'
+            })
+
+        except:
+
+            return {'status': 'server_error'}
+
+        return transcript
+
     def get_demo(self, page=None):
         """
         Gets demographic info about user
@@ -390,3 +444,42 @@ def get_hac_reportcard(user=""):
     print("GOT Reportcard for {0} in {1:.2f}".format(user, time.time() - t))
 
     return jsonify(reportcard)
+
+@app.route("/api/transcript/<user>", methods=['POST'])
+def get_hac_transcript(user=""):
+    """
+    Transcript
+
+    Parameters
+    ----------
+    user : str
+        Username
+    password : str (form)
+        Password
+
+    Returns
+    -------
+    str (json)
+        A json formatted compilation of the users transcript. In the event
+        of an error the 'status' attribute will reflect the issue that occured.
+
+    Note
+    ----
+    Every request will print username and fetch time for debugging.
+    """
+    passw = unquote(request.get_json()['password'])
+
+    t = time.time()
+    u = HomeAccessCenterUser(user)
+
+    if u.login(passw):
+
+        transcript = u.get_transcript()
+
+    else:
+
+        transcript = {'status': 'login_failed'}
+
+    print("GOT Transcript for {0} in {1:.2f}".format(user, time.time() - t))
+
+    return jsonify(transcript)
