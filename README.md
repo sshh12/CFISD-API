@@ -135,6 +135,19 @@ Returns reportcard for student
 }
 ```
 
+##### POST password -> /api/transcript/{ student id }
+Returns reportcard for student
+```js
+{
+   "gpa": {
+      "value": 4.0,
+	  "rank": 50,
+	  "class_size": 1000
+   },
+   "status":"success"
+}
+```
+
 ## Tests
 
 ```shell
