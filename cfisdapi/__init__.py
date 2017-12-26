@@ -12,9 +12,6 @@ import cfisdapi.faculty
 import cfisdapi.grades
 import cfisdapi.news
 
-import cfisdapi.grades_dep
-import cfisdapi.news_dep
-
 
 @app.route("/")
 def index_page():
