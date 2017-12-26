@@ -53,7 +53,7 @@ class HomeAccessCenterUser:
         except:
             return False
 
-        if "ViewAssignments" in resp.text:  # Test If Login Worked
+        if "Logoff" in resp.text:  # Test If Login Worked
             return True
 
         return False

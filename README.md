@@ -139,12 +139,12 @@ Returns reportcard for student
 Returns reportcard for student
 ```js
 {
-   "gpa": {
-      "value": 4.0,
-	  "rank": 50,
-	  "class_size": 1000
-   },
-   "status":"success"
+    "gpa": {
+        "value": 4.0,
+        "rank": 50,
+        "class_size": 1000
+    },
+    "status": "success"
 }
 ```
 
