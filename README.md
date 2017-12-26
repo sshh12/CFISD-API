@@ -28,8 +28,8 @@ Returns all news
         "text": "This is a test.",
         "type": 2
       },
-	  ...
-	]
+      ...
+    ]
   }
 }
 ```
@@ -49,52 +49,52 @@ Returns the all the current news organizations
 ##### GET /api/faculty
 Returns a list of all teachers at Cy-Ranch
 ```js
-{  
-   "A":[  // Last Name Letter
-      {  
-         "website": "https://sites.google.com/path/to/site",
-         "name": "Last, First",
-         "email": "email@cfisd.net"
-      },
-      ...
-   ],
-   ...
+{
+  "A": [ // Last Name Letter
+    {
+      "website": "https://sites.google.com/path/to/site",
+      "name": "Last, First",
+      "email": "email@cfisd.net"
+    },
+    ...
+  ],
+  ...
 }
 ```
 
 ##### POST password -> /api/current/{ student id }
 Returns current grades and classwork for student
 ```js
-{  
-   "grades": [
-	  {
-		  "name": "Honors Class",
-		  "honors": true,
-		  "letter": "A",
-		  "overallavg": "100.00%",
-		  "categories": {  
-			 "Major Grades": {  
-				"weight": 0.4,
-				"letter": "A",
-				"grade": "100.00%"
-			 },
-			 ...
-		  },
-		  "assignments" :[  
-			 {  
-				"name": "A Class Assignment",
-				"date": "MM/DD/YYYY",
-				"datedue": "MM/DD/YYYY",
-				"gradetype": "Major Grades",
-				"letter": "A",
-				"grade": "100.00%"
-			 },
-			 ...
-		  ]
+{
+  "grades": [
+    {
+      "name": "Honors Class",
+      "honors": true,
+      "letter": "A",
+      "overallavg": "100.00%",
+      "categories": {
+        "Major Grades": {
+          "weight": 0.4,
+          "letter": "A",
+          "grade": "100.00%"
+        },
+        ...
       },
-	  ...
-   ],
-   "status": "success"
+      "assignments": [
+        {
+          "name": "A Class Assignment",
+          "date": "MM/DD/YYYY",
+          "datedue": "MM/DD/YYYY",
+          "gradetype": "Major Grades",
+          "letter": "A",
+          "grade": "100.00%"
+        },
+        ...
+      ]
+    },
+    ...
+  ],
+  "status": "success"
 }
 ```
 
@@ -102,49 +102,49 @@ Returns current grades and classwork for student
 Returns reportcard for student
 ```js
 {
-   "reportcard": [
-     {
-        "name":"A Class",
-        "exams":[  
-           {  
-              "average":100.0,
-              "letter":"A"
-           },
-           ...
-        ],
-        "semesters":[  
-           {  
-              "average":100.0,
-              "letter":"A"
-           },
-           ...
-        ],
-        "teacher":"Last, First",
-        "room":"4231",
-        "averages":[  
-           {  
-              "average":100,
-              "letter":"A"
-           },
-           ...
-        ]
-     },
-     ...
-   ],
-   "status":"success"
+  "reportcard": [
+    {
+      "name": "A Class",
+      "exams": [
+        {
+          "average": 100.0,
+          "letter": "A"
+        },
+        ...
+      ],
+      "semesters": [
+        {
+          "average": 100.0,
+          "letter": "A"
+        },
+        ...
+      ],
+      "teacher": "Last, First",
+      "room": "4231",
+      "averages": [
+        {
+          "average": 100,
+          "letter": "A"
+        },
+        ...
+      ]
+    },
+    ...
+  ],
+  "status": "success"
 }
 ```
 
 ##### POST password -> /api/transcript/{ student id }
-Returns reportcard for student
+Returns transcript for student
 ```js
 {
-    "gpa": {
-        "value": 4.0,
-        "rank": 50,
-        "class_size": 1000
-    },
-    "status": "success"
+  "gpa": {
+    "value": 4.0,
+    "rank": 50,
+    "class_size": 1000
+  },
+  "status": "success"
 }
 ```
 
