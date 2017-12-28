@@ -46,7 +46,7 @@ def update_news(): # TODO Make this async
 
 
 @app.route("/api/news/cyranch/all")
-def get_news():
+def get_all_news_list():
     """
     Get the news
 
