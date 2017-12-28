@@ -7,7 +7,7 @@ import time
 import re
 
 from cfisdapi import app
-from cfisdapi.database import set_grade, execute, fetchone, fetchall, add_user
+from cfisdapi.database import set_grade, add_user, add_rank, is_user
 
 HAC_SERVER_TIMEOUT = 15
 
@@ -309,6 +309,8 @@ class HomeAccessCenterUser:
 
             return {'status': 'server_error'}
 
+        add_rank(self.sid, transcript)
+
         return transcript
 
     def get_demo(self, page=None):
@@ -331,8 +333,7 @@ class HomeAccessCenterUser:
         if self.sid == 's000000':
             return {}
 
-        execute("SELECT 1 FROM demo WHERE user_id=%s;", [self.sid])
-        if fetchone() != None:
+        if is_user(self.sid):
             return {'status': 'already_added'}
 
         if not page:

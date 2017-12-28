@@ -7,7 +7,7 @@ import time
 import re
 
 from cfisdapi import app
-from cfisdapi.database import get_db_news, add_db_news, get_db_news_orgs
+from cfisdapi.database import get_news, add_news, get_news_orgs
 
 class NewsType:
     """News Enum"""
@@ -42,7 +42,7 @@ def update_news(): # TODO Make this async
                 text = class_.find_class('previewstaffpic')[0].attrib['alt'].encode("utf8")
                 link = class_.xpath('a')[0].attrib['href']
 
-                add_db_news(picture, category, eventdate, text, link, NewsType.ARTICLE, check=True)
+                add_news(picture, category, eventdate, text, link, NewsType.ARTICLE, check=True)
 
 
 @app.route("/api/news/cyranch/all")
@@ -61,7 +61,7 @@ def get_news():
         update_news()
 
     news = {'news': {'all': []}}
-    for article in get_db_news():
+    for article in get_news():
         news['news']['all'].append({
                                     'date': article[4].strftime("%B %d, %Y"),
                                     'image': article[2],
@@ -116,7 +116,7 @@ def get_news():
 #
 #         if hashlib.sha256(org + "!").hexdigest()[:8] == password:  # Still Not Secure
 #
-#             add_db_news(icon, pic, org, date, text, link, NewsType.ARTICLE)
+#             add_news(icon, pic, org, date, text, link, NewsType.ARTICLE)
 #             return "Success"
 #
 #         return "Error"
@@ -144,7 +144,7 @@ def list_news():
         mobile app.
     """
     orgs = {'news': []}
-    for org in get_db_news_orgs():
+    for org in get_news_orgs():
         orgs['news'].append(org)
 
     return jsonify(orgs)

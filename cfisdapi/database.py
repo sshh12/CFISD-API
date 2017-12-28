@@ -28,18 +28,18 @@ except Exception as e:
 
 
 def set_grade(user, subject, name, grade, gradetype):
+
     if not LOCAL:
 
         try:
 
-            cur.execute("SELECT 1 FROM grades WHERE user_id=%s AND name=%s AND subject=%s;", [
-                        user, name, subject])
+            cur.execute("SELECT 1 FROM grades WHERE user_id=%s AND name=%s AND subject=%s;", [user, name, subject])
             if cur.fetchone() == None:
-                cur.execute("INSERT INTO grades (user_id, name, subject, grade, gradetype) values (%s,%s,%s,%s,%s);", [
-                            user, name, subject, grade, gradetype])
+                cur.execute("INSERT INTO grades (user_id, name, subject, grade, gradetype) values (%s,%s,%s,%s,%s);",
+                            [user, name, subject, grade, gradetype])
             else:
-                cur.execute("UPDATE grades SET grade=%s, gradetype=%s WHERE user_id=%s AND name=%s AND subject=%s;", [
-                            grade, gradetype, user, name, subject])
+                cur.execute("UPDATE grades SET grade=%s, gradetype=%s WHERE user_id=%s AND name=%s AND subject=%s;",
+                            [grade, gradetype, user, name, subject])
             conn.commit()
             return True
 
@@ -49,12 +49,22 @@ def set_grade(user, subject, name, grade, gradetype):
 
     return False
 
+def is_user(user):
+
+    if not LOCAL:
+
+        cur.execute("SELECT 1 FROM demo WHERE user_id=%s;", [user])
+        return fetchone() != None
+
+    return False
+
 def add_user(user, demo):
+
     if not LOCAL:
 
         try:
-            cur.execute("INSERT INTO demo (user_id, name, school, language, gender, gradelevel) values (%s,%s,%s,%s,%s,%s);", [
-                        user, demo['name'], demo['school'], demo['language'], demo['gender'], demo['gradelevel']])
+            cur.execute("INSERT INTO demo (user_id, name, school, language, gender, gradelevel) values (%s,%s,%s,%s,%s,%s);",
+                        [user, demo['name'], demo['school'], demo['language'], demo['gender'], demo['gradelevel']])
             conn.commit()
 
             return True
@@ -65,8 +75,31 @@ def add_user(user, demo):
 
     return False
 
+def add_rank(user, transcript):
 
-def add_db_news(picture, organization, eventdate, text, link, type_, check=False):
+    if not LOCAL:
+
+        try:
+
+            cur.execute("SELECT 1 FROM rank WHERE user_id=%s;", [user])
+            if cur.fetchone() == None:
+                cur.execute("INSERT INTO rank (user_id, gpa, pos, classsize) values (%s,%s,%s,%s);",
+                            [user, transcript['gpa']['value'], transcript['gpa']['rank'], transcript['gpa']['class_size']])
+            else:
+                cur.execute("UPDATE rank SET pos=%s, classsize=%s, gpa=%s WHERE user_id=%s;",
+                            [transcript['gpa']['rank'], transcript['gpa']['class_size'], transcript['gpa']['value'], user])
+            conn.commit()
+
+            return True
+
+        except Exception as e:
+            print("transcript db error - " + str(e))
+            conn.rollback()
+
+    return False
+
+def add_news(picture, organization, eventdate, text, link, type_, check=False):
+
     if not LOCAL:
 
         try:
@@ -79,8 +112,8 @@ def add_db_news(picture, organization, eventdate, text, link, type_, check=False
                 if cur.fetchone() != None:
                     return False
 
-            cur.execute("insert into news (picture, organization, eventdate, description, link, contenttype) values (%s,%s,%s,%s,%s,%s);", [
-                        picture, organization, eventdate, text, link, type_])
+            cur.execute("insert into news (picture, organization, eventdate, description, link, contenttype) values (%s,%s,%s,%s,%s,%s);",
+                        [picture, organization, eventdate, text, link, type_])
 
             conn.commit()
             return True
@@ -91,27 +124,25 @@ def add_db_news(picture, organization, eventdate, text, link, type_, check=False
 
     return False
 
-def get_db_news():
+def get_news():
 
     if not LOCAL:
 
-        if execute("select * from news"):
+        if cur.execute("select * from news"):
 
-            for news in fetchall():
+            for news in cur.fetchall():
 
                 yield news
 
-def get_db_news_orgs():
+def get_news_orgs():
 
     if not LOCAL:
 
-        execute('select distinct organization from news')
+        cur.execute('select distinct organization from news')
 
-        for org in fetchall():
+        for org in cur.fetchall():
 
             yield org[0]
-
-
 
 # Proxies for interacting with `cur` database object
 
