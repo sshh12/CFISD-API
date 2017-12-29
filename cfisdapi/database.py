@@ -28,10 +28,10 @@ except Exception as e:
 
 def db_wrapper(func):
     """Wrapper for database methods"""
-    def wrapper():
+    def wrapper(*args, **kwargs):
         if not LOCAL:
             try:
-                return func()
+                return func(*args, **kwargs)
             except Exception as e:
                 print('db error: ' + str(e) + ' @ ' + str(func))
                 conn.rollback()
