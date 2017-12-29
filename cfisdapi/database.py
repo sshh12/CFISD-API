@@ -103,11 +103,11 @@ def get_news():
     """Gets all news from db"""
     if not LOCAL:
 
-        if cur.execute("select * from news"):
+        cur.execute("select * from news")
 
-            for news in cur.fetchall():
+        for news in cur.fetchall():
 
-                yield news
+            yield news
 
 def get_news_orgs():
     """Lists organizations which have news"""
