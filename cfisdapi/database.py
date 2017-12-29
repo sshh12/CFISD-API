@@ -56,7 +56,7 @@ def set_grade(user, subject, name, grade, gradetype):
 def is_user(user):
     """Checks if users exists in db"""
     cur.execute("SELECT 1 FROM demo WHERE user_id=%s;", [user])
-    return fetchone() != None
+    return cur.fetchone() != None
 
 @db_wrapper
 def add_user(user, demo):
