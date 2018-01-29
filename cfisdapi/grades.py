@@ -1,5 +1,5 @@
 from requests import Session, Timeout
-from urllib import unquote
+from urllib.parse import unquote
 from flask import request
 from flask import jsonify
 from lxml import html
@@ -153,7 +153,7 @@ class HomeAccessCenterUser:
 
                 for row in class_.find_class('sg-asp-table-data-row'):
 
-                    cols = map(lambda el: el.text_content(), row.xpath("td"))
+                    cols = list(map(lambda el: el.text_content(), row.xpath("td")))
 
                     if len(cols) == 10:
 
@@ -231,7 +231,7 @@ class HomeAccessCenterUser:
 
         for row in tree.find_class('sg-asp-table-data-row'):
 
-            cols = map(lambda el: el.text_content().strip(), row.xpath("td"))
+            cols = list(map(lambda el: el.text_content().strip(), row.xpath("td")))
 
             classid = cols[0]
             classname = cols[1]

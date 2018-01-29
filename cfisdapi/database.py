@@ -1,4 +1,4 @@
-import urlparse
+from urllib.parse import urlparse
 import os
 
 from cfisdapi import app
@@ -7,8 +7,7 @@ LOCAL = False # Running Locally = W/O Database
 
 try:
     # If the VAR exists this probably is attach to a database
-    url = urlparse.urlparse(os.environ["DATABASE_URL"])
-    urlparse.uses_netloc.append("postgres")
+    url = urlparse(os.environ["DATABASE_URL"])
 
     import psycopg2
 

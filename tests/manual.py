@@ -21,7 +21,7 @@ def main(username, password):
 
 if __name__ == "__main__":
 
-    user = raw_input('Username > ')
+    user = input('Username > ')
     passed = getpass.getpass('Password (Hidden) > ')
 
     main(user, passed)
