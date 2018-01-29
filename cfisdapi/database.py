@@ -43,7 +43,7 @@ def set_grade(user, subject, name, grade, gradetype):
     """Sets a users grade in the db"""
     cur.execute("SELECT 1 FROM grades WHERE user_id=%s AND name=%s AND subject=%s;", [user, name, subject])
     if cur.fetchone() == None:
-        cur.execute("INSERT INTO grades (user_id, name, subject, grade, gradetype) values (%s,%s,%s,%s,%s);",
+        cur.execute("INSERT INTO grades (user_id, name, subject, grade, gradetype) values (%s, %s, %s, %s, %s);",
                     [user, name, subject, grade, gradetype])
     else:
         cur.execute("UPDATE grades SET grade=%s, gradetype=%s WHERE user_id=%s AND name=%s AND subject=%s;",
@@ -61,7 +61,7 @@ def is_user(user):
 @db_wrapper
 def add_user(user, demo):
 
-    cur.execute("INSERT INTO demo (user_id, name, school, language, gender, gradelevel) values (%s,%s,%s,%s,%s,%s);",
+    cur.execute("INSERT INTO demo (user_id, name, school, language, gender, gradelevel, updateddate) values (%s, %s, %s, %s, %s, %s, now());",
                 [user, demo['name'], demo['school'], demo['language'], demo['gender'], demo['gradelevel']])
     conn.commit()
 
@@ -72,7 +72,7 @@ def add_rank(user, transcript):
     """Adds a users class rank to db"""
     cur.execute("SELECT 1 FROM rank WHERE user_id=%s;", [user])
     if cur.fetchone() == None:
-        cur.execute("INSERT INTO rank (user_id, gpa, pos, classsize) values (%s,%s,%s,%s);",
+        cur.execute("INSERT INTO rank (user_id, gpa, pos, classsize, updateddate) values (%s, %s, %s, %s, now());",
                     [user, transcript['gpa']['value'], transcript['gpa']['rank'], transcript['gpa']['class_size']])
     else:
         cur.execute("UPDATE rank SET pos=%s, classsize=%s, gpa=%s WHERE user_id=%s;",
@@ -92,7 +92,7 @@ def add_news(picture, organization, eventdate, text, link, type_, check=False):
         if cur.fetchone() != None:
             return False
 
-    cur.execute("insert into news (picture, organization, eventdate, description, link, contenttype) values (%s,%s,%s,%s,%s,%s);",
+    cur.execute("insert into news (picture, organization, eventdate, description, link, contenttype) values (%s, %s, %s, %s, %s, %s);",
                 [picture, organization, eventdate, text, link, type_])
 
     conn.commit()
