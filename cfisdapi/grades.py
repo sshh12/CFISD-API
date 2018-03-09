@@ -85,6 +85,8 @@ class HomeAccessCenterUser:
             return 'C'
         elif num >= 15:
             return 'D'
+        elif num < 1:
+            return 'Z'
         else:
             return 'F'
 
