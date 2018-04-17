@@ -131,7 +131,7 @@ class HomeAccessCenterUser:
 
             for class_ in tree.find_class('AssignmentClass'):
 
-                class_id, classname = [s.strip() for s in class_.find_class('sg-header-heading')[0].text_content().split(" " * 3)]
+                class_id, classname = ([s.strip() for s in class_.find_class('sg-header-heading')[0].text_content().split(" " * 3) if s != ""])[1:3]
 
                 class_average = class_.find_class('sg-header-heading sg-right')[0].text_content().split(' ')[-1]
 
@@ -159,7 +159,7 @@ class HomeAccessCenterUser:
 
                     if len(cols) == 10:
 
-                        assign_name = cols[2].replace("\t*", "").strip().replace("&nbsp;", "").replace("&amp;", "&")
+                        assign_name = cols[2].replace("*", "").strip().replace("&nbsp;", "").replace("&amp;", "&")
 
                         datedue = cols[0].replace(u'\xa0', "")
                         date = cols[1].replace(u'\xa0', "")
