@@ -147,6 +147,31 @@ Returns transcript for student
 }
 ```
 
+##### POST password -> /api/attendance/{ student id }
+Returns attendance info for student
+```js
+{
+  "months": [
+	{
+		"name": "May 2018"
+		"timestamp": 1525150800.0,
+		"days": [
+			{
+				"day": 1,
+				"timestamp": 1525150800.0,
+				"info": {
+					"1": "Field Trip Instructional",
+					"2": "Field Trip Instructional"
+				}
+			}
+			...
+		]
+	}
+	...
+  ]
+}
+```
+
 ## Tests
 
 ```shell
