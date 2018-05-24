@@ -372,9 +372,11 @@ class HomeAccessCenterUser:
 
         attend = {'months': []}
 
-        current_params = True
+        current_params = True # Required page params
 
-        while current_params:
+        while current_params: # While there is a page to check
+
+            data = {}
 
             if type(current_params) == list:
 
@@ -386,14 +388,10 @@ class HomeAccessCenterUser:
                     '__EVENTVALIDATION': current_params[4]
                 }
 
-            else:
-
-                data = {}
-
             page = self.session.post("https://home-access.cfisd.net/HomeAccess/Content/Attendance/MonthlyView.aspx", timeout=HAC_SERVER_TIMEOUT, data=data).content
 
             tree = html.fromstring(page)
-            
+
             header = tree.xpath("//table[@class='sg-asp-calendar-header']")[0]
 
             month = header.text_content().replace(">", "").replace("<", "").strip()
@@ -404,7 +402,7 @@ class HomeAccessCenterUser:
                 'days': []
             }
 
-            try:
+            try: # Find the "<-" button and get its form attributes
 
                 before_params = header.xpath("//a[@title=\"Go to the previous month\"]")[0].attrib['href'].replace("javascript:__doPostBack('", "").replace("')", "").split("','")
 
@@ -418,7 +416,7 @@ class HomeAccessCenterUser:
 
             rows = tree.xpath("//tr")
 
-            for row_num in range(3, len(rows)):
+            for row_num in range(3, len(rows)): # Parse the calender
 
                 for col in rows[row_num]:
 
@@ -433,14 +431,14 @@ class HomeAccessCenterUser:
                             'timestamp': datetime.strptime(day_text, "%d %B %Y").timestamp()
                         }
 
-                        if 'title' in col.attrib:
+                        if 'title' in col.attrib: # has info text
 
                             attend_info = {}
 
                             info = col.attrib['title'].strip().split("\r")
 
-                            for i in range(0, len(info) - 1, 2):
-                                attend_info[info[i]] = info[i+1]
+                            for i in range(0, len(info) - 1, 2): # 1 A 2 B 3 C -> {1: A, 2: B, 3: C}
+                                attend_info[info[i]] = info[i + 1]
 
                             attend_day['info'] = attend_info
 
@@ -450,7 +448,9 @@ class HomeAccessCenterUser:
 
             current_params = before_params
 
-            if "Aug" in month: break
+            if "Aug" in month: break # Schools start in Aug so no more data
+
+        attend['status'] = 'success'
 
         return attend
 
