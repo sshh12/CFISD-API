@@ -368,6 +368,92 @@ class HomeAccessCenterUser:
 
         return demo
 
+    def get_attendance(self):
+
+        attend = {'months': []}
+
+        current_params = True
+
+        while current_params:
+
+            if type(current_params) == list:
+
+                data = {
+                    '__EVENTTARGET': current_params[0],
+                    '__EVENTARGUMENT': current_params[1],
+                    '__VIEWSTATE': current_params[2],
+                    '__VIEWSTATEGENERATOR': current_params[3],
+                    '__EVENTVALIDATION': current_params[4]
+                }
+
+            else:
+
+                data = {}
+
+            page = self.session.post("https://home-access.cfisd.net/HomeAccess/Content/Attendance/MonthlyView.aspx", timeout=HAC_SERVER_TIMEOUT, data=data).content
+
+            tree = html.fromstring(page)
+            
+            header = tree.xpath("//table[@class='sg-asp-calendar-header']")[0]
+
+            month = header.text_content().replace(">", "").replace("<", "").strip()
+
+            attend_month = {
+                'name': month,
+                'timestamp': datetime.strptime(month, "%B %Y").timestamp(),
+                'days': []
+            }
+
+            try:
+
+                before_params = header.xpath("//a[@title=\"Go to the previous month\"]")[0].attrib['href'].replace("javascript:__doPostBack('", "").replace("')", "").split("','")
+
+                before_params.append(tree.xpath("//input[@name='__VIEWSTATE']")[0].attrib['value'])
+                before_params.append(tree.xpath("//input[@name='__VIEWSTATEGENERATOR']")[0].attrib['value'])
+                before_params.append(tree.xpath("//input[@name='__EVENTVALIDATION']")[0].attrib['value'])
+
+            except:
+
+                before_params = None
+
+            rows = tree.xpath("//tr")
+
+            for row_num in range(3, len(rows)):
+
+                for col in rows[row_num]:
+
+                    if col.text_content().isnumeric():
+
+                        day = int(col.text_content())
+
+                        day_text = str(day).zfill(2) + " " + month
+
+                        attend_day = {
+                            'day': day,
+                            'timestamp': datetime.strptime(day_text, "%d %B %Y").timestamp()
+                        }
+
+                        if 'title' in col.attrib:
+
+                            attend_info = {}
+
+                            info = col.attrib['title'].strip().split("\r")
+
+                            for i in range(0, len(info) - 1, 2):
+                                attend_info[info[i]] = info[i+1]
+
+                            attend_day['info'] = attend_info
+
+                        attend_month['days'].append(attend_day)
+
+            attend['months'].append(attend_month)
+
+            current_params = before_params
+
+            if "Aug" in month: break
+
+        return attend
+
 
 @app.route("/api/current/<user>", methods=['POST'])
 def get_hac_classwork(user=""):
@@ -486,3 +572,42 @@ def get_hac_transcript(user=""):
     print("GOT Transcript for {0} in {1:.2f}".format(user, time.time() - t))
 
     return jsonify(transcript)
+
+@app.route("/api/attendance/<user>", methods=['POST'])
+def get_hac_attendance(user=""):
+    """
+    Attendance
+
+    Parameters
+    ----------
+    user : str
+        Username
+    password : str (form)
+        Password
+
+    Returns
+    -------
+    str (json)
+        A json formatted compilation of the users attenance records. In the event
+        of an error the 'status' attribute will reflect the issue that occured.
+
+    Note
+    ----
+    Every request will print username and fetch time for debugging.
+    """
+    passw = unquote(request.get_json()['password'])
+
+    t = time.time()
+    u = HomeAccessCenterUser(user)
+
+    if u.login(passw):
+
+        attendance = u.get_attendance()
+
+    else:
+
+        attendance = {'status': 'login_failed'}
+
+    print("GOT Attendance for {0} in {1:.2f}".format(user, time.time() - t))
+
+    return jsonify(attendance)
