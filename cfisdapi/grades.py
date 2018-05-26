@@ -1,8 +1,7 @@
 from requests import Session, Timeout
+from flask import request, jsonify
 from urllib.parse import unquote
 from datetime import datetime
-from flask import request
-from flask import jsonify
 from lxml import html
 import time
 import re

@@ -45,8 +45,8 @@ Returns the all the current news organizations
 }
 ```
 
-##### GET /api/faculty
-Returns a list of all teachers at Cy-Ranch
+##### GET /api/faculty[url=http://link/to/webpages/]
+Returns a list of all teachers.
 ```js
 {
   "A": [ // Last Name Letter
