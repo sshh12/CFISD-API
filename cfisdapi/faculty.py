@@ -26,7 +26,7 @@ def get_faculty_from_url(url):
 
         if 'mailto:' in user_text:
 
-            name = re.search('\\s*([A-Za-z\\s\\-]+, [A-Za-z\\-]+)\\s*<', user_text).group(1)
+            name = re.search('\\s*([A-Za-z\\s\\-]+, [A-Za-z\\s\\-]+?)\\s*<', user_text).group(1).strip()
 
             email = re.search('<a href=mailto:(\S+?)>', user_text).group(1)
 

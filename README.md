@@ -45,7 +45,7 @@ Returns the all the current news organizations
 }
 ```
 
-##### GET /api/faculty[url=http://link/to/webpages/]
+##### GET /api/faculty[?url=http://link/to/webpages/]
 Returns a list of all teachers.
 ```js
 {
