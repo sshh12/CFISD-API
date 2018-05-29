@@ -33,18 +33,6 @@ Returns all news
 }
 ```
 
-##### GET /api/news/{ school }/list
-Returns the all the current news organizations
-```js
-{
-  "news": [
-    "Mustang Editorial",
-    "Mustang Arts",
-    ...
-  ]
-}
-```
-
 ##### GET /api/faculty[?url=http://link/to/webpages/]
 Returns a list of all teachers.
 ```js

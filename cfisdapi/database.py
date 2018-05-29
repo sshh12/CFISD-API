@@ -81,39 +81,21 @@ def add_rank(user, transcript):
     return True
 
 @db_wrapper
-def add_news(picture, organization, eventdate, text, link, type_, check=False):
+def add_news(school, organization, eventdate, text, link, picture, type_):
     """Adds new article to db"""
-    if check: # Check if event already exists
-
-        cur.execute("select 1 from news where description=%s and organization=%s",
-                    [text, organization])
-
-        if cur.fetchone() != None:
-            return False
-
-    cur.execute("insert into news (picture, organization, eventdate, description, link, contenttype) values (%s, %s, %s, %s, %s, %s);",
+    cur.execute("insert into news (school, organization, eventdate, description, link, picture, contenttype) values (%s, %s, %s, %s, %s, %s, %s) ON CONFLICT (organization, description) DO NOTHING;",
                 [picture, organization, eventdate, text, link, type_])
 
     conn.commit()
 
     return True
 
-def get_news():
+def get_news(school):
     """Gets all news from db"""
     if not LOCAL:
 
-        cur.execute("select * from news")
+        cur.execute("select * from news where school=?;", [school])
 
         for news in cur.fetchall():
 
             yield news
-
-def get_news_orgs():
-    """Lists organizations which have news"""
-    if not LOCAL:
-
-        cur.execute('select distinct organization from news')
-
-        for org in cur.fetchall():
-
-            yield org[0]
