@@ -27,6 +27,27 @@ class NewsWebsite(object):
     def needs_update(self):
         return time.time() - self.last_updated > 86400
 
+class CFISDNews(NewsWebsite):
+
+    def download_and_parse(self):
+
+        text = requests.get(self.website).text
+
+        tree = html.fromstring(text)
+
+        for class_ in tree.find_class('index-item'):
+
+            content = class_.getchildren()
+
+            date = content[1].text_content().strip()
+            # date = datetime.strptime(date, '%b. %d, %Y')
+
+            title_elem = content[0].getchildren()[0]
+            text = title_elem.text_content().strip()
+            link = self.website + title_elem.attrib['href'][1:]
+
+            add_news(self.school, 'CFISD Media', date, text, link, '', NewsType.TEXT)
+
 class MustangMessenger(NewsWebsite):
 
     def download_and_parse(self):
@@ -38,6 +59,10 @@ class MustangMessenger(NewsWebsite):
             'Mustang Students': ['/student-life/', '/student-life/page/2/'],
             'Mustang Editorial': ['/category/editorial-2/', '/editorial-2/page/2/']
         }
+
+        self.run(org_urls)
+
+    def run(self, org_urls):
 
         for org, urls in org_urls.items():
 
@@ -67,17 +92,45 @@ class MustangMessenger(NewsWebsite):
 
         self.last_updated = time.time()
 
+class TheBridge(MustangMessenger):
+
+    def download_and_parse(self):
+
+        org_urls = {
+            'Bridgeland News': ['/news/', '/news/page/2/'],
+            'Bridgeland Opinion': ['/opinion/', '/opinion/page/2/'],
+            'Bridgeland Sports': ['/sports/', '/sports/page/2/'],
+            'Bridgeland Features': ['/features/', '/features/page/2/'],
+            'Bridgeland Entertainment': ['/entertainment/', '/entertainment/page/2/']
+        }
+
+        self.run(org_urls)
+
+class WingSpan(MustangMessenger):
+
+    def download_and_parse(self):
+
+        org_urls = {
+            'Falls News': ['/news/', '/news/page/2/'],
+            'Falls Opinion': ['/opinion/', '/opinion/page/2/'],
+            'Falls Students': ['/student-life/', '/student-life/page/2/'],
+            'Falls Entertainment': ['/entertainment/', '/entertainment/page/2/'],
+            'Falls Faculty': ['/faculty/', '/faculty/page/2/']
+        }
+
+        self.run(org_urls)
+
 student_news = {
-    'bridgeland': 'http://bhsthebridge.com/', # TODO this will break
+    'bridgeland': TheBridge('bridgeland', 'http://bhsthebridge.com/'),
     'cypresscreek': 'https://www.cchspress.com/',
-    'cypressfalls': 'https://www.cfwingspan.com/',
+    'cypressfalls': WingSpan('cypressfalls', 'https://www.cfwingspan.com/'),
     'cypresslakes': 'http://thelakeview.co/',
     'cypresswoods': 'https://www.thecrimsonconnection.com/',
     'cypressranch': MustangMessenger('cypressranch', 'https://cyranchnews.com/'),
     'cypressridge': 'https://crhsrampage.com/',
     'jerseyvillage': 'https://jvhsperegrine.com/',
     'langhamcreek': 'https://lchowler.net/',
-    'cfisd': '...'
+    'cfisd': CFISDNews('cfisd', 'https://www.cfisd.net/en/news-media/district/')
 }
 
 @app.route("/api/news/<school>/all")
