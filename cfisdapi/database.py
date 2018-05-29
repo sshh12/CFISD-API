@@ -83,8 +83,8 @@ def add_rank(user, transcript):
 @db_wrapper
 def add_news(school, organization, eventdate, text, link, picture, type_):
     """Adds new article to db"""
-    cur.execute("insert into news (school, organization, eventdate, description, link, picture, contenttype) values (%s, %s, %s, %s, %s, %s, %s) ON CONFLICT (organization, description) DO NOTHING;",
-                [picture, organization, eventdate, text, link, type_])
+    cur.execute("INSERT INTO news (school, organization, eventdate, description, link, picture, contenttype) VALUES (%s, %s, %s, %s, %s, %s, %s) ON CONFLICT (organization, description) DO NOTHING;",
+                [school, organization, eventdate, text, link, picture, type_])
 
     conn.commit()
 
@@ -94,7 +94,7 @@ def get_news(school):
     """Gets all news from db"""
     if not LOCAL:
 
-        cur.execute("select * from news where school=?;", [school])
+        cur.execute("SELECT * FROM news WHERE school=%s;", [school])
 
         for news in cur.fetchall():
 
