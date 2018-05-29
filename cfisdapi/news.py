@@ -76,7 +76,7 @@ class MustangMessenger(NewsWebsite):
 
                     try:
                         picture = class_.find_class('previewstaffpic')[0].attrib['src']
-                    except IndexError:
+                    except (IndexError, KeyError):
                         continue
 
                     try:
@@ -120,16 +120,67 @@ class WingSpan(MustangMessenger):
 
         self.run(org_urls)
 
+class LakeView(MustangMessenger):
+
+    def download_and_parse(self):
+
+        org_urls = {
+            'Lakes News': ['/news/', '/news/page/2/'],
+            'Lakes Entertainment': ['/entertainment/', '/entertainment/page/2/'],
+        }
+
+        self.run(org_urls)
+
+class Rampage(MustangMessenger):
+
+    def download_and_parse(self):
+
+        org_urls = {
+            'Ram News': ['/news/', '/news/page/2/'],
+            'Ram Opinion': ['/opinion/', '/opinion/page/2/'],
+            'Ram Entertainment': ['/entertainment/', '/entertainment/page/2/'],
+        }
+
+        self.run(org_urls)
+
+class Peregrine(MustangMessenger):
+
+    def download_and_parse(self):
+
+        org_urls = {
+            'JV News': ['/news/', '/news/page/2/'],
+            'JV Sports': ['/sports/', '/sports/page/2/'],
+            'JV Students': ['/student-life/', '/student-life/page/2/'],
+            'JV Opinion': ['/opinion/', '/opinion/page/2/'],
+            'JV A&E': ['/ae/', '/ae/page/2/']
+        }
+
+        self.run(org_urls)
+
+class Howler(MustangMessenger):
+
+    def download_and_parse(self):
+
+        org_urls = {
+            'Langham News': ['/news/', '/news/page/2/'],
+            'Langham Sports': ['/sports/', '/sports/page/2/'],
+            'Langham Opinion': ['/opinion/', '/opinion/page/2/'],
+            'Langham A&E': ['/ae/', '/ae/page/2/'],
+            'Langham Students': ['/showcase/', '/showcase/page/2/']
+        }
+
+        self.run(org_urls)
+
 student_news = {
     'bridgeland': TheBridge('bridgeland', 'http://bhsthebridge.com/'),
-    'cypresscreek': 'https://www.cchspress.com/',
+    'cypresscreek': 'https://www.cchspress.com/', # fix
     'cypressfalls': WingSpan('cypressfalls', 'https://www.cfwingspan.com/'),
-    'cypresslakes': 'http://thelakeview.co/',
-    'cypresswoods': 'https://www.thecrimsonconnection.com/',
+    'cypresslakes': LakeView('cypresslakes', 'http://thelakeview.co/'),
+    'cypresswoods': 'https://www.thecrimsonconnection.com/', #fix
     'cypressranch': MustangMessenger('cypressranch', 'https://cyranchnews.com/'),
-    'cypressridge': 'https://crhsrampage.com/',
-    'jerseyvillage': 'https://jvhsperegrine.com/',
-    'langhamcreek': 'https://lchowler.net/',
+    'cypressridge': Rampage('cypressridge', 'https://crhsrampage.com/'),
+    'jerseyvillage': Peregrine('jerseyvillage', 'https://jvhsperegrine.com/'),
+    'langhamcreek': Howler('langhamcreek', 'https://lchowler.net/'),
     'cfisd': CFISDNews('cfisd', 'https://www.cfisd.net/en/news-media/district/')
 }
 
