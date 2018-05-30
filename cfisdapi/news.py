@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask import request
 from flask import jsonify
 from lxml import html
@@ -40,7 +41,7 @@ class CFISDNews(NewsWebsite):
             content = class_.getchildren()
 
             date = content[1].text_content().strip()
-            # date = datetime.strptime(date, '%b. %d, %Y')
+            date = datetime.strptime(date, '%b. %d, %Y').strftime('%Y-%m-%d')
 
             title_elem = content[0].getchildren()[0]
             text = title_elem.text_content().strip()
@@ -171,12 +172,68 @@ class Howler(MustangMessenger):
 
         self.run(org_urls)
 
+class Crimson(NewsWebsite):
+
+    def download_and_parse(self):
+
+        org_urls = {
+            'Woods News': ['/news/', '/news/page/2/'],
+            'Woods Sports': ['/sports/', '/sports/page/2/'],
+            'Woods Opinion': ['/opinions/', '/opinions/page/2/'],
+            'Woods Entertainment': ['/entertainment/', '/entertainment/page/2/'],
+            'Woods Reviews': ['/reviews/', '/reviews/page/2/'],
+            'Woods Discover': ['/discover/', '/discover/page/2/']
+        }
+
+        self.run(org_urls)
+
+    def run(self, org_urls):
+
+        for org, urls in org_urls.items():
+
+            for url in urls:
+
+                text = requests.get(self.website + "category" + url).text
+
+                tree = html.fromstring(text)
+
+                for class_ in tree.find_class('sno-animate'):
+
+                    text = class_.getchildren()[0].text_content().strip()
+
+                    try:
+                        link_pic = class_.getchildren()[1]
+                        link = link_pic.attrib['href']
+                    except (KeyError, IndexError):
+                        continue
+
+                    picture = link_pic.getchildren()[0].attrib['src']
+
+                    eventdate = class_.find_class('categorydate')[0].text_content().strip()
+
+                    add_news(self.school, org, eventdate, text, link, picture, NewsType.ARTICLE)
+
+        self.last_updated = time.time()
+
+class Creek(Crimson):
+
+    def download_and_parse(self):
+
+        org_urls = {
+            'Creek News': ['/news/', '/news/page/2/'],
+            'Creek Sports': ['/sports/', '/sports/page/2/'],
+            'Creek Entertainment': ['/entertainment/', '/entertainment/page/2/'],
+            'Creek Opinion': ['/op-ed/', '/op-ed/page/2/']
+        }
+
+        self.run(org_urls)
+
 student_news = {
     'bridgeland': TheBridge('bridgeland', 'http://bhsthebridge.com/'),
-    'cypresscreek': 'https://www.cchspress.com/', # fix
+    'cypresscreek': Creek('cypresscreek', 'https://www.cchspress.com/'),
     'cypressfalls': WingSpan('cypressfalls', 'https://www.cfwingspan.com/'),
     'cypresslakes': LakeView('cypresslakes', 'http://thelakeview.co/'),
-    'cypresswoods': 'https://www.thecrimsonconnection.com/', #fix
+    'cypresswoods': Crimson('cypresswoods', 'https://www.thecrimsonconnection.com/'),
     'cypressranch': MustangMessenger('cypressranch', 'https://cyranchnews.com/'),
     'cypressridge': Rampage('cypressridge', 'https://crhsrampage.com/'),
     'jerseyvillage': Peregrine('jerseyvillage', 'https://jvhsperegrine.com/'),
@@ -194,15 +251,13 @@ def get_all_news_list(school=""):
     str (json)
         All news articles associated with the given organization
     """
-
     if school == 'cyranch': # Tweak for CyRanch app
         school = 'cypressranch'
 
-    if school in student_news:
-        news_website = student_news[school]
-    else:
-        news_website = student_news['cfisd'] # Use general news
+    if school not in student_news:
         school = 'cfisd'
+
+    news_website = student_news[school]
 
     if news_website.needs_update():
         news_website.download_and_parse()

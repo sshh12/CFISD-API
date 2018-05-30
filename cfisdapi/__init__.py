@@ -16,7 +16,7 @@ import cfisdapi.news
 @app.route("/")
 def index_page():
     """Returns basic index page."""
-    return "Hi! This is the Unoffical CyRanch Api, for info email: shrivu1122@gmail.com"
+    return "Hi! This is the Unoffical CFISD API, for info contact: shrivu1122@gmail.com"
 
 @app.route("/ping")
 def test_page():
