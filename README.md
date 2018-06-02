@@ -1,6 +1,6 @@
-# CyRanch App Server
+# CFISD API
 
-The python backend for the Cy-Ranch App.
+The python backend for the Cy-Ranch App and the CFISD App.
 
 [Live Code](https://cfisdapi.herokuapp.com/)
 
