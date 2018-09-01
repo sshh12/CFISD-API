@@ -5,7 +5,99 @@ Sample responses for test user `s000000`
 CLASSWORK = {
   "grades": [
     {
-      "name": "Honors Class",
+      "name": "Eng IV AP",
+      "honors": True,
+      "letter": "A",
+      "overallavg": "94.69%",
+      "categories": {
+        "Major Grades": {
+          "weight": 0.4,
+          "letter": "A",
+          "grade": "100.00%"
+        }
+      },
+      "assignments": [
+        {
+          "name": "A Class Assignment",
+          "date": "09/10/2021",
+          "datedue": "09/10/2021",
+          "gradetype": "Major Grades",
+          "letter": "A",
+          "grade": "100.00%"
+        }
+      ]
+    },
+    {
+      "name": "U S Govt AP",
+      "honors": True,
+      "letter": "A",
+      "overallavg": "95.19%",
+      "categories": {
+        "Major Grades": {
+          "weight": 0.4,
+          "letter": "A",
+          "grade": "100.00%"
+        }
+      },
+      "assignments": [
+        {
+          "name": "A Class Assignment",
+          "date": "09/10/2021",
+          "datedue": "09/10/2021",
+          "gradetype": "Major Grades",
+          "letter": "A",
+          "grade": "100.00%"
+        }
+      ]
+    },
+    {
+      "name": "Statistics AP",
+      "honors": True,
+      "letter": "A",
+      "overallavg": "95.50%",
+      "categories": {
+        "Major Grades": {
+          "weight": 0.4,
+          "letter": "A",
+          "grade": "100.00%"
+        }
+      },
+      "assignments": [
+        {
+          "name": "A Class Assignment",
+          "date": "09/10/2021",
+          "datedue": "09/10/2021",
+          "gradetype": "Major Grades",
+          "letter": "A",
+          "grade": "100.00%"
+        }
+      ]
+    },
+    {
+      "name": "Calc-BC AP",
+      "honors": True,
+      "letter": "A",
+      "overallavg": "96.40%",
+      "categories": {
+        "Major Grades": {
+          "weight": 0.4,
+          "letter": "A",
+          "grade": "100.00%"
+        }
+      },
+      "assignments": [
+        {
+          "name": "A Class Assignment",
+          "date": "09/10/2021",
+          "datedue": "09/10/2021",
+          "gradetype": "Major Grades",
+          "letter": "A",
+          "grade": "100.00%"
+        }
+      ]
+    },
+    {
+      "name": "RSCH COMP SCI K",
       "honors": True,
       "letter": "A",
       "overallavg": "100.00%",
@@ -19,8 +111,31 @@ CLASSWORK = {
       "assignments": [
         {
           "name": "A Class Assignment",
-          "date": "MM/DD/YYYY",
-          "datedue": "MM/DD/YYYY",
+          "date": "09/10/2021",
+          "datedue": "09/10/2021",
+          "gradetype": "Major Grades",
+          "letter": "A",
+          "grade": "100.00%"
+        }
+      ]
+    },
+    {
+      "name": "PHYSICS C AP",
+      "honors": True,
+      "letter": "A",
+      "overallavg": "99.78%",
+      "categories": {
+        "Major Grades": {
+          "weight": 0.4,
+          "letter": "A",
+          "grade": "100.00%"
+        }
+      },
+      "assignments": [
+        {
+          "name": "A Class Assignment",
+          "date": "09/10/2021",
+          "datedue": "09/10/2021",
           "gradetype": "Major Grades",
           "letter": "A",
           "grade": "100.00%"
@@ -34,24 +149,31 @@ CLASSWORK = {
 REPORTCARD = {
   "reportcard": [
     {
-      "name": "A Class",
+      "name": "U S Govt AP",
       "exams": [
-        {
-          "average": 100.0,
-          "letter": "A"
-        }
       ],
       "semesters": [
-        {
-          "average": 100.0,
-          "letter": "A"
-        }
       ],
       "teacher": "Last, First",
       "room": "4231",
       "averages": [
         {
-          "average": 100,
+          "average": 97,
+          "letter": "A"
+        }
+      ]
+    },
+    {
+      "name": "Calc-BC AP",
+      "exams": [
+      ],
+      "semesters": [
+      ],
+      "teacher": "Last, First",
+      "room": "4231",
+      "averages": [
+        {
+          "average": 96,
           "letter": "A"
         }
       ]
