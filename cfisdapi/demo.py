@@ -199,7 +199,7 @@ ATTENDANCE = {
   "months": [
     {
       "name": "Sep 2018",
-      "timestamp": 1535841400.0
+      "timestamp": 1535841400.0,
       "days": [
         {
           "day": 1,
