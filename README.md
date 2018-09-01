@@ -141,7 +141,7 @@ Returns attendance info for student
 {
   "months": [
     {
-      "name": "May 2018"
+      "name": "May 2018",
       "timestamp": 1525150800.0,
       "days": [
         {

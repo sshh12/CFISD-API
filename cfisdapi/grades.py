@@ -8,6 +8,7 @@ import re
 
 from cfisdapi import app
 from cfisdapi.database import set_grade, add_user, add_rank, is_user
+import cfisdapi.demo
 
 HAC_SERVER_TIMEOUT = 15
 
@@ -109,19 +110,12 @@ class HomeAccessCenterUser:
         if not page:
 
             if self.sid == 's000000': # Test User
+                return cfisdapi.demo.CLASSWORK
 
-                with open("tests/data/classwork_5-24-2017.html", 'r') as dat:
-                    page = dat.read()
-
-            else:
-
-                try:
-
-                    page = self.session.get("https://home-access.cfisd.net/HomeAccess/Content/Student/Assignments.aspx", timeout=HAC_SERVER_TIMEOUT).content
-
-                except Timeout:
-
-                    return {'status': 'connection_failed'}
+            try:
+                page = self.session.get("https://home-access.cfisd.net/HomeAccess/Content/Student/Assignments.aspx", timeout=HAC_SERVER_TIMEOUT).content
+            except Timeout:
+                return {'status': 'connection_failed'}
 
         tree = html.fromstring(page)
 
@@ -219,12 +213,12 @@ class HomeAccessCenterUser:
         """
         if not page:
 
+            if self.sid == 's000000': # Test User
+                return cfisdapi.demo.REPORTCARD
+
             try:
-
                 page = self.session.get("https://home-access.cfisd.net/HomeAccess/Content/Student/ReportCards.aspx", timeout=HAC_SERVER_TIMEOUT).content
-
             except Timeout:
-
                 return {'status': 'connection_failed'}
 
         tree = html.fromstring(page)
@@ -271,22 +265,15 @@ class HomeAccessCenterUser:
         Returns
         -------
         Dict containing transcript info
-
-        Note
-        ----
-        Demo account will return empty dict
         """
-        if self.sid == 's000000':
-            return {}
-
         if not page:
 
+            if self.sid == 's000000':
+                return cfisdapi.demo.TRANSCRIPT
+
             try:
-
                 page = self.session.get("https://home-access.cfisd.net/HomeAccess/Content/Student/Transcript.aspx", timeout=HAC_SERVER_TIMEOUT).content
-
             except Timeout:
-
                 return {'status': 'connection_failed'}
 
         tree = html.fromstring(page)
@@ -369,6 +356,15 @@ class HomeAccessCenterUser:
         return demo
 
     def get_attendance(self):
+        """
+        Gets attendance history of user
+
+        Returns
+        -------
+        Dict containing attendance info
+        """
+        if self.sid == 's000000':
+            return cfisdapi.demo.ATTENDANCE
 
         attend = {'months': []}
 
@@ -483,12 +479,9 @@ def get_hac_classwork(user=""):
     u = HomeAccessCenterUser(user)
 
     if u.login(passw):
-
         grades = u.get_classwork()
         u.get_demo()
-
     else:
-
         grades = {'status': 'login_failed'}
 
     print("GOT Classwork for {0} in {1:.2f}".format(user, time.time() - t))
@@ -523,11 +516,8 @@ def get_hac_reportcard(user=""):
     u = HomeAccessCenterUser(user)
 
     if u.login(passw):
-
         reportcard = u.get_reportcard()
-
     else:
-
         reportcard = {'status': 'login_failed'}
 
     print("GOT Reportcard for {0} in {1:.2f}".format(user, time.time() - t))
@@ -562,11 +552,8 @@ def get_hac_transcript(user=""):
     u = HomeAccessCenterUser(user)
 
     if u.login(passw):
-
         transcript = u.get_transcript()
-
     else:
-
         transcript = {'status': 'login_failed'}
 
     print("GOT Transcript for {0} in {1:.2f}".format(user, time.time() - t))
@@ -601,11 +588,9 @@ def get_hac_attendance(user=""):
     u = HomeAccessCenterUser(user)
 
     if u.login(passw):
-
         attendance = u.get_attendance()
 
     else:
-
         attendance = {'status': 'login_failed'}
 
     print("GOT Attendance for {0} in {1:.2f}".format(user, time.time() - t))
