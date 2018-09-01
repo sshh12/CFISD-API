@@ -156,7 +156,8 @@ Returns attendance info for student
       ]
     },
     ...
-  ]
+  ],
+  "status": "success"
 }
 ```
 
