@@ -151,6 +151,10 @@ REPORTCARD = {
     {
       "name": "U S Govt AP",
       "exams": [
+        {
+          "average": 97,
+          "letter": "A"
+        }
       ],
       "semesters": [
       ],
@@ -194,15 +198,61 @@ TRANSCRIPT = {
 ATTENDANCE = {
   "months": [
     {
-      "name": "May 2018",
-      "timestamp": 1525150800.0,
+      "name": "Sep 2018",
+      "timestamp": 1535841400.0
       "days": [
         {
           "day": 1,
-          "timestamp": 1525150800.0,
+          "timestamp": 1535841400.0,
           "info": {
             "1": "Field Trip Instructional",
             "2": "Field Trip Instructional"
+          }
+        },
+        {
+          "day": 2,
+          "timestamp": 1535841400.0 + 86400,
+          "info": {
+            "1": "Field Trip Instructional",
+            "2": "Field Trip Instructional"
+          }
+        },
+        {
+          "day": 3,
+          "timestamp": 1535841400.0 + 86400*2,
+        },
+        {
+          "day": 4,
+          "timestamp": 1535841400.0 + 86400*3,
+          "info": {
+            "1": "Field Trip Instructional",
+            "2": "Field Trip Instructional"
+          }
+        },
+        {
+          "day": 5,
+          "timestamp": 1535841400.0 + 86400*4,
+          "info": {
+            "1": "Field Trip Instructional",
+            "2": "Field Trip Instructional"
+          }
+        },
+        {
+          "day": 6,
+          "timestamp": 1535841400.0 + 86400*5,
+        },
+        {
+          "day": 7,
+          "timestamp": 1535841400.0 + 86400*6,
+          "info": {
+            "1": "testing"
+          }
+        },
+        {
+          "day": 8,
+          "timestamp": 1535841400.0 + 86400*7,
+          "info": {
+            "1": "no contact"
           }
         }
       ]
