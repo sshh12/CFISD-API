@@ -1,4 +1,5 @@
 from urllib.parse import urlparse
+from datetime import datetime
 import json
 import uuid
 import os
@@ -16,47 +17,44 @@ firebase_admin.initialize_app(creds)
 
 db = firestore.client()
 db_news = db.collection(u'news')
+db_users = db.collection(u'users')
 
 create_rand_id = lambda: str(uuid.uuid4())
 
 def set_grade(user, subject, name, grade, gradetype):
     """Sets a users grade in the db"""
-    cur.execute("SELECT 1 FROM grades WHERE user_id=%s AND name=%s AND subject=%s;", [user, name, subject])
-    if cur.fetchone() == None:
-        cur.execute("INSERT INTO grades (user_id, name, subject, grade, gradetype) values (%s, %s, %s, %s, %s);",
-                    [user, name, subject, grade, gradetype])
-    else:
-        cur.execute("UPDATE grades SET grade=%s, gradetype=%s WHERE user_id=%s AND name=%s AND subject=%s;",
-                    [grade, gradetype, user, name, subject])
-    conn.commit()
 
-    return True
+    db_users.document(user).collection(u'grades').document(name).set({
+        u'name': name,
+        u'subject': subject,
+        u'grade': grade,
+        u'gradetype': gradetype
+    })
 
 def is_user(user):
     """Checks if users exists in db"""
-    cur.execute("SELECT 1 FROM demo WHERE user_id=%s;", [user])
-    return cur.fetchone() != None
+    return False
 
 def add_user(user, demo):
 
-    cur.execute("INSERT INTO demo (user_id, name, school, language, gender, gradelevel, updateddate) values (%s, %s, %s, %s, %s, %s, now());",
-                [user, demo['name'], demo['school'], demo['language'], demo['gender'], demo['gradelevel']])
-    conn.commit()
-
-    return True
+    db_users.document(user).collection(u'profile').document(u'userdata').set({
+        u'name': demo['name'],
+        u'school': demo['school'],
+        u'language': demo['language'],
+        u'gender': demo['gender'],
+        u'gradelevel': demo['gradelevel'],
+        u'lastupdated': datetime.now()
+    })
 
 def add_rank(user, transcript):
     """Adds a users class rank to db"""
-    cur.execute("SELECT 1 FROM rank WHERE user_id=%s;", [user])
-    if cur.fetchone() == None:
-        cur.execute("INSERT INTO rank (user_id, gpa, pos, classsize, updateddate) values (%s, %s, %s, %s, now());",
-                    [user, transcript['gpa']['value'], transcript['gpa']['rank'], transcript['gpa']['class_size']])
-    else:
-        cur.execute("UPDATE rank SET pos=%s, classsize=%s, gpa=%s WHERE user_id=%s;",
-                    [transcript['gpa']['rank'], transcript['gpa']['class_size'], transcript['gpa']['value'], user])
-    conn.commit()
 
-    return True
+    db_users.document(user).collection(u'transript').document(u'rank').set({
+        u'gpa': transcript['gpa']['value'],
+        u'rank': transcript['gpa']['rank'],
+        u'classsize': transcript['gpa']['class_size'],
+        u'lastupdated': datetime.now()
+    })
 
 def add_news(school, organization, eventdate, text, link, picture, type_):
     """Adds new article to db"""

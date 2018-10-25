@@ -26,7 +26,7 @@ class HomeAccessCenterUser:
         sid : str
             The student id of the user
         """
-        self.sid = sid
+        self.sid = sid.lower()
         self.session = Session()
         self.demo_user = (self.sid == 's000000')
 
@@ -295,11 +295,21 @@ class HomeAccessCenterUser:
                 'status': 'success'
             })
 
+            add_rank(self.sid, transcript)
+
+        except IndexError: # no transcript yet
+
+            transcript.update({
+                'gpa': {
+                    'value': 0,
+                    'rank': 0,
+                    'class_size': 1
+                },
+                'status': 'success'
+            })
+
         except:
-
             return {'status': 'server_error'}
-
-        add_rank(self.sid, transcript)
 
         return transcript
 
@@ -476,16 +486,16 @@ def get_hac_classwork(user=""):
     """
     passw = unquote(request.get_json()['password'])
 
-    t = time.time()
-    u = HomeAccessCenterUser(user)
+    start_time = time.time()
+    hac_user = HomeAccessCenterUser(user)
 
-    if u.login(passw):
-        grades = u.get_classwork()
-        u.get_demo()
+    if hac_user.login(passw):
+        grades = hac_user.get_classwork()
+        hac_user.get_demo()
     else:
         grades = {'status': 'login_failed'}
 
-    print("GOT Classwork for {0} in {1:.2f}".format(user, time.time() - t))
+    print("GOT Classwork for {0} in {1:.2f}".format(user, time.time() - start_time))
 
     return jsonify(grades)
 
@@ -513,15 +523,15 @@ def get_hac_reportcard(user=""):
     """
     passw = unquote(request.get_json()['password'])
 
-    t = time.time()
-    u = HomeAccessCenterUser(user)
+    start_time = time.time()
+    hac_user = HomeAccessCenterUser(user)
 
-    if u.login(passw):
-        reportcard = u.get_reportcard()
+    if hac_user.login(passw):
+        reportcard = hac_user.get_reportcard()
     else:
         reportcard = {'status': 'login_failed'}
 
-    print("GOT Reportcard for {0} in {1:.2f}".format(user, time.time() - t))
+    print("GOT Reportcard for {0} in {1:.2f}".format(user, time.time() - start_time))
 
     return jsonify(reportcard)
 
@@ -549,15 +559,15 @@ def get_hac_transcript(user=""):
     """
     passw = unquote(request.get_json()['password'])
 
-    t = time.time()
-    u = HomeAccessCenterUser(user)
+    start_time = time.time()
+    hac_user = HomeAccessCenterUser(user)
 
-    if u.login(passw):
-        transcript = u.get_transcript()
+    if hac_user.login(passw):
+        transcript = hac_user.get_transcript()
     else:
         transcript = {'status': 'login_failed'}
 
-    print("GOT Transcript for {0} in {1:.2f}".format(user, time.time() - t))
+    print("GOT Transcript for {0} in {1:.2f}".format(user, time.time() - start_time))
 
     return jsonify(transcript)
 
@@ -585,15 +595,15 @@ def get_hac_attendance(user=""):
     """
     passw = unquote(request.get_json()['password'])
 
-    t = time.time()
-    u = HomeAccessCenterUser(user)
+    start_time = time.time()
+    hac_user = HomeAccessCenterUser(user)
 
-    if u.login(passw):
-        attendance = u.get_attendance()
+    if hac_user.login(passw):
+        attendance = hac_user.get_attendance()
 
     else:
         attendance = {'status': 'login_failed'}
 
-    print("GOT Attendance for {0} in {1:.2f}".format(user, time.time() - t))
+    print("GOT Attendance for {0} in {1:.2f}".format(user, time.time() - start_time))
 
     return jsonify(attendance)
