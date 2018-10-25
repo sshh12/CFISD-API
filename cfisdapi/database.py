@@ -1,7 +1,5 @@
-from urllib.parse import urlparse
 from datetime import datetime
 import json
-import uuid
 import os
 
 import firebase_admin
@@ -10,7 +8,6 @@ from firebase_admin import firestore
 
 from cfisdapi import app
 
-
 cred_json = json.loads(os.environ.get('FIREBASE_CRED', '{}'))
 creds = credentials.Certificate(cred_json)
 firebase_admin.initialize_app(creds)
@@ -18,8 +15,6 @@ firebase_admin.initialize_app(creds)
 db = firestore.client()
 db_news = db.collection(u'news')
 db_users = db.collection(u'users')
-
-create_rand_id = lambda: str(uuid.uuid4())
 
 def set_grade(user, subject, name, grade, gradetype):
     """Sets a users grade in the db"""
