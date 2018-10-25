@@ -29,7 +29,8 @@ def set_grade(user, subject, name, grade, gradetype):
         u'name': name,
         u'subject': subject,
         u'grade': grade,
-        u'gradetype': gradetype
+        u'gradetype': gradetype,
+        u'lastupdated': datetime.now()
     })
 
 def add_user(user, demo):
@@ -62,7 +63,8 @@ def add_news(school, organization, eventdate, text, link, picture, type_):
         u'link': link,
         u'picture': picture,
         u'articletype': type_,
-        u'date': eventdate
+        u'date': eventdate,
+        u'lastupdated': datetime.now()
     })
 
 def get_news(school):
