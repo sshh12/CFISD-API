@@ -2,6 +2,7 @@ from requests import Session, Timeout
 from flask import request, jsonify
 from urllib.parse import unquote
 from datetime import datetime
+from lru import LRUCacheDict
 from lxml import html
 import time
 import re
@@ -11,6 +12,7 @@ from cfisdapi.database import set_grade, add_user, add_rank
 import cfisdapi.demo
 
 HAC_SERVER_TIMEOUT = 15
+MAX_CACHE_SIZE = 1024
 
 class HomeAccessCenterUser:
     """Represents an instance of a Home Access Center user"""
@@ -458,6 +460,12 @@ class HomeAccessCenterUser:
 
         return attend
 
+# caches to speed up repeated requests
+demo_cache = LRUCacheDict(max_size=MAX_CACHE_SIZE, expiration=60*60*24*365) # 1 year (this never needs to update)
+current_cache = LRUCacheDict(max_size=MAX_CACHE_SIZE, expiration=60*15) # 15 mins
+reportcard_cache = LRUCacheDict(max_size=MAX_CACHE_SIZE, expiration=60*60*24) # 1 day
+transcript_cache = LRUCacheDict(max_size=MAX_CACHE_SIZE, expiration=60*60*24) # 1 day
+attendance_cache = LRUCacheDict(max_size=MAX_CACHE_SIZE, expiration=60*60) # 1 hour
 
 @app.route("/api/current/<user>", methods=['POST'])
 def get_hac_classwork(user=""):
@@ -486,15 +494,27 @@ def get_hac_classwork(user=""):
     start_time = time.time()
     hac_user = HomeAccessCenterUser(user)
 
+    if hac_user.sid in current_cache:
+        return current_cache[hac_user.sid]
+
     if hac_user.login(passw):
+
         grades = hac_user.get_classwork()
-        hac_user.get_demo()
+
+        if hac_user.sid not in demo_cache:
+            hac_user.get_demo()
+            demo_cache[hac_user.sid] = True
     else:
         grades = {'status': 'login_failed'}
 
-    print("GOT Classwork for {0} in {1:.2f}".format(user, time.time() - start_time))
+    print("GOT Classwork for {0} in {1:.2f}".format(hac_user.sid, time.time() - start_time))
 
-    return jsonify(grades)
+    json_results = jsonify(grades)
+
+    if grades['status'] == 'success':
+        current_cache[hac_user.sid] = json_results
+
+    return json_results
 
 @app.route("/api/reportcard/<user>", methods=['POST'])
 def get_hac_reportcard(user=""):
@@ -523,6 +543,9 @@ def get_hac_reportcard(user=""):
     start_time = time.time()
     hac_user = HomeAccessCenterUser(user)
 
+    if hac_user.sid in reportcard_cache:
+        return reportcard_cache[hac_user.sid]
+
     if hac_user.login(passw):
         reportcard = hac_user.get_reportcard()
     else:
@@ -530,7 +553,12 @@ def get_hac_reportcard(user=""):
 
     print("GOT Reportcard for {0} in {1:.2f}".format(user, time.time() - start_time))
 
-    return jsonify(reportcard)
+    json_results = jsonify(reportcard)
+
+    if reportcard['status'] == 'success':
+        reportcard_cache[hac_user.sid] = json_results
+
+    return json_results
 
 @app.route("/api/transcript/<user>", methods=['POST'])
 def get_hac_transcript(user=""):
@@ -559,6 +587,9 @@ def get_hac_transcript(user=""):
     start_time = time.time()
     hac_user = HomeAccessCenterUser(user)
 
+    if hac_user.sid in transcript_cache:
+        return transcript_cache[hac_user.sid]
+
     if hac_user.login(passw):
         transcript = hac_user.get_transcript()
     else:
@@ -566,7 +597,12 @@ def get_hac_transcript(user=""):
 
     print("GOT Transcript for {0} in {1:.2f}".format(user, time.time() - start_time))
 
-    return jsonify(transcript)
+    json_results = jsonify(transcript)
+
+    if transcript['status'] == 'success':
+        transcript_cache[hac_user.sid] = json_results
+
+    return json_results
 
 @app.route("/api/attendance/<user>", methods=['POST'])
 def get_hac_attendance(user=""):
@@ -595,6 +631,9 @@ def get_hac_attendance(user=""):
     start_time = time.time()
     hac_user = HomeAccessCenterUser(user)
 
+    if hac_user.sid in attendance_cache:
+        return attendance_cache[hac_user.sid]
+
     if hac_user.login(passw):
         attendance = hac_user.get_attendance()
 
@@ -603,4 +642,7 @@ def get_hac_attendance(user=""):
 
     print("GOT Attendance for {0} in {1:.2f}".format(user, time.time() - start_time))
 
-    return jsonify(attendance)
+    json_results = jsonify(attendance)
+
+
+    return json_results
