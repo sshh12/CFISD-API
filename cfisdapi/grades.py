@@ -7,7 +7,7 @@ import time
 import re
 
 from cfisdapi import app
-from cfisdapi.database import set_grade, add_user, add_rank, is_user
+from cfisdapi.database import set_grade, add_user, add_rank
 import cfisdapi.demo
 
 HAC_SERVER_TIMEOUT = 15
@@ -332,9 +332,6 @@ class HomeAccessCenterUser:
         """
         if self.demo_user:
             return {}
-
-        if is_user(self.sid):
-            return {'status': 'already_added'}
 
         if not page:
 

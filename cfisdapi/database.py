@@ -31,10 +31,6 @@ def set_grade(user, subject, name, grade, gradetype):
         u'gradetype': gradetype
     })
 
-def is_user(user):
-    """Checks if users exists in db"""
-    return False
-
 def add_user(user, demo):
 
     db_users.document(user).collection(u'profile').document(u'userdata').set({
@@ -49,7 +45,7 @@ def add_user(user, demo):
 def add_rank(user, transcript):
     """Adds a users class rank to db"""
 
-    db_users.document(user).collection(u'transript').document(u'rank').set({
+    db_users.document(user).collection(u'transcript').document(u'gpa').set({
         u'gpa': transcript['gpa']['value'],
         u'rank': transcript['gpa']['rank'],
         u'classsize': transcript['gpa']['class_size'],
