@@ -28,6 +28,7 @@ class HomeAccessCenterUser:
         """
         self.sid = sid
         self.session = Session()
+        self.demo_user = (self.sid == 's000000')
 
     def login(self, password):
         """
@@ -40,7 +41,7 @@ class HomeAccessCenterUser:
         """
         self.passwd = password
 
-        if self.sid == 's000000': # Test Account
+        if self.demo_user: # Test Account
             return True
 
         data = {'action': 'login',
@@ -213,7 +214,7 @@ class HomeAccessCenterUser:
         """
         if not page:
 
-            if self.sid == 's000000': # Test User
+            if self.demo_user: # Test User
                 return cfisdapi.demo.REPORTCARD
 
             try:
@@ -268,7 +269,7 @@ class HomeAccessCenterUser:
         """
         if not page:
 
-            if self.sid == 's000000':
+            if self.demo_user:
                 return cfisdapi.demo.TRANSCRIPT
 
             try:
@@ -319,7 +320,7 @@ class HomeAccessCenterUser:
         ----
         Demo account will return empty dict
         """
-        if self.sid == 's000000':
+        if self.demo_user:
             return {}
 
         if is_user(self.sid):

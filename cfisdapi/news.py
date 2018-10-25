@@ -267,12 +267,12 @@ def get_all_news_list(school=""):
     news = {'news': {'all': []}}
     for article in get_news(school):
         news['news']['all'].append({
-                                    'date': article[3].strftime("%B %d, %Y"),
-                                    'image': article[6],
-                                    'organization': article[2],
-                                    'text': article[4],
-                                    'link': article[5],
-                                    'type': article[7]
+                                    'date': article['date'],
+                                    'image': article['picture'],
+                                    'organization': article['organization'],
+                                    'text': article['text'],
+                                    'link': article['link'],
+                                    'type': article['articletype']
                                    })
     json_results = jsonify(news)
 
