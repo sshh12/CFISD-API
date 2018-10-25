@@ -4,6 +4,7 @@ from urllib.parse import unquote
 from datetime import datetime
 from lru import LRUCacheDict
 from lxml import html
+import hashlib
 import time
 import re
 
@@ -460,6 +461,14 @@ class HomeAccessCenterUser:
 
         return attend
 
+# create a key for cache dicts
+# creates hash(user + pass) to quickly verify users
+def get_cache_key(sid, passw):
+    m = hashlib.sha256()
+    m.update(bytes(sid, 'utf-8'))
+    m.update(bytes(passw, 'utf-8'))
+    return m.digest()
+
 # caches to speed up repeated requests
 demo_cache = LRUCacheDict(max_size=MAX_CACHE_SIZE, expiration=60*60*24*365) # 1 year (this never needs to update)
 current_cache = LRUCacheDict(max_size=MAX_CACHE_SIZE, expiration=60*15) # 15 mins
@@ -494,17 +503,18 @@ def get_hac_classwork(user=""):
     start_time = time.time()
     hac_user = HomeAccessCenterUser(user)
 
-    if hac_user.login(passw):
+    cache_key = get_cache_key(hac_user.sid, passw)
+    if cache_key in current_cache:
+        return current_cache[cache_key]
 
-        if hac_user.sid in current_cache:
-            return current_cache[hac_user.sid]
+    if hac_user.login(passw):
 
         grades = hac_user.get_classwork()
 
         if hac_user.sid not in demo_cache:
             hac_user.get_demo()
             demo_cache[hac_user.sid] = True
-            
+
     else:
         grades = {'status': 'login_failed'}
 
@@ -513,7 +523,7 @@ def get_hac_classwork(user=""):
     json_results = jsonify(grades)
 
     if grades['status'] == 'success':
-        current_cache[hac_user.sid] = json_results
+        current_cache[cache_key] = json_results
 
     return json_results
 
@@ -544,10 +554,11 @@ def get_hac_reportcard(user=""):
     start_time = time.time()
     hac_user = HomeAccessCenterUser(user)
 
-    if hac_user.login(passw):
+    cache_key = get_cache_key(hac_user.sid, passw)
+    if cache_key in reportcard_cache:
+        return reportcard_cache[cache_key]
 
-        if hac_user.sid in reportcard_cache:
-            return reportcard_cache[hac_user.sid]
+    if hac_user.login(passw):
 
         reportcard = hac_user.get_reportcard()
 
@@ -559,7 +570,7 @@ def get_hac_reportcard(user=""):
     json_results = jsonify(reportcard)
 
     if reportcard['status'] == 'success':
-        reportcard_cache[hac_user.sid] = json_results
+        reportcard_cache[cache_key] = json_results
 
     return json_results
 
@@ -590,10 +601,11 @@ def get_hac_transcript(user=""):
     start_time = time.time()
     hac_user = HomeAccessCenterUser(user)
 
-    if hac_user.login(passw):
+    cache_key = get_cache_key(hac_user.sid, passw)
+    if cache_key in transcript_cache:
+        return transcript_cache[cache_key]
 
-        if hac_user.sid in transcript_cache:
-            return transcript_cache[hac_user.sid]
+    if hac_user.login(passw):
 
         transcript = hac_user.get_transcript()
 
@@ -605,7 +617,7 @@ def get_hac_transcript(user=""):
     json_results = jsonify(transcript)
 
     if transcript['status'] == 'success':
-        transcript_cache[hac_user.sid] = json_results
+        transcript_cache[cache_key] = json_results
 
     return json_results
 
@@ -636,10 +648,11 @@ def get_hac_attendance(user=""):
     start_time = time.time()
     hac_user = HomeAccessCenterUser(user)
 
-    if hac_user.login(passw):
+    cache_key = get_cache_key(hac_user.sid, passw)
+    if cache_key in attendance_cache:
+        return attendance_cache[cache_key]
 
-        if hac_user.sid in attendance_cache:
-            return attendance_cache[hac_user.sid]
+    if hac_user.login(passw):
 
         attendance = hac_user.get_attendance()
 
@@ -651,6 +664,6 @@ def get_hac_attendance(user=""):
     json_results = jsonify(attendance)
 
     if attendance['status'] == 'success':
-        attendance_cache[hac_user.sid] = json_results
+        attendance_cache[cache_key] = json_results
 
     return json_results
