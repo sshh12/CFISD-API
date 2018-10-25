@@ -8,6 +8,12 @@ from firebase_admin import firestore
 
 from cfisdapi import app
 
+def fb_encode(val):
+    return val.replace('/', '%2F').replace('.', '%2E').replace('_', '%5F')
+
+def fb_decode(val):
+    return val.replace('%2F', '/').replace('%2E', '.').replace('%5F', '_')
+
 cred_json = json.loads(os.environ.get('FIREBASE_CRED', '{}'))
 creds = credentials.Certificate(cred_json)
 firebase_admin.initialize_app(creds)
@@ -19,7 +25,7 @@ db_users = db.collection(u'users')
 def set_grade(user, subject, name, grade, gradetype):
     """Sets a users grade in the db"""
 
-    db_users.document(user).collection(u'grades').document(name).set({
+    db_users.document(user).collection(u'grades').document(fb_encode(name)).set({
         u'name': name,
         u'subject': subject,
         u'grade': grade,
@@ -49,7 +55,7 @@ def add_rank(user, transcript):
 
 def add_news(school, organization, eventdate, text, link, picture, type_):
     """Adds new article to db"""
-    db_news.document(school).collection(u'articles').document(text).set({
+    db_news.document(fb_encode(school)).collection(u'articles').document(fb_encode(text)).set({
         u'school': school,
         u'text': text,
         u'organization': organization,
@@ -62,7 +68,7 @@ def add_news(school, organization, eventdate, text, link, picture, type_):
 def get_news(school):
     """Gets all news from db"""
 
-    all_news = db_news.document(school).collection(u'articles').get()
+    all_news = db_news.document(fb_encode(school)).collection(u'articles').get()
 
     for article in all_news:
         yield article.to_dict()
