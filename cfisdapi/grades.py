@@ -494,16 +494,17 @@ def get_hac_classwork(user=""):
     start_time = time.time()
     hac_user = HomeAccessCenterUser(user)
 
-    if hac_user.sid in current_cache:
-        return current_cache[hac_user.sid]
-
     if hac_user.login(passw):
+
+        if hac_user.sid in current_cache:
+            return current_cache[hac_user.sid]
 
         grades = hac_user.get_classwork()
 
         if hac_user.sid not in demo_cache:
             hac_user.get_demo()
             demo_cache[hac_user.sid] = True
+            
     else:
         grades = {'status': 'login_failed'}
 
@@ -543,11 +544,13 @@ def get_hac_reportcard(user=""):
     start_time = time.time()
     hac_user = HomeAccessCenterUser(user)
 
-    if hac_user.sid in reportcard_cache:
-        return reportcard_cache[hac_user.sid]
-
     if hac_user.login(passw):
+
+        if hac_user.sid in reportcard_cache:
+            return reportcard_cache[hac_user.sid]
+
         reportcard = hac_user.get_reportcard()
+
     else:
         reportcard = {'status': 'login_failed'}
 
@@ -587,11 +590,13 @@ def get_hac_transcript(user=""):
     start_time = time.time()
     hac_user = HomeAccessCenterUser(user)
 
-    if hac_user.sid in transcript_cache:
-        return transcript_cache[hac_user.sid]
-
     if hac_user.login(passw):
+
+        if hac_user.sid in transcript_cache:
+            return transcript_cache[hac_user.sid]
+
         transcript = hac_user.get_transcript()
+
     else:
         transcript = {'status': 'login_failed'}
 
@@ -631,10 +636,11 @@ def get_hac_attendance(user=""):
     start_time = time.time()
     hac_user = HomeAccessCenterUser(user)
 
-    if hac_user.sid in attendance_cache:
-        return attendance_cache[hac_user.sid]
-
     if hac_user.login(passw):
+
+        if hac_user.sid in attendance_cache:
+            return attendance_cache[hac_user.sid]
+
         attendance = hac_user.get_attendance()
 
     else:
@@ -644,5 +650,7 @@ def get_hac_attendance(user=""):
 
     json_results = jsonify(attendance)
 
+    if attendance['status'] == 'success':
+        attendance_cache[hac_user.sid] = json_results
 
     return json_results
