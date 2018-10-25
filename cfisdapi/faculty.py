@@ -5,7 +5,7 @@ from flask import request, jsonify
 import requests
 import re
 
-faculty_lists = LRUCacheDict(expiration=60*60*24*3)
+cached_faculty = LRUCacheDict(expiration=60*60*24*30) # 1 month
 
 @app.route("/api/faculty/list")
 def get_faculty():
@@ -13,14 +13,14 @@ def get_faculty():
 
     url = request.args.get('url', default="https://app.cfisd.net/urlcap/campus_list_012.html", type=str)
 
-    if url in faculty_lists:
-        return faculty_lists[url]
+    if url in cached_faculty:
+        return cached_faculty[url]
 
     teachers = get_faculty_from_url(url)
 
     json_results = jsonify(teachers)
 
-    faculty_lists[url] = json_results
+    cached_faculty[url] = json_results
 
     return json_results
 
