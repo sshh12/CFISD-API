@@ -2,15 +2,18 @@ from requests import Session, Timeout
 from flask import request, jsonify
 from urllib.parse import unquote
 from datetime import datetime
+from lru import LRUCacheDict
 from lxml import html
+import hashlib
 import time
 import re
 
 from cfisdapi import app
-from cfisdapi.database import set_grade, add_user, add_rank, is_user
+from cfisdapi.database import set_grade, add_user, add_rank
 import cfisdapi.demo
 
 HAC_SERVER_TIMEOUT = 15
+MAX_CACHE_SIZE = 1024
 
 class HomeAccessCenterUser:
     """Represents an instance of a Home Access Center user"""
@@ -26,8 +29,9 @@ class HomeAccessCenterUser:
         sid : str
             The student id of the user
         """
-        self.sid = sid
+        self.sid = sid.lower()
         self.session = Session()
+        self.demo_user = (self.sid == 's000000')
 
     def login(self, password):
         """
@@ -40,7 +44,7 @@ class HomeAccessCenterUser:
         """
         self.passwd = password
 
-        if self.sid == 's000000': # Test Account
+        if self.demo_user: # Test Account
             return True
 
         data = {'action': 'login',
@@ -213,7 +217,7 @@ class HomeAccessCenterUser:
         """
         if not page:
 
-            if self.sid == 's000000': # Test User
+            if self.demo_user: # Test User
                 return cfisdapi.demo.REPORTCARD
 
             try:
@@ -268,7 +272,7 @@ class HomeAccessCenterUser:
         """
         if not page:
 
-            if self.sid == 's000000':
+            if self.demo_user:
                 return cfisdapi.demo.TRANSCRIPT
 
             try:
@@ -294,11 +298,21 @@ class HomeAccessCenterUser:
                 'status': 'success'
             })
 
+            add_rank(self.sid, transcript)
+
+        except IndexError: # no transcript yet
+
+            transcript.update({
+                'gpa': {
+                    'value': 0,
+                    'rank': 0,
+                    'class_size': 1
+                },
+                'status': 'success'
+            })
+
         except:
-
             return {'status': 'server_error'}
-
-        add_rank(self.sid, transcript)
 
         return transcript
 
@@ -319,11 +333,8 @@ class HomeAccessCenterUser:
         ----
         Demo account will return empty dict
         """
-        if self.sid == 's000000':
+        if self.demo_user:
             return {}
-
-        if is_user(self.sid):
-            return {'status': 'already_added'}
 
         if not page:
 
@@ -450,6 +461,20 @@ class HomeAccessCenterUser:
 
         return attend
 
+# create a key for cache dicts
+# creates hash(user + pass) to quickly verify users
+def get_cache_key(sid, passw):
+    m = hashlib.sha256()
+    m.update(bytes(sid, 'utf-8'))
+    m.update(bytes(passw, 'utf-8'))
+    return m.digest()
+
+# caches to speed up repeated requests
+demo_cache = LRUCacheDict(max_size=MAX_CACHE_SIZE, expiration=60*60*24*365) # 1 year (this never needs to update)
+current_cache = LRUCacheDict(max_size=MAX_CACHE_SIZE, expiration=60*15) # 15 mins
+reportcard_cache = LRUCacheDict(max_size=MAX_CACHE_SIZE, expiration=60*60*24) # 1 day
+transcript_cache = LRUCacheDict(max_size=MAX_CACHE_SIZE, expiration=60*60*24) # 1 day
+attendance_cache = LRUCacheDict(max_size=MAX_CACHE_SIZE, expiration=60*60) # 1 hour
 
 @app.route("/api/current/<user>", methods=['POST'])
 def get_hac_classwork(user=""):
@@ -475,18 +500,32 @@ def get_hac_classwork(user=""):
     """
     passw = unquote(request.get_json()['password'])
 
-    t = time.time()
-    u = HomeAccessCenterUser(user)
+    start_time = time.time()
+    hac_user = HomeAccessCenterUser(user)
 
-    if u.login(passw):
-        grades = u.get_classwork()
-        u.get_demo()
+    cache_key = get_cache_key(hac_user.sid, passw)
+    if cache_key in current_cache:
+        return current_cache[cache_key]
+
+    if hac_user.login(passw):
+
+        grades = hac_user.get_classwork()
+
+        if hac_user.sid not in demo_cache:
+            hac_user.get_demo()
+            demo_cache[hac_user.sid] = True
+
     else:
         grades = {'status': 'login_failed'}
 
-    print("GOT Classwork for {0} in {1:.2f}".format(user, time.time() - t))
+    print("GOT Classwork for {0} in {1:.2f}".format(hac_user.sid, time.time() - start_time))
 
-    return jsonify(grades)
+    json_results = jsonify(grades)
+
+    if grades['status'] == 'success':
+        current_cache[cache_key] = json_results
+
+    return json_results
 
 @app.route("/api/reportcard/<user>", methods=['POST'])
 def get_hac_reportcard(user=""):
@@ -512,17 +551,28 @@ def get_hac_reportcard(user=""):
     """
     passw = unquote(request.get_json()['password'])
 
-    t = time.time()
-    u = HomeAccessCenterUser(user)
+    start_time = time.time()
+    hac_user = HomeAccessCenterUser(user)
 
-    if u.login(passw):
-        reportcard = u.get_reportcard()
+    cache_key = get_cache_key(hac_user.sid, passw)
+    if cache_key in reportcard_cache:
+        return reportcard_cache[cache_key]
+
+    if hac_user.login(passw):
+
+        reportcard = hac_user.get_reportcard()
+
     else:
         reportcard = {'status': 'login_failed'}
 
-    print("GOT Reportcard for {0} in {1:.2f}".format(user, time.time() - t))
+    print("GOT Reportcard for {0} in {1:.2f}".format(user, time.time() - start_time))
 
-    return jsonify(reportcard)
+    json_results = jsonify(reportcard)
+
+    if reportcard['status'] == 'success':
+        reportcard_cache[cache_key] = json_results
+
+    return json_results
 
 @app.route("/api/transcript/<user>", methods=['POST'])
 def get_hac_transcript(user=""):
@@ -548,17 +598,28 @@ def get_hac_transcript(user=""):
     """
     passw = unquote(request.get_json()['password'])
 
-    t = time.time()
-    u = HomeAccessCenterUser(user)
+    start_time = time.time()
+    hac_user = HomeAccessCenterUser(user)
 
-    if u.login(passw):
-        transcript = u.get_transcript()
+    cache_key = get_cache_key(hac_user.sid, passw)
+    if cache_key in transcript_cache:
+        return transcript_cache[cache_key]
+
+    if hac_user.login(passw):
+
+        transcript = hac_user.get_transcript()
+
     else:
         transcript = {'status': 'login_failed'}
 
-    print("GOT Transcript for {0} in {1:.2f}".format(user, time.time() - t))
+    print("GOT Transcript for {0} in {1:.2f}".format(user, time.time() - start_time))
 
-    return jsonify(transcript)
+    json_results = jsonify(transcript)
+
+    if transcript['status'] == 'success':
+        transcript_cache[cache_key] = json_results
+
+    return json_results
 
 @app.route("/api/attendance/<user>", methods=['POST'])
 def get_hac_attendance(user=""):
@@ -584,15 +645,25 @@ def get_hac_attendance(user=""):
     """
     passw = unquote(request.get_json()['password'])
 
-    t = time.time()
-    u = HomeAccessCenterUser(user)
+    start_time = time.time()
+    hac_user = HomeAccessCenterUser(user)
 
-    if u.login(passw):
-        attendance = u.get_attendance()
+    cache_key = get_cache_key(hac_user.sid, passw)
+    if cache_key in attendance_cache:
+        return attendance_cache[cache_key]
+
+    if hac_user.login(passw):
+
+        attendance = hac_user.get_attendance()
 
     else:
         attendance = {'status': 'login_failed'}
 
-    print("GOT Attendance for {0} in {1:.2f}".format(user, time.time() - t))
+    print("GOT Attendance for {0} in {1:.2f}".format(user, time.time() - start_time))
 
-    return jsonify(attendance)
+    json_results = jsonify(attendance)
+
+    if attendance['status'] == 'success':
+        attendance_cache[cache_key] = json_results
+
+    return json_results

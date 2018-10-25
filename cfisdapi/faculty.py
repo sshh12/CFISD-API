@@ -1,8 +1,11 @@
 from cfisdapi import app
 
+from lru import LRUCacheDict
 from flask import request, jsonify
 import requests
 import re
+
+cached_faculty = LRUCacheDict(expiration=60*60*24*30) # 1 month
 
 @app.route("/api/faculty/list")
 def get_faculty():
@@ -10,9 +13,16 @@ def get_faculty():
 
     url = request.args.get('url', default="https://app.cfisd.net/urlcap/campus_list_012.html", type=str)
 
+    if url in cached_faculty:
+        return cached_faculty[url]
+
     teachers = get_faculty_from_url(url)
 
-    return jsonify(teachers)
+    json_results = jsonify(teachers)
+
+    cached_faculty[url] = json_results
+
+    return json_results
 
 def get_faculty_from_url(url):
 
@@ -35,6 +45,7 @@ def get_faculty_from_url(url):
             if website:
                 website = website.group(1)
 
+            # name[0] is just first letter
             if name[0] not in teachers:
                 teachers[name[0]] = []
 

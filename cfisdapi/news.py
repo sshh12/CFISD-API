@@ -1,4 +1,5 @@
 from datetime import datetime
+from lru import LRUCacheDict
 from flask import request
 from flask import jsonify
 from lxml import html
@@ -24,9 +25,6 @@ class NewsWebsite(object):
 
     def download_and_parse(self):
         pass
-
-    def needs_update(self):
-        return time.time() - self.last_updated > 86400
 
 class CFISDNews(NewsWebsite):
 
@@ -241,6 +239,8 @@ student_news = {
     'cfisd': CFISDNews('cfisd', 'https://www.cfisd.net/en/news-media/district/')
 }
 
+cached_news = LRUCacheDict(expiration=60*60*24*3) # 3 days
+
 @app.route("/api/news/<school>/all")
 def get_all_news_list(school=""):
     """
@@ -257,19 +257,25 @@ def get_all_news_list(school=""):
     if school not in student_news:
         school = 'cfisd'
 
+    if school in cached_news:
+        return cached_news[school]
+
     news_website = student_news[school]
 
-    if news_website.needs_update():
-        news_website.download_and_parse()
+    news_website.download_and_parse()
 
     news = {'news': {'all': []}}
     for article in get_news(school):
         news['news']['all'].append({
-                                    'date': article[3].strftime("%B %d, %Y"),
-                                    'image': article[6],
-                                    'organization': article[2],
-                                    'text': article[4],
-                                    'link': article[5],
-                                    'type': article[7]
+                                    'date': article['date'],
+                                    'image': article['picture'],
+                                    'organization': article['organization'],
+                                    'text': article['text'],
+                                    'link': article['link'],
+                                    'type': article['articletype']
                                    })
-    return jsonify(news)
+    json_results = jsonify(news)
+
+    cached_news[school] = json_results
+
+    return json_results

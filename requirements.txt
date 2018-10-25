@@ -1,6 +1,8 @@
 flask==0.12.2
 gunicorn==19.7.1
 requests==2.9.1
-psycopg2==2.7.3.2
 lxml==4.1.1
 flask_cors==3.0.3
+py_lru_cache==0.1.4
+firebase-admin==2.13.0
+google-cloud-firestore==0.30.0
