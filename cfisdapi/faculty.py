@@ -5,7 +5,7 @@ from flask import request, jsonify
 import requests
 import re
 
-cached_faculty = LRUCacheDict(expiration=60*60*24*30) # 1 month
+cached_faculty = LRUCacheDict(expiration=60*60*24*30, concurrent=True) # 1 month
 
 @app.route("/api/faculty/list")
 def get_faculty():

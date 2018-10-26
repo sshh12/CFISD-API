@@ -239,7 +239,7 @@ student_news = {
     'cfisd': CFISDNews('cfisd', 'https://www.cfisd.net/en/news-media/district/')
 }
 
-cached_news = LRUCacheDict(expiration=60*60*24*3) # 3 days
+cached_news = LRUCacheDict(expiration=60*60*24*3, concurrent=True) # 3 days
 
 @app.route("/api/news/<school>/all")
 def get_all_news_list(school=""):
