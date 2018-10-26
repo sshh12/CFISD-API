@@ -470,11 +470,12 @@ def get_cache_key(sid, passw):
     return m.digest()
 
 # caches to speed up repeated requests
-demo_cache = LRUCacheDict(max_size=MAX_CACHE_SIZE, expiration=60*60*24*365) # 1 year (this never needs to update)
-current_cache = LRUCacheDict(max_size=MAX_CACHE_SIZE, expiration=60*15) # 15 mins
-reportcard_cache = LRUCacheDict(max_size=MAX_CACHE_SIZE, expiration=60*60*24) # 1 day
-transcript_cache = LRUCacheDict(max_size=MAX_CACHE_SIZE, expiration=60*60*24) # 1 day
-attendance_cache = LRUCacheDict(max_size=MAX_CACHE_SIZE, expiration=60*60) # 1 hour
+cache_settings = dict(max_size=MAX_CACHE_SIZE, concurrent=True)
+demo_cache = LRUCacheDict(expiration=60*60*24*365, **cache_settings)   # 1 year (this never needs to update)
+current_cache = LRUCacheDict(expiration=60*15, **cache_settings)       # 15 mins
+reportcard_cache = LRUCacheDict(expiration=60*60*24, **cache_settings) # 1 day
+transcript_cache = LRUCacheDict(expiration=60*60*24, **cache_settings) # 1 day
+attendance_cache = LRUCacheDict(expiration=60*60, **cache_settings)    # 1 hour
 
 @app.route("/api/current/<user>", methods=['POST'])
 def get_hac_classwork(user=""):
