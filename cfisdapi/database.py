@@ -45,7 +45,7 @@ def add_user(user, demo):
             u'gradelevel': demo['gradelevel'],
             u'lastupdated': datetime.now()
         })
-    except Exception as e
+    except Exception as e:
         print(e)
 
 def add_rank(user, transcript):
@@ -57,7 +57,7 @@ def add_rank(user, transcript):
             u'classsize': transcript['gpa']['class_size'],
             u'lastupdated': datetime.now()
         })
-    except Exception as e
+    except Exception as e:
         print(e)
 
 def add_news(school, organization, eventdate, text, link, picture, type_):
@@ -73,7 +73,7 @@ def add_news(school, organization, eventdate, text, link, picture, type_):
             u'date': eventdate,
             u'lastupdated': datetime.now()
         })
-    except Exception as e
+    except Exception as e:
         print(e)
 
 def get_news(school):
@@ -83,6 +83,6 @@ def get_news(school):
 
         for article in all_news:
             yield article.to_dict()
-    except Exception as e
+    except Exception as e:
         print(e)
         return []
