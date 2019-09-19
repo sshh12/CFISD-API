@@ -252,7 +252,7 @@ student_news = {
 }
 
 
-cached_news = LRUCacheDict(expiration=60*60*24*3, concurrent=True) # 3 days
+cached_news = LRUCacheDict(expiration=60*60*24, concurrent=True) # 1 day
 
 
 @app.route("/api/news/<school>/all")
@@ -271,23 +271,27 @@ def get_all_news_list(school=""):
     if school not in student_news:
         school = 'cfisd'
 
+    app.logger.info('News(%s)', school)
+
     if school in cached_news:
         return cached_news[school]
 
     news_website = student_news[school]
-
     news_website.download_and_parse()
 
-    news = {'news': {'all': []}}
+    articles = []
     for article in get_news(school):
-        news['news']['all'].append({
-                                    'date': article['date'],
-                                    'image': article['picture'],
-                                    'organization': article['organization'],
-                                    'text': article['text'],
-                                    'link': article['link'],
-                                    'type': article['articletype']
-                                   })
+        articles.append({
+            'date': article['date'],
+            'image': article['picture'],
+            'organization': article['organization'],
+            'text': article['text'],
+            'link': article['link'],
+            'type': article['articletype']
+        })
+
+    news = {'news': {'all': articles}}
+
     json_results = jsonify(news)
 
     cached_news[school] = json_results

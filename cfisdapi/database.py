@@ -86,7 +86,10 @@ def add_news(school, organization, eventdate, text, link, picture, type_):
 def get_news(school):
     """Gets all news from db"""
     try:
-        all_news = db_news.document(fb_encode(school)).collection(u'articles').get()
+        all_news = db_news.document(fb_encode(school))\
+            .collection(u'articles')\
+            .order_by(u'lastupdated', direction=firestore.Query.DESCENDING)\
+            .limit(50).get()
 
         for article in all_news:
             yield article.to_dict()

@@ -65,7 +65,7 @@ def get_hac_classwork(user=""):
     if hac_user.login(passw):
         grades = hac_user.get_classwork()
         if hac_user.sid not in demo_cache:
-            app.logger.info("Demo({0}) not found...downloading.".format(hac_user.sid))
+            app.logger.info("Demo({0}) not found...downloading".format(hac_user.sid))
             hac_user.get_demo()
             demo_cache[hac_user.sid] = True
     else:
