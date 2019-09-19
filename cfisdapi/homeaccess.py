@@ -7,13 +7,46 @@ from cfisdapi.database import set_grade, add_user, add_rank
 from cfisdapi import app
 
 
+HAC_URL = "https://home-access.cfisd.net"
 HAC_SERVER_TIMEOUT = 15
+REGEX_HONORS = re.compile(r'\b(?:AP|K)\b')
+
+
+def percent_to_float(percent_str):
+    try:
+        return float(percent_str.replace("%", "").strip())
+    except ValueError:
+        return 0.0
+
+
+def grade_to_letter(percent):
+
+    if not percent:
+        return ''
+    elif 'X' in percent:
+        return 'U'
+
+    num = percent_to_float(percent)
+    if num >= 89.5:
+        return 'A'
+    elif num >= 79.5:
+        return 'B'
+    elif num >= 69.5:
+        return 'C'
+    elif num >= 15:
+        return 'D'
+    elif num < 1:
+        return 'Z'
+    else:
+        return 'F'
+
+
+def is_honors(classname):
+    return classname != '' and REGEX_HONORS.search(classname) != None
 
 
 class HomeAccessCenterUser:
     """Represents an instance of a Home Access Center user"""
-
-    re_honors = re.compile(r'\b(?:AP|K)\b')
 
     def __init__(self, sid):
         """
@@ -28,7 +61,7 @@ class HomeAccessCenterUser:
         self.session = Session()
         self.demo_user = (self.sid == 's000000')
 
-    def login(self, password):
+    def login(self, passwd):
         """
         Sends a login request and validates credentials
 
@@ -37,7 +70,7 @@ class HomeAccessCenterUser:
         password : str
             The users password
         """
-        self.passwd = password
+        self.passwd = passwd
 
         if self.demo_user: # Test Account
             return True
@@ -48,32 +81,16 @@ class HomeAccessCenterUser:
                 'LogOnDetails.Password': self.passwd}
 
         try:
-            resp = self.session.post(
-                "https://home-access.cfisd.net/HomeAccess/Account/LogOn", timeout=HAC_SERVER_TIMEOUT, data=data)
+            resp = self.session.post(HAC_URL + "/HomeAccess/Account/LogOn", timeout=HAC_SERVER_TIMEOUT, data=data)
         except:
             return False
 
-        if "Logoff" in resp.text:  # Test If Login Worked
-            return True
-
-        return False
+        # Test If Login Worked
+        return ("Logoff" in resp.text)
 
     def logout(self):  # Ignored to Keep Resp. Times Lower
         """Logout the user and devalidate cookies"""
-        self.session.get("https://home-access.cfisd.net/HomeAccess/Account/LogOff")
-
-    def _percent_to_float(self, s):
-        try:
-            return float(s.replace("%", ""))
-        except ValueError:
-            return 0.0
-
-    def _get_letter_grade(self, percent):
-
-        
-
-    def _is_honors(self, name):
-        return name != '' and self.re_honors.search(name) != None
+        self.session.get(HAC_URL + "/HomeAccess/Account/LogOff")
 
     def get_classwork(self, page=None):
         """
@@ -94,7 +111,7 @@ class HomeAccessCenterUser:
                 return cfisdapi.demo.CLASSWORK
 
             try:
-                page = self.session.get("https://home-access.cfisd.net/HomeAccess/Content/Student/Assignments.aspx", timeout=HAC_SERVER_TIMEOUT).content
+                page = self.session.get(HAC_URL + "/HomeAccess/Content/Student/Assignments.aspx", timeout=HAC_SERVER_TIMEOUT).content
             except Timeout:
                 return {'status': 'connection_failed'}
 
@@ -110,15 +127,15 @@ class HomeAccessCenterUser:
 
                 class_average = class_.find_class('sg-header-heading sg-right')[0].text_content().split(' ')[-1]
 
-                class_avg_asfloat = self._percent_to_float(class_average)
+                class_avg_asfloat = percent_to_float(class_average)
 
                 classwork.append({
                                   'name': classname,
-                                  'honors': self._is_honors(classname),
+                                  'honors': is_honors(classname),
                                   'overallavg': class_average,
                                   'assignments': [],
                                   'categories': [],
-                                  'letter': self._get_letter_grade(class_average)
+                                  'letter': grade_to_letter(class_average)
                                  })
 
                 if class_avg_asfloat > 10:
@@ -142,7 +159,7 @@ class HomeAccessCenterUser:
                         grade_type = cols[3]
                         grade = cols[-1].replace("&nbsp;", "").replace(u'\xa0', "")
 
-                        assign_avg_asfloat = self._percent_to_float(grade)
+                        assign_avg_asfloat = percent_to_float(grade)
 
                         classwork[-1]['assignments'].append({
                                                             'name': assign_name,
@@ -150,7 +167,7 @@ class HomeAccessCenterUser:
                                                             'datedue': datedue,
                                                             'gradetype': grade_type,
                                                             'grade': grade,
-                                                            'letter': self._get_letter_grade(grade)
+                                                            'letter': grade_to_letter(grade)
                                                             })
 
                         if assign_avg_asfloat > 10:
@@ -165,7 +182,7 @@ class HomeAccessCenterUser:
                         category = cols[0]
                         grade = cols[3].strip()
                         weight = float(cols[4])
-                        letter = self._get_letter_grade(grade)
+                        letter = grade_to_letter(grade)
 
                         classwork[-1]['categories'].append({
                                                             'name': category,
@@ -198,7 +215,7 @@ class HomeAccessCenterUser:
                 return cfisdapi.demo.REPORTCARD
 
             try:
-                page = self.session.get("https://home-access.cfisd.net/HomeAccess/Content/Student/ReportCards.aspx", timeout=HAC_SERVER_TIMEOUT).content
+                page = self.session.get(HAC_URL + "/HomeAccess/Content/Student/ReportCards.aspx", timeout=HAC_SERVER_TIMEOUT).content
             except Timeout:
                 return {'status': 'connection_failed'}
 
@@ -217,13 +234,13 @@ class HomeAccessCenterUser:
 
             averages = []
             for i in [7, 8, 11, 12]:
-                averages.append({'average': self._percent_to_float(cols[i]), 'letter': self._get_letter_grade(cols[i])})
+                averages.append({'average': percent_to_float(cols[i]), 'letter': grade_to_letter(cols[i])})
 
             exams = []
             sems = []
             for i in [9, 13]:
-                exams.append({'average': self._percent_to_float(cols[i]), 'letter': self._get_letter_grade(cols[i])})
-                sems.append({'average': self._percent_to_float(cols[i + 1]), 'letter': self._get_letter_grade(cols[i + 1])})
+                exams.append({'average': percent_to_float(cols[i]), 'letter': grade_to_letter(cols[i])})
+                sems.append({'average': percent_to_float(cols[i + 1]), 'letter': grade_to_letter(cols[i + 1])})
 
             reportcard.append({'name': classname,
                                'teacher': teacher,
@@ -253,7 +270,7 @@ class HomeAccessCenterUser:
                 return cfisdapi.demo.TRANSCRIPT
 
             try:
-                page = self.session.get("https://home-access.cfisd.net/HomeAccess/Content/Student/Transcript.aspx", timeout=HAC_SERVER_TIMEOUT).content
+                page = self.session.get(HAC_URL + "/HomeAccess/Content/Student/Transcript.aspx", timeout=HAC_SERVER_TIMEOUT).content
             except Timeout:
                 return {'status': 'connection_failed'}
 
@@ -315,7 +332,7 @@ class HomeAccessCenterUser:
 
         if not page:
             try:
-                page = self.session.get("https://home-access.cfisd.net/HomeAccess/Content/Student/Registration.aspx", timeout=HAC_SERVER_TIMEOUT).content
+                page = self.session.get(HAC_URL + "/HomeAccess/Content/Student/Registration.aspx", timeout=HAC_SERVER_TIMEOUT).content
             except Timeout:
                 return {'status': 'connection_failed'}
 
@@ -368,7 +385,7 @@ class HomeAccessCenterUser:
                     '__EVENTVALIDATION': current_params[4]
                 }
 
-            page = self.session.post("https://home-access.cfisd.net/HomeAccess/Content/Attendance/MonthlyView.aspx", timeout=HAC_SERVER_TIMEOUT, data=data).content
+            page = self.session.post(HAC_URL + "/HomeAccess/Content/Attendance/MonthlyView.aspx", timeout=HAC_SERVER_TIMEOUT, data=data).content
 
             tree = html.fromstring(page)
 
