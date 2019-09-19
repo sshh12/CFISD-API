@@ -1,7 +1,6 @@
 from datetime import datetime
 from lru import LRUCacheDict
-from flask import request
-from flask import jsonify
+from flask import request, jsonify
 from lxml import html
 import requests
 import time
@@ -10,11 +9,13 @@ import re
 from cfisdapi import app
 from cfisdapi.database import get_news, add_news
 
+
 class NewsType:
     """News Enum"""
     BASIC = 0
     ARTICLE = 1
     TEXT = 2
+
 
 class NewsWebsite(object):
 
@@ -25,6 +26,7 @@ class NewsWebsite(object):
 
     def download_and_parse(self):
         pass
+
 
 class CFISDNews(NewsWebsite):
 
@@ -46,6 +48,7 @@ class CFISDNews(NewsWebsite):
             link = self.website + title_elem.attrib['href'][1:]
 
             add_news(self.school, 'CFISD Media', date, text, link, '', NewsType.TEXT)
+
 
 class MustangMessenger(NewsWebsite):
 
@@ -91,6 +94,7 @@ class MustangMessenger(NewsWebsite):
 
         self.last_updated = time.time()
 
+
 class TheBridge(MustangMessenger):
 
     def download_and_parse(self):
@@ -104,6 +108,7 @@ class TheBridge(MustangMessenger):
         }
 
         self.run(org_urls)
+
 
 class WingSpan(MustangMessenger):
 
@@ -119,6 +124,7 @@ class WingSpan(MustangMessenger):
 
         self.run(org_urls)
 
+
 class LakeView(MustangMessenger):
 
     def download_and_parse(self):
@@ -129,6 +135,7 @@ class LakeView(MustangMessenger):
         }
 
         self.run(org_urls)
+
 
 class Rampage(MustangMessenger):
 
@@ -141,6 +148,7 @@ class Rampage(MustangMessenger):
         }
 
         self.run(org_urls)
+
 
 class Peregrine(MustangMessenger):
 
@@ -156,6 +164,7 @@ class Peregrine(MustangMessenger):
 
         self.run(org_urls)
 
+
 class Howler(MustangMessenger):
 
     def download_and_parse(self):
@@ -169,6 +178,7 @@ class Howler(MustangMessenger):
         }
 
         self.run(org_urls)
+
 
 class Crimson(NewsWebsite):
 
@@ -213,6 +223,7 @@ class Crimson(NewsWebsite):
 
         self.last_updated = time.time()
 
+
 class Creek(Crimson):
 
     def download_and_parse(self):
@@ -225,6 +236,7 @@ class Creek(Crimson):
         }
 
         self.run(org_urls)
+
 
 student_news = {
     'bridgeland': TheBridge('bridgeland', 'http://bhsthebridge.com/'),
@@ -239,7 +251,9 @@ student_news = {
     'cfisd': CFISDNews('cfisd', 'https://www.cfisd.net/en/news-media/district/')
 }
 
-cached_news = LRUCacheDict(expiration=60*60*24*3, concurrent=True) # 3 days
+
+cached_news = LRUCacheDict(expiration=60*60*24, concurrent=True) # 1 day
+
 
 @app.route("/api/news/<school>/all")
 def get_all_news_list(school=""):
@@ -257,23 +271,27 @@ def get_all_news_list(school=""):
     if school not in student_news:
         school = 'cfisd'
 
+    app.logger.info('News(%s)', school)
+
     if school in cached_news:
         return cached_news[school]
 
     news_website = student_news[school]
-
     news_website.download_and_parse()
 
-    news = {'news': {'all': []}}
+    articles = []
     for article in get_news(school):
-        news['news']['all'].append({
-                                    'date': article['date'],
-                                    'image': article['picture'],
-                                    'organization': article['organization'],
-                                    'text': article['text'],
-                                    'link': article['link'],
-                                    'type': article['articletype']
-                                   })
+        articles.append({
+            'date': article['date'],
+            'image': article['picture'],
+            'organization': article['organization'],
+            'text': article['text'],
+            'link': article['link'],
+            'type': article['articletype']
+        })
+
+    news = {'news': {'all': articles}}
+
     json_results = jsonify(news)
 
     cached_news[school] = json_results

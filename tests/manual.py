@@ -1,7 +1,7 @@
 import getpass
 import pprint
 
-from cfisdapi.grades import HomeAccessCenterUser
+from cfisdapi.homeaccess import HomeAccessCenterUser
 
 def main(username, password):
     """
@@ -22,6 +22,6 @@ def main(username, password):
 if __name__ == "__main__":
 
     user = input('Username > ')
-    passed = getpass.getpass('Password (Hidden) > ')
+    passwd = getpass.getpass('Password (Hidden) > ')
 
-    main(user, passed)
+    main(user, passwd)
