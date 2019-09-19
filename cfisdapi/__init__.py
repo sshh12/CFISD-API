@@ -19,7 +19,7 @@ HOME_TEXT = """
 <h4>
 <b>Hi!</b>
 This is the Unoffical CFISD API.
-For help see <a href=\"https://github.com/sshh12/CyRanch-App-Server\">github.com/sshh12/CyRanch-App-Server</a>
+For help see <a href=\"https://github.com/sshh12/CFISD-API\">github.com/sshh12/CFISD-API</a>
 or contact me @ <a href=\"https://sshh.io\">sshh.io</a>
 </h4>
 """

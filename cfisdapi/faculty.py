@@ -3,7 +3,6 @@ from cfisdapi import app
 from lru import LRUCacheDict
 from flask import request, jsonify
 import requests
-import logging
 import re
 
 
