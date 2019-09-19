@@ -5,6 +5,7 @@ from datetime import datetime
 from lru import LRUCacheDict
 from lxml import html
 import hashlib
+import logging
 import time
 import re
 
@@ -200,7 +201,7 @@ class HomeAccessCenterUser:
                                                            })
 
         except Exception as e:
-            print(str(e) + " -- grades")
+            app.logger.error('Grades error %s', str(e))
 
         return {'grades': classwork, 'status': 'success'}
 
@@ -524,7 +525,7 @@ def get_hac_classwork(user=""):
     else:
         grades = {'status': 'login_failed'}
 
-    print("GOT Classwork for {0} in {1:.2f}".format(hac_user.sid, time.time() - start_time))
+    app.logger.info("Classwork({0}) found in {1:.2f}s".format(hac_user.sid, time.time() - start_time))
 
     json_results = jsonify(grades)
 
@@ -572,7 +573,7 @@ def get_hac_reportcard(user=""):
     else:
         reportcard = {'status': 'login_failed'}
 
-    print("GOT Reportcard for {0} in {1:.2f}".format(user, time.time() - start_time))
+    app.logger.info("Reportcard({0}) found in {1:.2f}s".format(hac_user.sid, time.time() - start_time))
 
     json_results = jsonify(reportcard)
 
@@ -614,13 +615,11 @@ def get_hac_transcript(user=""):
         return transcript_cache[cache_key]
 
     if hac_user.login(passw):
-
         transcript = hac_user.get_transcript()
-
     else:
         transcript = {'status': 'login_failed'}
 
-    print("GOT Transcript for {0} in {1:.2f}".format(user, time.time() - start_time))
+    app.logger.info("Transcript({0}) found in {1:.2f}s".format(hac_user.sid, time.time() - start_time))
 
     json_results = jsonify(transcript)
 
@@ -668,7 +667,7 @@ def get_hac_attendance(user=""):
     else:
         attendance = {'status': 'login_failed'}
 
-    print("GOT Attendance for {0} in {1:.2f}".format(user, time.time() - start_time))
+    app.logger.info("Attendance({0}) found in {1:.2f}s".format(hac_user.sid, time.time() - start_time))
 
     json_results = jsonify(attendance)
 

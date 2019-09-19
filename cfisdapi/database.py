@@ -36,7 +36,7 @@ def set_grade(user, subject, name, grade, gradetype):
             u'lastupdated': datetime.now()
         })
     except Exception as e:
-        print(e)
+        app.logger.error('DB Error %s', str(e))
 
 
 def add_user(user, demo):
@@ -50,7 +50,7 @@ def add_user(user, demo):
             u'lastupdated': datetime.now()
         })
     except Exception as e:
-        print(e)
+        app.logger.error('DB Error %s', str(e))
 
 
 def add_rank(user, transcript):
@@ -63,7 +63,7 @@ def add_rank(user, transcript):
             u'lastupdated': datetime.now()
         })
     except Exception as e:
-        print(e)
+        app.logger.error('DB Error %s', str(e))
 
 
 def add_news(school, organization, eventdate, text, link, picture, type_):
@@ -80,7 +80,7 @@ def add_news(school, organization, eventdate, text, link, picture, type_):
             u'lastupdated': datetime.now()
         })
     except Exception as e:
-        print(e)
+        app.logger.error('DB Error %s', str(e))
 
 
 def get_news(school):
@@ -91,5 +91,5 @@ def get_news(school):
         for article in all_news:
             yield article.to_dict()
     except Exception as e:
-        print(e)
+        app.logger.error('DB Error %s', str(e))
         return []

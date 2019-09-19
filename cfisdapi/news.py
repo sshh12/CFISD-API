@@ -1,7 +1,6 @@
 from datetime import datetime
 from lru import LRUCacheDict
-from flask import request
-from flask import jsonify
+from flask import request, jsonify
 from lxml import html
 import requests
 import time

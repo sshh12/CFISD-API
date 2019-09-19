@@ -3,6 +3,7 @@ from cfisdapi import app
 from lru import LRUCacheDict
 from flask import request, jsonify
 import requests
+import logging
 import re
 
 
@@ -14,6 +15,8 @@ def get_faculty():
     """Returns json of school faculty."""
 
     url = request.args.get('url', default="https://app.cfisd.net/urlcap/campus_list_012.html", type=str)
+
+    app.logger.info('Downloading faculty from %s', url)
 
     if url in cached_faculty:
         return cached_faculty[url]
