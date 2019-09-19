@@ -2,6 +2,7 @@
 Sample responses for test user `s000000`
 """
 
+
 CLASSWORK = {
   "grades": [
     {
@@ -146,6 +147,7 @@ CLASSWORK = {
   "status": "success"
 }
 
+
 REPORTCARD = {
   "reportcard": [
     {
@@ -238,6 +240,7 @@ REPORTCARD = {
   "status": "success"
 }
 
+
 TRANSCRIPT = {
   "gpa": {
     "value": 6.854,
@@ -246,6 +249,7 @@ TRANSCRIPT = {
   },
   "status": "success"
 }
+
 
 ATTENDANCE = {
   "months": [

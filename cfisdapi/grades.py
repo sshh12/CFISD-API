@@ -12,8 +12,10 @@ from cfisdapi import app
 from cfisdapi.database import set_grade, add_user, add_rank
 import cfisdapi.demo
 
+
 HAC_SERVER_TIMEOUT = 15
 MAX_CACHE_SIZE = 1024
+
 
 class HomeAccessCenterUser:
     """Represents an instance of a Home Access Center user"""
@@ -461,6 +463,7 @@ class HomeAccessCenterUser:
 
         return attend
 
+
 # create a key for cache dicts
 # creates hash(user + pass) to quickly verify users
 def get_cache_key(sid, passw):
@@ -469,6 +472,7 @@ def get_cache_key(sid, passw):
     m.update(bytes(passw, 'utf-8'))
     return m.digest()
 
+
 # caches to speed up repeated requests
 cache_settings = dict(max_size=MAX_CACHE_SIZE, concurrent=True)
 demo_cache = LRUCacheDict(expiration=60*60*24*365, **cache_settings)   # 1 year (this never needs to update)
@@ -476,6 +480,7 @@ current_cache = LRUCacheDict(expiration=60*15, **cache_settings)       # 15 mins
 reportcard_cache = LRUCacheDict(expiration=60*60*24, **cache_settings) # 1 day
 transcript_cache = LRUCacheDict(expiration=60*60*24, **cache_settings) # 1 day
 attendance_cache = LRUCacheDict(expiration=60*60, **cache_settings)    # 1 hour
+
 
 @app.route("/api/current/<user>", methods=['POST'])
 def get_hac_classwork(user=""):
@@ -528,6 +533,7 @@ def get_hac_classwork(user=""):
 
     return json_results
 
+
 @app.route("/api/reportcard/<user>", methods=['POST'])
 def get_hac_reportcard(user=""):
     """
@@ -575,6 +581,7 @@ def get_hac_reportcard(user=""):
 
     return json_results
 
+
 @app.route("/api/transcript/<user>", methods=['POST'])
 def get_hac_transcript(user=""):
     """
@@ -621,6 +628,7 @@ def get_hac_transcript(user=""):
         transcript_cache[cache_key] = json_results
 
     return json_results
+
 
 @app.route("/api/attendance/<user>", methods=['POST'])
 def get_hac_attendance(user=""):
