@@ -8,11 +8,13 @@ from firebase_admin import firestore
 
 from cfisdapi import app
 
+
 def fb_encode(val):
     return val.replace('/', '%2F').replace('.', '%2E').replace('_', '%5F')
 
 def fb_decode(val):
     return val.replace('%2F', '/').replace('%2E', '.').replace('%5F', '_')
+
 
 cred_json = json.loads(os.environ.get('FIREBASE_CRED', '{}'))
 creds = credentials.Certificate(cred_json)
@@ -21,6 +23,7 @@ firebase_admin.initialize_app(creds)
 db = firestore.client()
 db_news = db.collection(u'news')
 db_users = db.collection(u'users')
+
 
 def set_grade(user, subject, name, grade, gradetype):
     """Sets a users grade in the db"""
@@ -35,6 +38,7 @@ def set_grade(user, subject, name, grade, gradetype):
     except Exception as e:
         print(e)
 
+
 def add_user(user, demo):
     try:
         db_users.document(user).collection(u'profile').document(u'userdata').set({
@@ -48,6 +52,7 @@ def add_user(user, demo):
     except Exception as e:
         print(e)
 
+
 def add_rank(user, transcript):
     """Adds a users class rank to db"""
     try:
@@ -59,6 +64,7 @@ def add_rank(user, transcript):
         })
     except Exception as e:
         print(e)
+
 
 def add_news(school, organization, eventdate, text, link, picture, type_):
     """Adds new article to db"""
@@ -75,6 +81,7 @@ def add_news(school, organization, eventdate, text, link, picture, type_):
         })
     except Exception as e:
         print(e)
+
 
 def get_news(school):
     """Gets all news from db"""
