@@ -6,9 +6,24 @@ import sys
 app = Flask(__name__)
 cors = CORS(app)
 
+
+class DNSRedirectMiddleware(object):
+
+    def __init__(self, app):
+        self.app = app
+
+    def __call__(self, environ, start_response):
+        host = environ.get('HTTP_HOST', '')
+        print(host)
+        # resp = start_response('301 MOVED PERMANENTLY', [('location', 'https://cfisdapi.sshh.io')])(b'')
+        return self.app(environ, start_response)
+
+
+app.wsgi_app = DNSRedirectMiddleware(app.wsgi_app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 app.logger.addHandler(logging.StreamHandler(sys.stdout))
 app.logger.setLevel(logging.INFO)
+
 
 import cfisdapi.database
 import cfisdapi.faculty
