@@ -17,7 +17,8 @@ class DNSRedirectMiddleware(object):
         uri = environ.get('RAW_URI', '')
         if host == 'cfisdapi.herokuapp.com':
             print('Bad host...redirecting.')
-            return start_response('301 MOVED PERMANENTLY', [('location', 'https://cfisdapi.sshh.io' + uri)])(b'')
+            start_response('301 MOVED PERMANENTLY', [('location', 'https://cfisdapi.sshh.io' + uri)])
+            return [b'Redirected.']
         return self.app(environ, start_response)
 
 
