@@ -5,6 +5,7 @@ import re
 
 from cfisdapi.database import set_grade, add_user, add_rank
 from cfisdapi import app
+import cfisdapi.demo
 
 
 HAC_URL = "https://home-access.cfisd.net"

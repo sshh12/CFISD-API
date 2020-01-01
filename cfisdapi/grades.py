@@ -7,7 +7,6 @@ import time
 
 from cfisdapi import app
 from cfisdapi.homeaccess import HomeAccessCenterUser
-import cfisdapi.demo
 
 
 MAX_CACHE_SIZE = 1024
