@@ -1,4 +1,4 @@
-from requests import Session, Timeout
+from requests import Session
 from datetime import datetime
 from lxml import html
 import re
@@ -8,7 +8,7 @@ from cfisdapi import app
 import cfisdapi.demo
 
 
-HAC_URL = "https://home-access.cfisd.net"
+HAC_URL = 'https://home-access.cfisd.net'
 HAC_SERVER_TIMEOUT = 15
 REGEX_HONORS = re.compile(r'\b(?:AP|K)\b')
 
@@ -83,7 +83,7 @@ class HomeAccessCenterUser:
 
         try:
             resp = self.session.post(HAC_URL + "/HomeAccess/Account/LogOn", timeout=HAC_SERVER_TIMEOUT, data=data)
-        except:
+        except Exception:
             return False
 
         # Test If Login Worked
@@ -113,7 +113,7 @@ class HomeAccessCenterUser:
 
             try:
                 page = self.session.get(HAC_URL + "/HomeAccess/Content/Student/Assignments.aspx", timeout=HAC_SERVER_TIMEOUT).content
-            except Timeout:
+            except Exception:
                 return {'status': 'connection_failed'}
 
         tree = html.fromstring(page)
@@ -217,7 +217,7 @@ class HomeAccessCenterUser:
 
             try:
                 page = self.session.get(HAC_URL + "/HomeAccess/Content/Student/ReportCards.aspx", timeout=HAC_SERVER_TIMEOUT).content
-            except Timeout:
+            except Exception:
                 return {'status': 'connection_failed'}
 
         tree = html.fromstring(page)
@@ -272,7 +272,7 @@ class HomeAccessCenterUser:
 
             try:
                 page = self.session.get(HAC_URL + "/HomeAccess/Content/Student/Transcript.aspx", timeout=HAC_SERVER_TIMEOUT).content
-            except Timeout:
+            except Exception:
                 return {'status': 'connection_failed'}
 
         tree = html.fromstring(page)
@@ -334,7 +334,7 @@ class HomeAccessCenterUser:
         if not page:
             try:
                 page = self.session.get(HAC_URL + "/HomeAccess/Content/Student/Registration.aspx", timeout=HAC_SERVER_TIMEOUT).content
-            except Timeout:
+            except Exception:
                 return {'status': 'connection_failed'}
 
         tree = html.fromstring(page)
