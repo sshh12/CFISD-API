@@ -16,7 +16,7 @@ class DNSRedirectMiddleware(object):
         host = environ.get('HTTP_HOST', '')
         uri = environ.get('RAW_URI', '')
         if host == 'cfisdapi.herokuapp.com':
-            print('Bad host...redirecting.')
+            app.logger.warning('Bad host...redirecting.')
             start_response('301 MOVED PERMANENTLY', [('location', 'https://cfisdapi.sshh.io' + uri)])
             return [b'Redirected.']
         return self.app(environ, start_response)
@@ -24,7 +24,6 @@ class DNSRedirectMiddleware(object):
 
 app.wsgi_app = DNSRedirectMiddleware(app.wsgi_app)
 app.config['CORS_HEADERS'] = 'Content-Type'
-app.logger.addHandler(logging.StreamHandler(sys.stdout))
 app.logger.setLevel(logging.INFO)
 
 
