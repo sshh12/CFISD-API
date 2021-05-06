@@ -2,7 +2,7 @@ flask==1.1.1
 gunicorn==19.9.0
 requests==2.22.0
 lxml==4.1.1
-flask_cors==3.0.3
+flask_cors==3.0.9
 git+git://github.com/kirill578/Python-LRU-cache.git
 firebase-admin==2.13.0
 google-cloud-firestore==0.30.0
